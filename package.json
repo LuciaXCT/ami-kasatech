@@ -1,0 +1,12 @@
+{
+  "name": "ami-kasatech",
+  "version": "1.0.0",
+  "description": "AMI by KasaTECH — The Focus Buddy desk companion web application",
+  "scripts": {
+    "start": "npx serve .",
+    "deploy": "npx vercel --prod"
+  },
+  "keywords": ["ami", "kasatech", "focus-buddy", "local-first", "pomodoro", "timer"],
+  "author": "KasaTECH",
+  "license": "MIT"
+}
