@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>AMI by KasaTECH — The Focus Buddy</title>
   <meta name="description" content="A small friend for big days. A palm-sized desk companion paired with a calm, local-first focus timer. One thing at a time.">
+  <meta name="theme-color" content="#FFF7F4">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -31,12 +32,21 @@
         <span class="brand-tag">Focus Buddy</span>
       </a>
 
-      <!-- View Switcher (Overview vs App) -->
+      <!-- Live Companion Status Indicator -->
+      <div class="header-status-pill glass-pill" id="headerStatusPill">
+        <span class="pulse-dot" id="apiDot"></span>
+        <span id="apiStatusText">AMI is here with you</span>
+      </div>
+
+      <!-- Navigation & Actions -->
       <nav class="top-nav">
-        <div class="view-switcher">
+        <div class="view-switcher glass-pill">
           <button class="switch-btn active" id="btnShowLanding">Overview</button>
           <button class="switch-btn" id="btnShowApp">Live App</button>
         </div>
+        <button class="icon-btn-glass" id="btnOpenSettings" title="Open Preferences" aria-label="Preferences">
+          <span>☼</span>
+        </button>
         <button class="btn-order-cta" id="btnOrderHeader">Order AMI — $89</button>
       </nav>
     </div>
@@ -44,7 +54,7 @@
 
   <main>
     <!-- ============================================== -->
-    <!-- VIEW 1: WEBSITE LANDING PAGE                   -->
+    <!-- VIEW 1: WEBSITE OVERVIEW & BRAND SHOWCASE      -->
     <!-- ============================================== -->
     <section id="landingView" class="view-section active">
       <div class="landing-container">
@@ -54,20 +64,34 @@
           <div class="hero-text">
             <div class="hero-badge">
               <span class="badge-dot"></span>
-              <span>Local-First Hardware Companion</span>
+              <span>A Small Friend For Big Days</span>
             </div>
-            <h1>A small friend for big days.</h1>
-            <p>A physical desk companion paired with a calm, local-first focus timer. Keeping your desk anchored to one task at a time.</p>
+            <h1>One thing<br>at a time<span class="period">.</span></h1>
+            <p>AMI helps you get started, take a proper breather, and feel a little less alone at your desk. Palm-sized hardware paired with a calm, local-first app.</p>
+            
+            <div class="today-greeting-chip glass-light">
+              <span class="chip-icon">✿</span>
+              <div>
+                <strong id="greetingLabel">Good day!</strong>
+                <span class="chip-sub">Your pace is allowed to be human.</span>
+              </div>
+            </div>
+
             <div class="hero-cta-group">
-              <button class="hero-cta-btn" id="heroOrderBtn">Order AMI — $89</button>
+              <div class="hero-cta-row">
+                <button class="hero-cta-btn" id="heroOrderBtn">Order AMI — $89</button>
+                <button class="hero-cta-secondary glass-pill" id="heroLaunchAppBtn">Launch Live App →</button>
+              </div>
               <span class="hero-meta">Uncoated paper wrap · Free worldwide delivery · Zero subscriptions</span>
             </div>
           </div>
 
           <!-- Interactive EVE-Inspired Robot Art on Multi-Layer Glass Pedestal -->
           <div class="robot-stage">
-            <div class="robot-card-stage" id="robotCardStage">
+            <div class="robot-card-stage" id="amiStage" title="Tap AMI to pet and say hello ♥">
               <div class="robot-stage-sheen"></div>
+              <div class="ami-hearts-container" id="amiHeartsContainer"></div>
+              
               <svg class="robot-art" viewBox="0 0 220 300" id="robotGraphic" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AMI Desk Companion Robot">
                 <defs>
                   <linearGradient id="bodySheen" x1="20%" y1="0%" x2="80%" y2="100%">
@@ -81,63 +105,71 @@
                     <stop offset="100%" stop-color="#080506" />
                   </linearGradient>
                   <linearGradient id="glareSweep" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="rgba(255,255,255,0.32)" />
+                    <stop offset="0%" stop-color="rgba(255,255,255,0.34)" />
                     <stop offset="35%" stop-color="rgba(255,255,255,0.08)" />
                     <stop offset="100%" stop-color="rgba(255,255,255,0.0)" />
                   </linearGradient>
                   <filter id="eyeGlow" x="-30%" y="-30%" width="160%" height="160%">
-                    <feGaussianBlur stdDeviation="3.5" result="blur" />
+                    <feGaussianBlur stdDeviation="3.2" result="blur" />
                     <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                  </filter>
+                  <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="4" />
                   </filter>
                 </defs>
 
                 <!-- 3mm Physical Shadow Gap on Pedestal -->
-                <ellipse cx="110" cy="285" rx="74" ry="8" fill="rgba(46, 37, 38, 0.12)" />
-                <ellipse cx="110" cy="283" rx="48" ry="4.5" fill="rgba(46, 37, 38, 0.24)" />
+                <ellipse cx="110" cy="285" rx="74" ry="8" fill="rgba(46, 37, 38, 0.12)" filter="url(#softShadow)" />
+                <ellipse cx="110" cy="283" rx="48" ry="4.5" fill="rgba(46, 37, 38, 0.22)" />
 
                 <!-- Base Heart Light Ring (2mm seam breathing ring) -->
                 <ellipse cx="110" cy="276" rx="50" ry="6.5" fill="#D88E9A" class="robot-heart-ring" id="robotHeartRing" />
 
-                <!-- Continuous Matte White Ovoid Body (110 mm tall scale) -->
-                <path d="M 110,18
-                         C 174,18 198,78 198,155
-                         C 198,226 166,274 110,274
-                         C 54,274 22,226 22,155
-                         C 22,78 46,18 110,18 Z"
-                      fill="url(#bodySheen)"
-                      stroke="rgba(238, 216, 216, 0.85)"
-                      stroke-width="1.2" />
+                <!-- Continuous Matte White Ovoid Body (110 mm scale) -->
+                <g id="robotBodyGroup">
+                  <path d="M 110,18
+                           C 174,18 198,78 198,155
+                           C 198,226 166,274 110,274
+                           C 54,274 22,226 22,155
+                           C 22,78 46,18 110,18 Z"
+                        fill="url(#bodySheen)"
+                        stroke="rgba(238, 216, 216, 0.85)"
+                        stroke-width="1.2" />
 
-                <!-- Flush Glossy Black Visor (60% front height) -->
-                <path class="robot-svg-visor"
-                      d="M 110,50
-                         C 152,50 172,78 172,126
-                         C 172,176 150,198 110,198
-                         C 70,198 48,176 48,126
-                         C 48,78 68,50 110,50 Z"
-                      fill="url(#visorSpec)" />
+                  <!-- Flush Glossy Black Visor (60% front height) -->
+                  <path class="robot-svg-visor"
+                        d="M 110,50
+                           C 152,50 172,78 172,126
+                           C 172,176 150,198 110,198
+                           C 70,198 48,176 48,126
+                           C 48,78 68,50 110,50 Z"
+                        fill="url(#visorSpec)" />
 
-                <!-- Curved Glass Visor Reflection Arc -->
-                <path d="M 62,68
-                         C 88,56 132,56 158,68
-                         C 142,60 98,60 62,68 Z"
-                      fill="url(#glareSweep)" />
+                  <!-- Curved Glass Visor Reflection Arc -->
+                  <path d="M 62,68
+                           C 88,56 132,56 158,68
+                           C 142,60 98,60 62,68 Z"
+                        fill="url(#glareSweep)" />
 
-                <!-- Left Luminous Capsule Eye -->
-                <g class="robot-eye" id="eyeLeft" transform="translate(86, 122)">
-                  <ellipse cx="0" cy="0" rx="14" ry="17" fill="rgba(216, 142, 154, 0.28)" />
-                  <ellipse cx="0" cy="0" rx="9" ry="13" fill="#FFFDF9" filter="url(#eyeGlow)" />
-                </g>
+                  <!-- Left Luminous Capsule Eye -->
+                  <g class="robot-eye" id="eyeLeft" transform="translate(86, 122)">
+                    <ellipse cx="0" cy="0" rx="14" ry="17" fill="rgba(216, 142, 154, 0.28)" />
+                    <ellipse cx="0" cy="0" rx="9" ry="13" fill="#FFFDF9" filter="url(#eyeGlow)" />
+                  </g>
 
-                <!-- Right Luminous Capsule Eye -->
-                <g class="robot-eye" id="eyeRight" transform="translate(134, 122)">
-                  <ellipse cx="0" cy="0" rx="14" ry="17" fill="rgba(216, 142, 154, 0.28)" />
-                  <ellipse cx="0" cy="0" rx="9" ry="13" fill="#FFFDF9" filter="url(#eyeGlow)" />
+                  <!-- Right Luminous Capsule Eye -->
+                  <g class="robot-eye" id="eyeRight" transform="translate(134, 122)">
+                    <ellipse cx="0" cy="0" rx="14" ry="17" fill="rgba(216, 142, 154, 0.28)" />
+                    <ellipse cx="0" cy="0" rx="9" ry="13" fill="#FFFDF9" filter="url(#eyeGlow)" />
+                  </g>
                 </g>
               </svg>
             </div>
             
-            <div class="robot-caption">AMI · Tap companion to blink & chime</div>
+            <div class="robot-caption glass-pill" id="robotCaption">
+              <span class="online-pip"></span>
+              <span id="amiCaptionText">AMI · Tap companion to pet & chime</span>
+            </div>
 
             <!-- Interactive Quick Controls on Robot Pedestal -->
             <div class="robot-actions-glass">
@@ -158,22 +190,22 @@
             <!-- Expandable Hardware Specs Glass Drawer -->
             <div class="specs-drawer glass-strong" id="specsDrawer">
               <div class="specs-grid">
-                <div class="spec-card">
+                <div class="spec-card glass-light">
                   <span class="spec-title">SCALE & FORM</span>
                   <span class="spec-value">110 × 95 × 85 mm · 210g</span>
                   <span class="spec-detail">Continuous soft-touch matte unibody with 3mm silicone base shadow gap.</span>
                 </div>
-                <div class="spec-card">
+                <div class="spec-card glass-light">
                   <span class="spec-title">VISOR & SENSORS</span>
                   <span class="spec-value">Glossy Black · Capacitive Crown</span>
                   <span class="spec-detail">Luminous twin capsule eyes, breathing rose heart ring, capacitive top touch.</span>
                 </div>
-                <div class="spec-card">
+                <div class="spec-card glass-light">
                   <span class="spec-title">AUDIO HARDWARE</span>
-                  <span class="spec-value">MicroSD Slot · Speaker Perforation</span>
+                  <span class="spec-value">MicroSD Slot · Speaker Arc</span>
                   <span class="spec-detail">Plays royalty-free ambient soundscapes from card. Zero streaming, no telemetry.</span>
                 </div>
-                <div class="spec-card">
+                <div class="spec-card glass-light">
                   <span class="spec-title">CONNECTIVITY</span>
                   <span class="spec-value">Centered USB-C · Local-First</span>
                   <span class="spec-detail">Operates 100% offline. Progress stays strictly on your physical machine.</span>
@@ -209,89 +241,6 @@
           </div>
         </div>
 
-        <!-- Active Companion Session Mock in Refined Glass Panel -->
-        <div class="section-label">Session Preview</div>
-        <div class="session-mock glass-strong">
-          <div class="session-mock-left">
-            <h4>Live Session Active</h4>
-            <div class="session-mock-tabs">
-              <span class="session-mock-tab">Study</span>
-              <span class="session-mock-tab active-tab">Work</span>
-              <span class="session-mock-tab">Reset</span>
-            </div>
-            <div class="session-mock-sub">25 min focus · 5 min break</div>
-          </div>
-          <div class="session-mock-right">
-            <div class="session-mock-time" id="mockTimer">25:00</div>
-          </div>
-        </div>
-
-        <!-- Companion Gentle Check-In Chips (From Arena Prompt) -->
-        <div class="section-label">Companion Presence</div>
-        <div class="companion-chat-card glass">
-          <div class="chat-prompt-header">
-            <div class="chat-badge">TINY CHECK-IN</div>
-            <h4>Feeling stuck? Speak with AMI</h4>
-            <p>Gentle micro-prompts. No artificial scolding, just calm perspective.</p>
-          </div>
-          <div class="chat-chips-group">
-            <button class="chat-chip-btn" data-msg="distracted">I'm distracted</button>
-            <button class="chat-chip-btn" data-msg="tired">I'm tired</button>
-            <button class="chat-chip-btn" data-msg="joke">Tiny joke?</button>
-          </div>
-          <div class="chat-bubble-response glass-light" id="chatResponseBox" style="display:none;">
-            <div class="bubble-speaker">
-              <div class="brand-icon-ovoid" style="width:16px;height:20px;">
-                <div class="brand-icon-visor" style="width:10px;height:6px;top:3px;"></div>
-              </div>
-              <span>AMI</span>
-            </div>
-            <div class="bubble-text" id="chatResponseText">One breath. Just the next five minutes.</div>
-          </div>
-        </div>
-
-        <!-- Break Nudge Defaults -->
-        <div class="section-label">Gentle Defaults, Not Medical Advice</div>
-        <div class="nudges-list glass">
-          <div class="nudge-item">
-            <div class="nudge-info">
-              <span class="nudge-title">Distance eye release</span>
-              <span class="nudge-sub">Look 20 feet away for 20 seconds</span>
-            </div>
-            <div class="nudge-interval">
-              <span>Every 20 min</span>
-              <span class="badge-active">Active</span>
-            </div>
-          </div>
-          <div class="nudge-item">
-            <div class="nudge-info">
-              <span class="nudge-title">Standing posture shift</span>
-              <span class="nudge-sub">Uncross legs and roll shoulders back</span>
-            </div>
-            <div class="nudge-interval">
-              <span>Every 50 min</span>
-              <span class="badge-active">Active</span>
-            </div>
-          </div>
-          <div class="nudge-item">
-            <div class="nudge-info">
-              <span class="nudge-title">Hydration pause</span>
-              <span class="nudge-sub">Take a calm sip of water</span>
-            </div>
-            <div class="nudge-interval">
-              <span>Every 45 min</span>
-              <span class="badge-active">Active</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Local Music Feature Banner -->
-        <div class="feature-banner glass">
-          <div class="feature-badge">OFFLINE AUDIO</div>
-          <h3>Local Audio via microSD</h3>
-          <p>Royalty-free focus tracks play directly from the internal microSD card. No streaming accounts, no tracking, and zero internet required.</p>
-        </div>
-
         <!-- Packaging & Unboxing Strip (5 Frames from Arena Prompt) -->
         <div class="section-label">Packaging & Unboxing</div>
         <div class="unboxing-strip glass">
@@ -300,48 +249,31 @@
             <p>120 × 110 × 70 mm rigid paper wrap with hot-stamped rose-deep foil.</p>
           </div>
           <div class="unboxing-frames">
-            <div class="unbox-frame">
+            <div class="unbox-frame glass-light">
               <div class="frame-tag">01</div>
               <div class="frame-name">Sealed Pack</div>
               <div class="frame-desc">Matte paper wrap with blind-embossed face mark and sage seal dot.</div>
             </div>
-            <div class="unbox-frame">
+            <div class="unbox-frame glass-light">
               <div class="frame-tag">02</div>
               <div class="frame-name">Lid Lifted</div>
               <div class="frame-desc">Telescoping lid lifts to reveal dark visor and twin capsule eyes.</div>
             </div>
-            <div class="unbox-frame">
+            <div class="unbox-frame glass-light">
               <div class="frame-tag">03</div>
               <div class="frame-name">Cream Card</div>
               <div class="frame-desc">Heavyweight insert: <em>One thing at a time.</em> Quick start guide on reverse.</div>
             </div>
-            <div class="unbox-frame">
+            <div class="unbox-frame glass-light">
               <div class="frame-tag">04</div>
               <div class="frame-name">Pulp Cradle</div>
               <div class="frame-desc">AMI rests in molded unbleached fiber tray with braided USB-C below.</div>
             </div>
-            <div class="unbox-frame">
+            <div class="unbox-frame glass-light">
               <div class="frame-tag">05</div>
               <div class="frame-name">Flat-Lay</div>
               <div class="frame-desc">AMI companion, 32GB microSD inserted, braided cable, tactile card.</div>
             </div>
-          </div>
-        </div>
-
-        <!-- Progress Overview -->
-        <div class="section-label">Your Record</div>
-        <div class="progress-grid">
-          <div class="stat-box glass">
-            <div class="stat-number">14</div>
-            <div class="stat-label">Sessions Completed</div>
-          </div>
-          <div class="stat-box glass">
-            <div class="stat-number">350</div>
-            <div class="stat-label">Minutes Focused</div>
-          </div>
-          <div class="stat-box glass">
-            <div class="stat-number">5</div>
-            <div class="stat-label">Day Current Rhythm</div>
           </div>
         </div>
 
@@ -356,206 +288,396 @@
     </section>
 
     <!-- ============================================== -->
-    <!-- VIEW 2: THE COMPANION APP                      -->
+    <!-- VIEW 2: THE COMPLETE LIVE FOCUS APP            -->
     <!-- ============================================== -->
     <section id="appView" class="view-section">
-      <div class="app-wrapper">
-        <div class="app-container glass-strong">
+      <div class="app-dashboard-container">
+        
+        <div class="dashboard-header-block">
+          <div>
+            <div class="section-label">AMI FOCUS DASHBOARD</div>
+            <h2 class="dashboard-title">Your calm workspace companion.</h2>
+          </div>
+          <div class="dashboard-meta-actions">
+            <button class="adaptive-apply-btn glass-pill" id="btnApplyAdaptive">
+              <span>✦ Use AMI’s suggested rhythm</span>
+            </button>
+          </div>
+        </div>
 
-          <!-- App Glass Header -->
-          <div class="app-header">
-            <div class="app-header-title">
-              <div class="brand-icon-ovoid" style="width:20px; height:24px;">
-                <div class="brand-icon-visor" style="width:12px; height:8px; top:4px;"></div>
+        <!-- 6-Card High-Functionality Glass Dashboard Grid -->
+        <div class="dashboard-grid">
+
+          <!-- CARD 1: FOCUS SESSION TIMER -->
+          <article class="card glass-strong dash-card focus-card">
+            <div class="dash-card-head">
+              <div>
+                <span class="card-eyebrow">YOUR FOCUS SESSION</span>
+                <h3>Let’s get into it</h3>
               </div>
-              <span>AMI Companion</span>
+              <span class="card-glyph">◷</span>
             </div>
-            <div class="app-header-actions">
-              <div class="app-device-badge">
+
+            <!-- Mode Tabs (Study / Work / Reset) -->
+            <div class="mode-tabs-glass glass-light" role="group" aria-label="Choose a focus mode">
+              <button class="mode-tab-btn active" data-mode="study">Study</button>
+              <button class="mode-tab-btn" data-mode="work">Work</button>
+              <button class="mode-tab-btn" data-mode="reset">Reset</button>
+            </div>
+
+            <!-- Timer Hero Display -->
+            <div class="timer-display-wrap">
+              <div class="timer-digits-hero" id="timerDisplay">25:00</div>
+              <div class="timer-sub-caption" id="timerStatusLabel">READY WHEN YOU ARE</div>
+            </div>
+
+            <!-- Timer Actions -->
+            <div class="focus-action-group">
+              <button class="action-pillar" id="btnFocusStart">Start focus</button>
+              <button class="action-quiet-btn glass-pill" id="btnFocusFinish" disabled>Finish early</button>
+            </div>
+
+            <!-- Break Prompt Button (Appears when focus ends) -->
+            <div class="break-prompt-wrap" id="breakPromptWrap" style="display:none;">
+              <button class="btn-break-trigger" id="btnBreakStart">
+                <span>☕ Start your 5-min break</span>
+              </button>
+            </div>
+
+            <div class="dash-card-foot">
+              <span>✿ <span id="cycleLabel">25 min focus · 5 min break</span></span>
+              <span id="focusStateNote">No pressure. Just begin.</span>
+            </div>
+          </article>
+
+          <!-- CARD 2: GENTLE BREAK NUDGES & CYCLES -->
+          <article class="card glass dash-card break-card">
+            <div class="dash-card-head">
+              <div>
+                <span class="card-eyebrow">A KIND LITTLE NUDGE</span>
+                <h3>Breaks count too</h3>
+              </div>
+              <span class="card-glyph">✿</span>
+            </div>
+            <p class="dash-card-copy">AMI will remind you gently. Pick a rhythm that feels doable today.</p>
+
+            <div class="cycle-selects-row">
+              <label class="cycle-label-wrap">
+                <span>Work cycle</span>
+                <select id="selectWorkCycle" class="glass-select">
+                  <option value="25">25 minutes</option>
+                  <option value="40">40 minutes</option>
+                  <option value="50">50 minutes</option>
+                </select>
+              </label>
+              <label class="cycle-label-wrap">
+                <span>Break</span>
+                <select id="selectBreakCycle" class="glass-select">
+                  <option value="5">5 minutes</option>
+                  <option value="10">10 minutes</option>
+                  <option value="15">15 minutes</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="nudge-items-list">
+              <div class="nudge-row glass-light">
+                <span class="nudge-icon">👀</span>
+                <div class="nudge-detail">
+                  <strong>Rest your eyes</strong>
+                  <small>Look 20 feet away for 20s</small>
+                </div>
+                <span class="nudge-badge" id="badgeEyeInterval">20m</span>
+              </div>
+              <div class="nudge-row glass-light">
+                <span class="nudge-icon">🫶</span>
+                <div class="nudge-detail">
+                  <strong>Stretch a little</strong>
+                  <small>Unclench your shoulders</small>
+                </div>
+                <span class="nudge-badge" id="badgeStretchInterval">50m</span>
+              </div>
+              <div class="nudge-row glass-light">
+                <span class="nudge-icon">💧</span>
+                <div class="nudge-detail">
+                  <strong>Have some water</strong>
+                  <small>One sip is a good start</small>
+                </div>
+                <span class="nudge-badge" id="badgeWaterInterval">45m</span>
+              </div>
+            </div>
+
+            <!-- Break Treats -->
+            <div class="break-treat-section">
+              <span class="treat-title">A tiny treat for break time:</span>
+              <div class="treat-chips-row">
+                <button class="treat-chip glass-pill" data-say="Tell me a joke">Joke</button>
+                <button class="treat-chip glass-pill" data-say="Tell me a fun fact">Trivia</button>
+                <button class="treat-chip glass-pill" data-say="Give me a riddle">Riddle</button>
+                <button class="treat-chip glass-pill" data-say="Tell me a mini story">Mini story</button>
+              </div>
+            </div>
+
+            <div class="dash-card-foot">
+              <span>♡ Gentle reminders, never a scolding.</span>
+            </div>
+          </article>
+
+          <!-- CARD 3: LOCAL MICROSD AUDIO PLAYER -->
+          <article class="card glass dash-card music-card">
+            <div class="dash-card-head">
+              <div>
+                <span class="card-eyebrow">SOUNDTRACK FOR THIS MOMENT</span>
+                <h3>Pick your mood</h3>
+              </div>
+              <span class="card-glyph">♫</span>
+            </div>
+            <p class="dash-card-copy">AMI plays royalty-free tracks locally from its microSD card.</p>
+
+            <div class="music-mood-grid">
+              <button class="music-mood-btn glass-light active" data-music="focus">
+                <span class="mood-icon">☁</span>
+                <strong>Focus</strong>
+                <small>soft & steady</small>
+              </button>
+              <button class="music-mood-btn glass-light" data-music="relax">
+                <span class="mood-icon">☾</span>
+                <strong>Relax</strong>
+                <small>slow it down</small>
+              </button>
+              <button class="music-mood-btn glass-light" data-music="energise">
+                <span class="mood-icon">☀</span>
+                <strong>Energise</strong>
+                <small>gentle lift</small>
+              </button>
+            </div>
+
+            <!-- Player Bar with Live Web Audio Synthesis -->
+            <div class="music-player-bar glass-light">
+              <div class="album-orb" id="albumOrb">♫</div>
+              <div class="music-info-text">
+                <strong id="musicTitleText">AMI · Focus Ambient</strong>
+                <small id="musicSubText">Ready on the companion’s SD card</small>
+              </div>
+              <button class="play-trigger-btn" id="btnToggleMusic" aria-label="Toggle local audio">
+                <span id="musicPlayIcon">▶</span>
+              </button>
+            </div>
+
+            <div class="dash-card-foot">
+              <span id="musicStateNote">Music is synthesized locally; zero internet streaming.</span>
+            </div>
+          </article>
+
+          <!-- CARD 4: TIMED REMINDERS -->
+          <article class="card glass dash-card reminder-card">
+            <div class="dash-card-head">
+              <div>
+                <span class="card-eyebrow">KEEP IT ON YOUR RADAR</span>
+                <h3>Small reminders</h3>
+              </div>
+              <span class="card-glyph">⌁</span>
+            </div>
+
+            <form id="reminderForm" class="reminder-form-grid">
+              <input type="text" id="inputReminderText" class="glass-input" maxlength="160" placeholder="e.g. submit assignment, drink tea" required>
+              <input type="datetime-local" id="inputReminderTime" class="glass-input" required>
+              <div class="reminder-form-actions">
+                <button type="submit" class="btn-primary-small">Add reminder</button>
+                <button type="button" class="voice-btn glass-pill" id="btnVoiceReminder">
+                  <span>🎙 Say it</span>
+                </button>
+              </div>
+            </form>
+
+            <!-- Reminders List -->
+            <div class="reminders-scroll-area" id="remindersList">
+              <div class="empty-reminders-state">Your reminders will show up here.</div>
+            </div>
+
+            <div class="dash-card-foot">
+              <span id="voiceStatusNote">Voice input uses browser speech recognition when available.</span>
+            </div>
+          </article>
+
+          <!-- CARD 5: TALK TO AMI (INTERACTIVE CHAT + VOICE) -->
+          <article class="card glass dash-card chat-card">
+            <div class="dash-card-head">
+              <div>
+                <span class="card-eyebrow">A FRIENDLY CHECK-IN</span>
+                <h3>Talk to AMI</h3>
+              </div>
+              <div class="ami-online-indicator">
                 <span class="pulse-dot"></span>
-                <span>Connected</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- App Navigation (3 Surfaces Only) -->
-          <div class="app-nav-tabs">
-            <button class="app-tab-btn active" data-surface="focus">Focus</button>
-            <button class="app-tab-btn" data-surface="nudges">Nudges</button>
-            <button class="app-tab-btn" data-surface="you">You</button>
-          </div>
-
-          <!-- SURFACE 1: FOCUS -->
-          <div id="surfaceFocus" class="app-surface active">
-            <div class="focus-eyebrow">YOUR FOCUS SESSION</div>
-
-            <!-- Segmented Control with Frosted Slider Pill -->
-            <div class="segmented-control glass-light">
-              <button class="seg-btn active" data-mode="study">Study (25m)</button>
-              <button class="seg-btn" data-mode="work">Work (50m)</button>
-              <button class="seg-btn" data-mode="reset">Reset (10m)</button>
-            </div>
-
-            <!-- 104px Tabular Monospace Timer Display -->
-            <div class="timer-hero">
-              <div class="timer-digits" id="timerDisplay">25:00</div>
-              <div class="timer-caption" id="timerCaption">25 min focus · 5 min break</div>
-            </div>
-
-            <!-- Tactile 60px Rose Pillar Action Button -->
-            <button class="action-pillar" id="btnMainAction">Start focus</button>
-
-            <!-- Reset / Secondary Actions -->
-            <div class="secondary-actions">
-              <button class="btn-secondary glass-pill" id="btnResetTimer">Reset</button>
-              <button class="btn-secondary glass-pill" id="btnSimulateDone">Test Finished State</button>
-            </div>
-
-            <!-- Mood Chip Selector -->
-            <div class="mood-chip-container">
-              <div class="mood-chip glass-pill" id="moodChip">
-                <span>Tone:</span>
-                <strong id="currentMoodLabel">Focus</strong>
-                <span class="chip-arrow">▾</span>
-              </div>
-              <div class="mood-sheet glass-strong" id="moodSheet">
-                <button class="mood-option active" data-mood="Focus">Focus</button>
-                <button class="mood-option" data-mood="Relax">Relax</button>
-                <button class="mood-option" data-mood="Energise">Energise</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- SURFACE 2: NUDGES -->
-          <div id="surfaceNudges" class="app-surface">
-            <div class="nudges-header">
-              <h3>GENTLE BREAK DEFAULTS</h3>
-              <p>Paced pauses for desk work. Adjust intervals freely.</p>
-            </div>
-
-            <div id="nudgesContainer">
-              <div class="nudge-box glass-light">
-                <div class="nudge-left">
-                  <h4>Distance eye pause</h4>
-                  <p>Look twenty feet away for twenty seconds</p>
-                </div>
-                <div class="nudge-right">
-                  <span class="nudge-tag">Every 20 m</span>
-                  <div class="toggle-switch" onclick="this.classList.toggle('off')" role="switch" aria-checked="true">
-                    <div class="toggle-dot"></div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="nudge-box glass-light">
-                <div class="nudge-left">
-                  <h4>Posture reset</h4>
-                  <p>Stand, stretch wrists, and uncross legs</p>
-                </div>
-                <div class="nudge-right">
-                  <span class="nudge-tag">Every 50 m</span>
-                  <div class="toggle-switch" onclick="this.classList.toggle('off')" role="switch" aria-checked="true">
-                    <div class="toggle-dot"></div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="nudge-box glass-light">
-                <div class="nudge-left">
-                  <h4>Water pause</h4>
-                  <p>Refill your cup or take a sip of water</p>
-                </div>
-                <div class="nudge-right">
-                  <span class="nudge-tag">Every 45 m</span>
-                  <div class="toggle-switch" onclick="this.classList.toggle('off')" role="switch" aria-checked="true">
-                    <div class="toggle-dot"></div>
-                  </div>
-                </div>
+                <span>ready</span>
               </div>
             </div>
 
-            <!-- Add Nudge Inline Form -->
-            <div class="add-nudge-inline">
-              <input type="text" class="input-nudge glass-light" id="newNudgeInput" placeholder="Add custom nudge (e.g., Deep breath)">
-              <button class="btn-add-nudge" id="btnAddNudge">Add</button>
-            </div>
-
-            <div class="nudges-disclaimer">
-              Gentle defaults, not medical advice.
-            </div>
-          </div>
-
-          <!-- SURFACE 3: YOU -->
-          <div id="surfaceYou" class="app-surface">
-            <div class="you-figures">
-              <div class="you-stat-card glass-light">
-                <div class="you-stat-num" id="totalSessions">14</div>
-                <div class="you-stat-label">Sessions</div>
-              </div>
-              <div class="you-stat-card glass-light">
-                <div class="you-stat-num" id="totalMinutes">350</div>
-                <div class="you-stat-label">Minutes</div>
-              </div>
-              <div class="you-stat-card glass-light">
-                <div class="you-stat-num" id="currentStreak">5</div>
-                <div class="you-stat-label">Days Streak</div>
+            <!-- Chat Message History -->
+            <div class="chat-log-window" id="chatLogWindow" aria-live="polite">
+              <div class="bubble ami-bubble glass-light">
+                Hey, I’m here. What’s on your mind—or should we pick one tiny thing to start? <span class="bubble-heart">♥</span>
               </div>
             </div>
 
-            <!-- 7-Dot Week Rhythm Strip -->
-            <div class="week-strip glass-light">
-              <div class="week-strip-title">Recent Rhythm</div>
-              <div class="week-dots">
-                <div class="day-cell"><span>M</span><div class="day-circle active">✓</div></div>
-                <div class="day-cell"><span>T</span><div class="day-circle active">✓</div></div>
-                <div class="day-cell"><span>W</span><div class="day-circle active">✓</div></div>
-                <div class="day-cell"><span>T</span><div class="day-circle active">✓</div></div>
-                <div class="day-cell"><span>F</span><div class="day-circle active">✓</div></div>
-                <div class="day-cell"><span>S</span><div class="day-circle"></div></div>
-                <div class="day-cell"><span>S</span><div class="day-circle"></div></div>
+            <!-- Quick Reply Chips -->
+            <div class="chat-quick-replies">
+              <button class="quick-reply-btn glass-pill" data-say="I feel distracted">I’m distracted</button>
+              <button class="quick-reply-btn glass-pill" data-say="I feel tired">I’m tired</button>
+              <button class="quick-reply-btn glass-pill" data-say="Tell me a joke">Tiny joke?</button>
+            </div>
+
+            <!-- Chat Input Form -->
+            <form id="chatForm" class="chat-input-bar">
+              <input type="text" id="chatInputText" class="glass-input" maxlength="2000" placeholder="Tell AMI what’s up…" autocomplete="off" required>
+              <button type="button" id="btnChatMic" class="mic-trigger-btn glass-pill" title="Speak to AMI (Voice Input)">🎙</button>
+              <button type="submit" class="send-trigger-btn" aria-label="Send message">↑</button>
+            </form>
+
+            <div class="dash-card-foot chat-foot-split">
+              <span>Short, kind, and honest.</span>
+              <button type="button" id="btnSpeakToggle" class="text-toggle-btn" aria-pressed="false">Read replies aloud: off</button>
+            </div>
+          </article>
+
+          <!-- CARD 6: REAL PROGRESS & ADAPTIVE RHYTHM -->
+          <article class="card glass dash-card progress-card">
+            <div class="dash-card-head">
+              <div>
+                <span class="card-eyebrow">REAL PROGRESS, NOT PERFECTION</span>
+                <h3>You showed up</h3>
+              </div>
+              <span class="card-glyph">✧</span>
+            </div>
+
+            <!-- Stat Counters -->
+            <div class="stats-summary-row">
+              <div class="stat-cell glass-light">
+                <strong id="statSessionsVal">0</strong>
+                <small>sessions</small>
+              </div>
+              <div class="stat-cell glass-light">
+                <strong id="statMinutesVal">0</strong>
+                <small>focus min</small>
+              </div>
+              <div class="stat-cell glass-light">
+                <strong id="statStreakVal">0</strong>
+                <small>day streak</small>
               </div>
             </div>
 
-            <!-- Inline Preferences Disclosures -->
-            <div class="pref-disclosure glass-light">
-              <div class="pref-summary" onclick="const d = this.nextElementSibling; d.style.display = d.style.display === 'none' ? 'block' : 'none';">
-                <span>Interval & Rhythm Defaults</span>
-                <span class="pref-chevron">▾</span>
-              </div>
-              <div class="pref-detail" style="display:none;">
-                Long pause after every 4 completed sessions. Gentle pulse audio tone enabled.
-              </div>
-            </div>
-
-            <div class="pref-disclosure glass-light">
-              <div class="pref-summary" onclick="const d = this.nextElementSibling; d.style.display = d.style.display === 'none' ? 'block' : 'none';">
-                <span>Sound Chime</span>
-                <span class="pref-chevron">▾</span>
-              </div>
-              <div class="pref-detail" style="display:none;">
-                Gentle harmonic tri-tone chime using Web Audio synthesizer. Zero harsh alarms.
+            <!-- 7-Dot Week Strip -->
+            <div class="week-strip-mini glass-light">
+              <div class="week-title-bar">Recent Rhythm</div>
+              <div class="week-dots-row">
+                <div class="day-dot-item"><span>M</span><div class="dot-circ" id="dotM"></div></div>
+                <div class="day-dot-item"><span>T</span><div class="dot-circ" id="dotT"></div></div>
+                <div class="day-dot-item"><span>W</span><div class="dot-circ" id="dotW"></div></div>
+                <div class="day-dot-item"><span>T</span><div class="dot-circ" id="dotTh"></div></div>
+                <div class="day-dot-item"><span>F</span><div class="dot-circ" id="dotF"></div></div>
+                <div class="day-dot-item"><span>S</span><div class="dot-circ" id="dotSa"></div></div>
+                <div class="day-dot-item"><span>S</span><div class="dot-circ" id="dotSu"></div></div>
               </div>
             </div>
 
-            <div class="privacy-card glass-light">
-              <strong>Local-First Guarantee</strong><br>
-              All focus logs and preferences are stored exclusively on your device in private localStorage.
+            <!-- Adaptive Recommendation Text -->
+            <div class="adaptive-recommendation-box glass-light">
+              <div class="recom-icon">✿</div>
+              <p id="adaptiveRecomText">Every finished session teaches AMI what works for you. Complete a few blocks to get custom rhythm suggestions.</p>
             </div>
-          </div>
+
+            <div class="dash-card-foot">
+              <span class="star-rhythm-row">✿　✦　♡　✦　✿</span>
+            </div>
+          </article>
 
         </div>
       </div>
     </section>
   </main>
 
+  <!-- Preferences Dialog / Modal -->
+  <dialog id="settingsDialog" class="settings-modal glass-strong">
+    <div class="dialog-content-wrapper">
+      <div class="dialog-header">
+        <div>
+          <span class="card-eyebrow">YOUR AMI, YOUR WAY</span>
+          <h3>Preferences</h3>
+        </div>
+        <button class="close-dialog-btn glass-pill" id="btnCloseSettings" aria-label="Close dialog">×</button>
+      </div>
+
+      <div class="dialog-form-body">
+        <label class="setting-row">
+          <span>Long break every</span>
+          <select id="settingLongBreakEvery" class="glass-select">
+            <option value="4">4 sessions</option>
+            <option value="3">3 sessions</option>
+            <option value="5">5 sessions</option>
+          </select>
+        </label>
+
+        <label class="setting-row">
+          <span>AMI’s nudge style</span>
+          <select id="settingNudgeStyle" class="glass-select">
+            <option value="gentle">Gentle</option>
+            <option value="direct">Direct, but kind</option>
+            <option value="quiet">Quiet</option>
+          </select>
+        </label>
+
+        <label class="setting-row checkbox-row">
+          <span>Spoken reminders on the robot</span>
+          <input type="checkbox" id="settingVoiceEnabled" checked>
+        </label>
+
+        <label class="setting-row">
+          <span>Eye rest interval</span>
+          <select id="settingEyeInterval" class="glass-select">
+            <option value="20">20 minutes</option>
+            <option value="25">25 minutes</option>
+            <option value="30">30 minutes</option>
+          </select>
+        </label>
+
+        <label class="setting-row">
+          <span>Stretch reminder</span>
+          <select id="settingStretchInterval" class="glass-select">
+            <option value="50">50 minutes</option>
+            <option value="40">40 minutes</option>
+            <option value="60">60 minutes</option>
+          </select>
+        </label>
+
+        <label class="setting-row">
+          <span>Water reminder</span>
+          <select id="settingWaterInterval" class="glass-select">
+            <option value="45">45 minutes</option>
+            <option value="30">30 minutes</option>
+            <option value="60">60 minutes</option>
+          </select>
+        </label>
+
+        <p class="dialog-fineprint">These are gentle defaults, not medical advice. Adjust or turn them off whenever you like.</p>
+
+        <div class="dialog-actions">
+          <button type="button" class="action-pillar" id="btnSaveSettings">Save preferences</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Floating Toast Notification System -->
+  <div id="toastContainer" class="toast-container" role="status" aria-live="polite"></div>
+
   <!-- Site Glass Footer -->
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-left">
-        <strong>KasaTECH</strong> · Kyoto & Zurich · Local-First Focus Hardware
+        <strong>AMI · The Focus Buddy</strong> · KasaTECH (Kyoto & Zurich)
       </div>
       <div class="footer-right">
-        AMI The Focus Buddy · FSC Uncoated Packaging · $89
+        Local-first by default. Your progress stays exclusively on your machine.
       </div>
     </div>
   </footer>
