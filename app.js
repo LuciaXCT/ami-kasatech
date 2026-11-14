@@ -313,3 +313,63 @@ if (savedSessions) document.getElementById('totalSessions').textContent = savedS
 if (savedMinutes) document.getElementById('totalMinutes').textContent = savedMinutes;
 
 updateDisplay();
+
+// --- Robot Action Buttons & Specs Drawer ---
+const btnRobotBlink = document.getElementById('btnRobotBlink');
+const btnRobotChime = document.getElementById('btnRobotChime');
+const btnToggleSpecs = document.getElementById('btnToggleSpecs');
+const specsDrawer = document.getElementById('specsDrawer');
+
+if (btnRobotBlink) {
+  btnRobotBlink.addEventListener('click', () => {
+    triggerRobotBlink(true);
+  });
+}
+
+if (btnRobotChime) {
+  btnRobotChime.addEventListener('click', () => {
+    playGentleChime();
+    triggerRobotBlink(true);
+  });
+}
+
+if (btnToggleSpecs && specsDrawer) {
+  btnToggleSpecs.addEventListener('click', () => {
+    specsDrawer.classList.toggle('open');
+    btnToggleSpecs.classList.toggle('active');
+  });
+}
+
+// --- Companion Check-In Chat Chips ---
+const chatChips = document.querySelectorAll('.chat-chip-btn');
+const chatResponseBox = document.getElementById('chatResponseBox');
+const chatResponseText = document.getElementById('chatResponseText');
+
+const companionReplies = {
+  distracted: "That's completely fine. Take three slow breaths, then stay with just the next five minutes.",
+  tired: "Stand up, stretch your shoulders back, and drink a glass of water. Rest is part of the rhythm.",
+  joke: "Why did the robot sit on the clock? To be on time for you."
+};
+
+chatChips.forEach(chip => {
+  chip.addEventListener('click', () => {
+    chatChips.forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    
+    const key = chip.dataset.msg;
+    const reply = companionReplies[key] || "One thing at a time.";
+    
+    if (chatResponseBox && chatResponseText) {
+      chatResponseText.textContent = reply;
+      chatResponseBox.style.display = 'flex';
+      chatResponseBox.classList.remove('fade-in');
+      void chatResponseBox.offsetWidth; // trigger reflow
+      chatResponseBox.classList.add('fade-in');
+    }
+    
+    triggerRobotBlink(true);
+    if (key === 'tired' || key === 'joke') {
+      playGentleChime();
+    }
+  });
+});
