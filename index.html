@@ -10,6 +10,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
 </head>
 <body>
 
@@ -89,84 +97,110 @@
             </div>
           </div>
 
-          <!-- Interactive EVE-Inspired Robot Art on Multi-Layer Glass Pedestal -->
+          <!-- Interactive 3D Companion Robot & Packaging Box Stage -->
           <div class="robot-stage">
-            <div class="robot-card-stage" id="amiStage" title="Tap AMI to pet and say hello ♥">
+            <div class="robot-card-stage-3d glass-strong" id="amiStage" title="Drag to orbit in 3D · Tap companion to inspect & pet ♥">
               <div class="robot-stage-sheen"></div>
               <div class="ami-hearts-container" id="amiHeartsContainer"></div>
-              
-              <svg class="robot-art" viewBox="0 0 220 300" id="robotGraphic" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AMI Desk Companion Robot">
-                <defs>
-                  <linearGradient id="bodySheen" x1="20%" y1="0%" x2="80%" y2="100%">
-                    <stop offset="0%" stop-color="#FFFFFF" />
-                    <stop offset="60%" stop-color="#FFFDF9" />
-                    <stop offset="100%" stop-color="#F7EFEA" />
-                  </linearGradient>
-                  <linearGradient id="visorSpec" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#241B1C" />
-                    <stop offset="45%" stop-color="#140E0F" />
-                    <stop offset="100%" stop-color="#080506" />
-                  </linearGradient>
-                  <linearGradient id="glareSweep" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="rgba(255,255,255,0.34)" />
-                    <stop offset="35%" stop-color="rgba(255,255,255,0.08)" />
-                    <stop offset="100%" stop-color="rgba(255,255,255,0.0)" />
-                  </linearGradient>
-                  <filter id="eyeGlow" x="-30%" y="-30%" width="160%" height="160%">
-                    <feGaussianBlur stdDeviation="3.2" result="blur" />
-                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                  </filter>
-                  <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feGaussianBlur stdDeviation="4" />
-                  </filter>
-                </defs>
 
-                <!-- 3mm Physical Shadow Gap on Pedestal -->
-                <ellipse cx="110" cy="285" rx="74" ry="8" fill="rgba(46, 37, 38, 0.12)" filter="url(#softShadow)" />
-                <ellipse cx="110" cy="283" rx="48" ry="4.5" fill="rgba(46, 37, 38, 0.22)" />
+              <!-- Top floating 3D HUD controls -->
+              <div class="stage-3d-hud">
+                <div class="mode-toggle-pill">
+                  <button class="stage-mode-btn active" id="btnModeRobot" type="button">Robot 3D</button>
+                  <button class="stage-mode-btn" id="btnModeBox" type="button">Box 3D</button>
+                </div>
+                <div class="camera-views-row">
+                  <button class="view-chip" data-v="front" type="button">Front</button>
+                  <button class="view-chip active" data-v="threeq" type="button">3/4</button>
+                  <button class="view-chip" data-v="top" type="button">Top</button>
+                  <button class="view-chip active" id="btnToggleSpin" type="button">Spin: on</button>
+                </div>
+              </div>
 
-                <!-- Base Heart Light Ring (2mm seam breathing ring) -->
-                <ellipse cx="110" cy="276" rx="50" ry="6.5" fill="#D88E9A" class="robot-heart-ring" id="robotHeartRing" />
+              <!-- Live Photorealistic 3D WebGL Canvas -->
+              <canvas id="heroCanvas3D" class="hero-canvas-3d"></canvas>
 
-                <!-- Continuous Matte White Ovoid Body (110 mm scale) -->
-                <g id="robotBodyGroup">
-                  <path d="M 110,18
-                           C 174,18 198,78 198,155
-                           C 198,226 166,274 110,274
-                           C 54,274 22,226 22,155
-                           C 22,78 46,18 110,18 Z"
-                        fill="url(#bodySheen)"
-                        stroke="rgba(238, 216, 216, 0.85)"
-                        stroke-width="1.2" />
+              <!-- SVG Fallback (hidden unless WebGL fails) -->
+              <div id="svgFallback" class="svg-fallback-wrapper" style="display:none;">
+                <svg class="robot-art" viewBox="0 0 220 300" id="robotGraphic" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AMI Desk Companion Robot">
+                  <defs>
+                    <linearGradient id="bodySheen" x1="20%" y1="0%" x2="80%" y2="100%">
+                      <stop offset="0%" stop-color="#FFFFFF" />
+                      <stop offset="60%" stop-color="#FFFDF9" />
+                      <stop offset="100%" stop-color="#F7EFEA" />
+                    </linearGradient>
+                    <linearGradient id="visorSpec" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#241B1C" />
+                      <stop offset="45%" stop-color="#140E0F" />
+                      <stop offset="100%" stop-color="#080506" />
+                    </linearGradient>
+                    <linearGradient id="glareSweep" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="rgba(255,255,255,0.34)" />
+                      <stop offset="35%" stop-color="rgba(255,255,255,0.08)" />
+                      <stop offset="100%" stop-color="rgba(255,255,255,0.0)" />
+                    </linearGradient>
+                    <filter id="eyeGlow" x="-30%" y="-30%" width="160%" height="160%">
+                      <feGaussianBlur stdDeviation="3.2" result="blur" />
+                      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+                      <feGaussianBlur stdDeviation="4" />
+                    </filter>
+                  </defs>
 
-                  <!-- Flush Glossy Black Visor (60% front height) -->
-                  <path class="robot-svg-visor"
-                        d="M 110,50
-                           C 152,50 172,78 172,126
-                           C 172,176 150,198 110,198
-                           C 70,198 48,176 48,126
-                           C 48,78 68,50 110,50 Z"
-                        fill="url(#visorSpec)" />
+                  <!-- 3mm Physical Shadow Gap on Pedestal -->
+                  <ellipse cx="110" cy="285" rx="74" ry="8" fill="rgba(46, 37, 38, 0.12)" filter="url(#softShadow)" />
+                  <ellipse cx="110" cy="283" rx="48" ry="4.5" fill="rgba(46, 37, 38, 0.22)" />
 
-                  <!-- Curved Glass Visor Reflection Arc -->
-                  <path d="M 62,68
-                           C 88,56 132,56 158,68
-                           C 142,60 98,60 62,68 Z"
-                        fill="url(#glareSweep)" />
+                  <!-- Base Heart Light Ring (2mm seam breathing ring) -->
+                  <ellipse cx="110" cy="276" rx="50" ry="6.5" fill="#D88E9A" class="robot-heart-ring" id="robotHeartRing" />
 
-                  <!-- Left Luminous Capsule Eye -->
-                  <g class="robot-eye" id="eyeLeft" transform="translate(86, 122)">
-                    <ellipse cx="0" cy="0" rx="14" ry="17" fill="rgba(216, 142, 154, 0.28)" />
-                    <ellipse cx="0" cy="0" rx="9" ry="13" fill="#FFFDF9" filter="url(#eyeGlow)" />
+                  <!-- Continuous Matte White Ovoid Body (110 mm scale) -->
+                  <g id="robotBodyGroup">
+                    <path d="M 110,18
+                             C 174,18 198,78 198,155
+                             C 198,226 166,274 110,274
+                             C 54,274 22,226 22,155
+                             C 22,78 46,18 110,18 Z"
+                          fill="url(#bodySheen)"
+                          stroke="rgba(238, 216, 216, 0.85)"
+                          stroke-width="1.2" />
+
+                    <!-- Flush Glossy Black Visor (60% front height) -->
+                    <path class="robot-svg-visor"
+                          d="M 110,50
+                             C 152,50 172,78 172,126
+                             C 172,176 150,198 110,198
+                             C 70,198 48,176 48,126
+                             C 48,78 68,50 110,50 Z"
+                          fill="url(#visorSpec)" />
+
+                    <!-- Curved Glass Visor Reflection Arc -->
+                    <path d="M 62,68
+                             C 88,56 132,56 158,68
+                             C 142,60 98,60 62,68 Z"
+                          fill="url(#glareSweep)" />
+
+                    <!-- Left Luminous Capsule Eye -->
+                    <g class="robot-eye" id="eyeLeft" transform="translate(86, 122)">
+                      <ellipse cx="0" cy="0" rx="14" ry="17" fill="rgba(216, 142, 154, 0.28)" />
+                      <ellipse cx="0" cy="0" rx="9" ry="13" fill="#FFFDF9" filter="url(#eyeGlow)" />
+                    </g>
+
+                    <!-- Right Luminous Capsule Eye -->
+                    <g class="robot-eye" id="eyeRight" transform="translate(134, 122)">
+                      <ellipse cx="0" cy="0" rx="14" ry="17" fill="rgba(216, 142, 154, 0.28)" />
+                      <ellipse cx="0" cy="0" rx="9" ry="13" fill="#FFFDF9" filter="url(#eyeGlow)" />
+                    </g>
                   </g>
+                </svg>
+              </div>
 
-                  <!-- Right Luminous Capsule Eye -->
-                  <g class="robot-eye" id="eyeRight" transform="translate(134, 122)">
-                    <ellipse cx="0" cy="0" rx="14" ry="17" fill="rgba(216, 142, 154, 0.28)" />
-                    <ellipse cx="0" cy="0" rx="9" ry="13" fill="#FFFDF9" filter="url(#eyeGlow)" />
-                  </g>
-                </g>
-              </svg>
+              <!-- 3D Bottom Hint Pill -->
+              <div class="stage-3d-hint">
+                <span class="online-pip"></span>
+                <span id="hintText">drag to orbit in 3D · tap any part</span>
+              </div>
             </div>
             
             <div class="robot-caption glass-pill" id="robotCaption">
@@ -685,6 +719,10 @@
     </div>
   </footer>
 
+  <script type="module">
+    import { initHero3D } from './hero-3d.js';
+    initHero3D();
+  </script>
   <script src="app.js"></script>
 </body>
 </html>
