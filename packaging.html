@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AMI — Packaging · OOH · Social</title>
+<style>
+  :root{
+    --paper:#FFF7F4; --cream:#FFFDF9; --rose:#D88E9A; --rose-deep:#965765;
+    --rose-soft:#F6E4E3; --peach:#F6D9CA; --ink:#3E3334; --muted:#837273;
+    --line:#EED8D8; --sage:#7A9280;
+    --shadow:0 14px 42px rgba(92,57,60,.08);
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+       -webkit-font-smoothing:antialiased;line-height:1.6}
+  .shell{max-width:1240px;margin:0 auto;padding:56px 32px 110px}
+
+  /* ---------- chrome ---------- */
+  .head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
+        border-bottom:1px solid var(--line);padding-bottom:20px}
+  .brandmark{font-size:44px;letter-spacing:.18em;font-weight:600;line-height:1}
+  .brandmark span{color:var(--rose)}
+  .head p{margin:6px 0 0;color:var(--muted);font-size:14px}
+  .stamp{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+         color:var(--muted);text-align:right;line-height:1.9}
+  .stamp b{color:var(--rose-deep);font-weight:600}
+
+  section{margin-top:76px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+  .sec-head h2{font-size:13px;letter-spacing:.16em;text-transform:uppercase;
+               color:var(--muted);font-weight:600;margin:0}
+  .sec-head .rule{flex:1;height:1px;background:var(--line)}
+  .sec-head .n{font-family:var(--mono);font-size:11px;color:var(--rose)}
+  .spec{font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--muted);
+        margin:0 0 22px}
+  .spec b{color:var(--rose-deep);font-weight:600}
+
+  /* ---------- the object (one font-size scales it) ---------- */
+  .ami{position:relative;font-size:10px;width:15em;height:19.6em;background:var(--cream);
+       border-radius:50% 50% 50% 50% / 44% 44% 56% 56%;
+       box-shadow:inset 0 0 0 .1em rgba(62,51,52,.055),
+                  inset -1em -1.4em 3em rgba(92,57,60,.07),
+                  inset .8em .8em 2.2em rgba(255,255,255,.9),
+                  0 1em 2.4em rgba(92,57,60,.10)}
+  .visor{position:absolute;left:8%;right:8%;top:24%;height:26%;background:#151112;
+         border-radius:48% 48% 42% 42% / 46% 46% 54% 54%;
+         display:flex;align-items:center;justify-content:center;gap:2.6em;
+         box-shadow:inset 0 -.8em 1.6em rgba(255,255,255,.05)}
+  .eye{width:1.3em;height:2.1em;border-radius:50%;background:var(--cream);
+       box-shadow:0 0 0 .5em rgba(216,142,154,.16)}
+  .eye.blink{height:.2em;border-radius:.2em;box-shadow:0 0 0 .5em rgba(216,142,154,.10)}
+  .ring{position:absolute;left:50%;bottom:.7em;transform:translateX(-50%);
+        width:4.6em;height:.4em;border-radius:50%;background:rgba(216,142,154,.75);
+        filter:blur(.07em)}
+  .gap{width:9.8em;height:1em;border-radius:50%;margin-top:.5em;
+       background:rgba(92,57,60,.13);filter:blur(.6em)}
+  .obj{display:flex;flex-direction:column;align-items:center}
+
+  /* ---------- 01 orthographic ---------- */
+  .ortho{display:grid;gap:10px;justify-content:center;
+         grid-template-columns:297.5px 161.5px 297.5px 161.5px;
+         grid-template-areas:
+           ". . top ."
+           "back left front right"
+           ". . bottom .";}
+  .cell{display:flex;flex-direction:column;gap:7px}
+  .cell.top{grid-area:top} .cell.left{grid-area:left;justify-content:center}
+  .cell.front{grid-area:front} .cell.right{grid-area:right;justify-content:center}
+  .cell.bottom{grid-area:bottom} .cell.back{grid-area:back}
+
+  .oface{background:var(--cream);border:1px solid var(--line);position:relative;overflow:hidden;
+         box-shadow:0 6px 18px rgba(92,57,60,.05);display:flex;flex-direction:column}
+  .oface .lab{position:absolute;top:8px;left:10px;font-family:var(--mono);font-size:8.5px;
+              letter-spacing:.14em;text-transform:uppercase;color:var(--muted);z-index:2}
+  /* true panel sizes at 1.7 px per mm */
+  .f-front,.f-back{width:297.5px;height:229.5px}   /* 175 x 135 */
+  .f-left,.f-right{width:161.5px;height:229.5px}   /* 95 x 135 */
+  .f-top,.f-bottom{width:297.5px;height:161.5px}   /* 175 x 95 */
+
+  .dim{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;
+       color:var(--rose-deep);letter-spacing:.06em}
+  .dim .ln{flex:1;height:1px;background:var(--line)}
+  .dim .tk{width:1px;height:7px;background:var(--rose-deep)}
+
+  /* front panel */
+  .front{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+  .mark{width:52px;height:66px;border-radius:50% 50% 50% 50% / 44% 44% 56% 56%;
+        border:1.2px solid rgba(62,51,52,.55);position:relative;margin-bottom:12px}
+  .mark::before{content:"";position:absolute;left:17%;right:17%;top:25%;height:26%;
+                background:var(--ink);border-radius:46% 46% 40% 40% / 42% 42% 58% 58%}
+  .mark i{position:absolute;top:32%;width:4.5px;height:7px;border-radius:50%;
+          background:var(--cream);z-index:1}
+  .mark i.a{left:31%} .mark i.b{right:31%}
+  .wm{font-size:33px;letter-spacing:.2em;font-weight:600;color:var(--rose-deep);line-height:1;
+      text-indent:.2em}
+  .ds{font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:9px}
+  .kasa{position:absolute;bottom:9px;left:0;right:0;text-align:center;font-size:7.5px;
+        letter-spacing:.18em;color:var(--muted)}
+
+  /* back panel */
+  .back{padding:26px 14px 12px;display:flex;flex-direction:column;font-size:7.5px}
+  .t3{font-size:8.5px;line-height:1.5}
+  .t3 b{display:block;font-size:8.5px;margin-bottom:1px}
+  .steps{display:flex;gap:7px;margin-top:6px}
+  .steps span{display:flex;align-items:center;gap:3px;font-size:7px;color:var(--muted)}
+  .steps i{font-family:var(--mono);font-style:normal;font-size:6.5px;color:var(--rose-deep);
+           width:11px;height:11px;border:1px solid var(--line);border-radius:50%;
+           display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .codes{display:flex;gap:8px;align-items:flex-end;margin-top:8px}
+  .qr{width:38px;height:38px;border:1px solid var(--line);padding:2px;background:var(--cream);flex:0 0 auto}
+  .qr svg{width:100%;height:100%;display:block}
+  .bar{height:11px;width:62%;border-radius:1px;
+       background:repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px 3px)}
+  .codetext{font-family:var(--mono);font-size:6.5px;letter-spacing:.04em;color:var(--muted);margin-top:2px}
+  .addr{margin-top:auto;font-size:6.5px;line-height:1.6;color:var(--muted)}
+  .reg{font-size:6.5px;color:var(--muted);margin-top:2px}
+
+  /* left / right */
+  .side{padding:26px 12px 12px;display:flex;flex-direction:column}
+  .vert{writing-mode:vertical-rl;text-orientation:mixed;font-size:9.5px;letter-spacing:.06em;
+        color:var(--rose-deep);margin:auto}
+  .contents{font-size:8px;line-height:2}
+  .contents i{font-family:var(--mono);font-style:normal;font-size:7px;color:var(--muted)}
+
+  /* top / bottom */
+  .topface{align-items:center;justify-content:center;display:flex;flex-direction:column}
+  .emboss{width:52px;height:66px;border-radius:50% 50% 50% 50% / 44% 44% 56% 56%;
+          border:1px solid rgba(62,51,52,.16);
+          box-shadow:inset 1px 1px 2px rgba(62,51,52,.10),inset -1px -1px 1px rgba(255,255,255,.9)}
+  .bottomface{padding:26px 14px 12px;display:flex;flex-direction:column}
+  .bottomface .bar{width:56%;height:14px}
+  .regs{margin-top:auto;font-size:7px;line-height:1.7;color:var(--muted)}
+
+  .ortho-note{margin:16px 0 0;font-family:var(--mono);font-size:10px;color:var(--muted);
+              text-align:center;letter-spacing:.05em}
+
+  /* ---------- 02 dieline ---------- */
+  .dieline{width:100%;height:auto;display:block;background:var(--cream);
+           border:1px solid var(--line);border-radius:13px;padding:14px}
+  .dieline text{font-family:var(--mono);fill:var(--ink)}
+  .dieline .co{fill:var(--rose-deep);font-size:3.9px;letter-spacing:.06em}
+  .dieline .cd{fill:var(--muted);font-size:3.4px}
+  .dieline .pl{fill:var(--muted);font-size:3.5px;letter-spacing:.1em}
+  .legend{display:flex;flex-wrap:wrap;gap:26px;margin-top:14px;font-family:var(--mono);
+          font-size:10px;color:var(--muted)}
+  .legend span{display:flex;align-items:center;gap:8px}
+  .legend i{width:26px;height:0;border-top:1px solid var(--ink);display:block}
+  .legend i.dash{border-top:1px dashed var(--rose-deep)}
+  .legend i.dot{border-top:1px dotted var(--rose-deep)}
+  .legend i.bleed{border-top:5px solid var(--rose-soft);width:26px}
+  .legend i.glue{width:26px;height:10px;border:1px solid var(--rose-deep);
+                 background:repeating-linear-gradient(45deg,transparent 0 2px,rgba(150,87,101,.4) 2px 3px)}
+
+  /* ---------- 03 unboxing ---------- */
+  .unbox{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+  .uframe{margin:0;border:1px solid var(--line);border-radius:11px;background:var(--cream);
+          aspect-ratio:1;padding:12px 10px 26px;display:flex;flex-direction:column;align-items:center;
+          justify-content:center;position:relative;overflow:hidden}
+  .uframe figcaption{position:absolute;bottom:8px;left:0;right:0;text-align:center;
+                     font-family:var(--mono);font-size:8px;letter-spacing:.07em;
+                     color:var(--muted);text-transform:uppercase}
+  .bx{width:92px;height:92px;background:var(--paper);border:1px solid rgba(62,51,52,.16);
+      position:relative;border-radius:2px;
+      box-shadow:0 6px 12px rgba(92,57,60,.07)}
+  .band{position:absolute;left:-1px;right:-1px;top:50%;transform:translateY(-50%);height:15px;
+        background:var(--rose-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+        display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+        font-size:6.5px;letter-spacing:.22em;color:var(--rose-deep)}
+  .lid{width:94px;height:12px;background:var(--cream);border:1px solid rgba(62,51,52,.18);
+       border-radius:2px;margin-bottom:9px;box-shadow:0 5px 9px rgba(92,57,60,.10)}
+  .base6{width:86px;height:46px;background:var(--paper);border:1px solid rgba(62,51,52,.20);
+         border-radius:1px 1px 3px 3px;overflow:hidden;display:flex;justify-content:center;
+         position:relative;box-shadow:inset 0 10px 12px rgba(92,57,60,.13)}
+  .base6 .ami{position:absolute;top:-2px}
+  .card6{width:76px;height:48px;background:var(--cream);border:1px solid var(--line);border-radius:2px;
+         display:flex;align-items:center;justify-content:center;text-align:center;
+         font-family:var(--mono);font-size:7px;line-height:1.5;color:var(--ink);
+         box-shadow:0 4px 10px rgba(92,57,60,.06)}
+  .pulp{width:84px;height:60px;background:var(--peach);border-radius:5px;position:relative;
+        display:flex;justify-content:center;align-items:flex-end;
+        box-shadow:inset 0 7px 9px rgba(92,57,60,.15),inset 0 -5px 8px rgba(92,57,60,.10),
+                   inset 2px 0 6px rgba(92,57,60,.07),inset -2px 0 6px rgba(92,57,60,.07)}
+  .pulp .ami{position:absolute;bottom:-3px;filter:drop-shadow(0 3px 4px rgba(92,57,60,.14))}
+  .pulp .slot{position:absolute;right:9px;bottom:7px;width:16px;height:5px;
+              background:rgba(92,57,60,.16);border-radius:2px}
+  .flat{display:flex;align-items:flex-end;gap:7px}
+  .flat .cbl{width:22px;height:3px;background:var(--line);border-radius:2px;margin-bottom:4px}
+  .flat .crd{width:20px;height:26px;background:var(--cream);border:1px solid var(--line);border-radius:1px}
+
+  .band-proof{margin-top:14px;display:flex;align-items:center;gap:16px}
+  .band-proof .strip{flex:1;height:44px;background:var(--rose-soft);border:1px solid var(--line);
+                     display:flex;align-items:center;justify-content:space-between;padding:0 16px;
+                     font-family:var(--mono);font-size:8px;letter-spacing:.18em;color:var(--rose-deep)}
+  .band-proof .strip b{font-family:var(--sans);font-size:13px;letter-spacing:.22em}
+  .band-proof p{margin:0;max-width:34ch;font-size:11.5px;color:var(--muted)}
+
+  /* ---------- 04 OOH ---------- */
+  .boards{display:grid;gap:18px}
+  .boards figure{margin:0;min-width:0}
+  .board{aspect-ratio:2/1;border:1px solid var(--line);border-radius:10px;background:var(--cream);
+         position:relative;overflow:hidden;display:flex;align-items:center;gap:36px;
+         padding:0 48px;min-width:0}
+  .board.alt{background:var(--peach)}
+  .board.tint{background:var(--rose-soft)}
+  .board .copy{font-size:clamp(28px,4.2vw,52px);font-weight:600;letter-spacing:-.02em;
+               line-height:1.12;max-width:12ch;position:relative;z-index:2}
+  .board .micro{position:absolute;bottom:16px;left:48px;font-family:var(--mono);font-size:9.5px;
+                letter-spacing:.18em;text-transform:uppercase;color:var(--muted);z-index:2}
+  .board .underscore{display:block;width:60px;height:3px;background:var(--rose);margin-top:13px;border-radius:2px}
+  .board .obj{margin-left:auto;flex:0 0 auto}
+  .board.b1{align-items:flex-end;gap:0;padding-right:44px}
+  .board.b1 .ami{font-size:clamp(12px,2.2vw,26px);margin-bottom:-1.2em}
+  .board.b1 .copy{align-self:center}
+  .board.b2 .ami{font-size:clamp(5px,.92vw,9px)}
+  .board.b3{gap:40px}
+  .board.b3 .crop{position:relative;align-self:center;width:52%;height:56%;overflow:hidden;flex:0 0 auto}
+  .board.b3 .crop .ami{position:absolute;left:50%;top:50%;margin:0;
+                       font-size:clamp(16px,3.15vw,31px);transform:translate(-50%,-37%)}
+  .cap{display:flex;justify-content:space-between;gap:16px;font-family:var(--mono);
+       font-size:10px;color:var(--muted);margin:7px 2px 0}
+  .cap b{color:var(--rose-deep);font-weight:600}
+
+  /* 16:9 adaptations — scaled proofs, not full-size boards */
+  .thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+  .thumb{aspect-ratio:16/9;border:1px solid var(--line);border-radius:8px;overflow:hidden;
+         position:relative;display:flex;align-items:center;background:var(--cream);padding:0 18px}
+  .thumb.alt{background:var(--peach)}
+  .thumb.tint{background:var(--rose-soft)}
+  .thumb .copy{font-size:15px;font-weight:600;letter-spacing:-.02em;line-height:1.12;
+               max-width:11ch;z-index:2}
+  .thumb .micro{position:absolute;bottom:7px;left:18px;font-family:var(--mono);font-size:6.5px;
+                letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+  .thumb .obj{margin-left:auto;flex:0 0 auto}
+  .thumb .b1i{font-size:5.4px;margin-right:-6px}
+  .thumb .b2i{font-size:3.2px}
+  .thumb .crop{position:relative;width:46%;height:66%;overflow:hidden;flex:0 0 auto}
+  .thumb .crop .ami{position:absolute;left:50%;top:50%;margin:0;font-size:6.6px;
+                    transform:translate(-50%,-37%)}
+  .thumb .tc{position:absolute;top:7px;left:18px;font-family:var(--mono);font-size:6px;
+             letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+
+  .squint{display:grid;gap:14px;margin-top:26px;overflow:hidden;border-radius:10px;background:var(--paper)}
+  .squint .blur{filter:blur(6px)}
+  .squint p{margin:0;font-size:12.5px;color:var(--muted);max-width:56ch;line-height:1.65}
+  .squint p b{color:var(--ink);font-weight:600;display:block;font-size:13px;margin-bottom:4px}
+
+  /* ---------- 05 social ---------- */
+  .img{position:relative;overflow:hidden;border:1px solid var(--line);background:var(--cream);
+       font-size:9px;display:flex;align-items:center;justify-content:center}
+  .img.big{font-size:22px}
+  .img.sq{aspect-ratio:1}
+  .img.tall{aspect-ratio:9/16}
+  .img.peach{background:var(--peach)} .img.rose{background:var(--rose-soft)}
+  .img.paper{background:var(--paper)}
+  .img .tc{position:absolute;left:1.1em;top:1.1em;font-size:1.05em;font-weight:600;
+           line-height:1.16;letter-spacing:-.02em;max-width:9em;z-index:2}
+  .img .tc.bot{top:auto;bottom:1.1em}
+  .img .tc.ctr{position:static;text-align:left;max-width:7em}
+  .img .mk{position:absolute;left:1.1em;bottom:1.1em;font-family:var(--mono);font-size:.5em;
+           letter-spacing:.22em;color:var(--muted)}
+  .img .mk.r{left:auto;right:1.1em}
+  .img .ami{font-size:.5em}
+  .img .mono{font-family:var(--mono);font-size:3.2em;letter-spacing:-.03em;
+             font-variant-numeric:tabular-nums;line-height:1}
+  .img .sub{font-size:.62em;color:var(--muted);margin-top:.5em;line-height:1.4;max-width:11em}
+  .img .crop{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .img .crop .ami{position:absolute;font-size:1.12em;left:50%;top:50%;
+                  transform:translate(-50%,-37%)}
+  .img .band2{position:absolute;left:8%;right:8%;top:50%;transform:translateY(-50%);
+              height:1.6em;background:var(--rose-soft);border:1px solid var(--line);
+              display:flex;align-items:center;justify-content:center;
+              font-family:var(--mono);font-size:.42em;letter-spacing:.24em;color:var(--rose-deep)}
+  .img .sd{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);
+           width:3em;height:1.9em;border:1px solid var(--rose-deep);border-radius:.2em;
+           display:flex;align-items:center;justify-content:center;
+           font-family:var(--mono);font-size:.46em;letter-spacing:.08em;color:var(--rose-deep);
+           background:rgba(255,253,249,.85);
+           box-shadow:0 .2em .5em rgba(92,57,60,.10)}
+  .img .wordmark{font-size:1.8em;letter-spacing:.22em;font-weight:600;color:var(--rose-deep);
+                 text-indent:.22em;line-height:1}
+
+  .feed{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .stories{display:grid;grid-template-columns:repeat(3,minmax(0,258px));justify-content:center;gap:16px}
+  .socialrow{display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:start;margin-top:26px}
+  .grid9{display:grid;grid-template-columns:repeat(3,148px);gap:6px;background:var(--paper);
+         padding:6px;border:1px solid var(--line)}
+  .grid9 .img{font-size:9px}
+  .caption{font-size:12.5px;line-height:1.75;color:var(--ink);max-width:44ch}
+  .caption h4{margin:0 0 8px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+              text-transform:uppercase;color:var(--muted);font-weight:600}
+  .caption .hash{font-family:var(--mono);font-size:11px;color:var(--rose-deep);margin-top:10px}
+  .caption .alt{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);
+                font-size:11.5px;color:var(--muted)}
+
+  .rules{list-style:none;padding:0;margin:26px 0 0;border-top:1px solid var(--line);
+         padding-top:16px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .rules li{font-size:11.5px;color:var(--muted);line-height:1.5}
+  .rules b{display:block;color:var(--ink);font-size:12px;margin-bottom:3px}
+
+  .safe{position:absolute;left:6%;right:6%;top:13%;bottom:13%;border:1px dashed var(--rose);
+        opacity:.5;pointer-events:none}
+  .img.tall .tc{top:15%;max-width:8.4em}
+  .img.tall .tc.bot{top:auto;bottom:15%}
+  .img.tall .mk{bottom:9%}
+  .stories-note{margin:12px 0 0;text-align:center;font-family:var(--mono);font-size:9.5px;
+                letter-spacing:.06em;color:var(--muted)}
+
+  footer{margin-top:88px;border-top:1px solid var(--line);padding-top:22px;
+         display:flex;justify-content:space-between;color:var(--muted);font-size:12px;
+         font-family:var(--mono);gap:20px}
+
+  @media(max-width:900px){
+    .ortho{grid-template-columns:1fr;justify-items:center;
+           grid-template-areas:"front" "back" "left" "right" "top" "bottom"}
+    .unbox,.thumbs,.feed,.stories,.rules{grid-template-columns:1fr 1fr}
+    .socialrow{grid-template-columns:1fr}
+    .board .copy{font-size:clamp(18px,4.4vw,28px)}
+  }
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="head">
+    <div>
+      <div class="brandmark">AM<span>I</span></div>
+      <p>Packaging · Billboard · Social — a KasaTECH product</p>
+    </div>
+    <div class="stamp">
+      plate 02 · <b>three deliverables</b><br>
+      box 175 × 135 × 95 mm<br>
+      body 150 × 110 × 100 mm
+    </div>
+  </header>
+
+  <!-- ============ 01 ORTHOGRAPHIC ============ -->
+  <section>
+    <div class="sec-head"><span class="n">01</span><h2>Packaging — six views</h2><span class="rule"></span></div>
+    <p class="spec">True orthographic panels at <b>1.7 px per mm</b>. Every face keeps its real proportion — the front is 1.30:1, the side is 0.70:1, the top is 1.84:1.</p>
+
+    <div class="ortho">
+      <div class="cell top">
+        <div class="oface f-top topface"><span class="lab">top</span><div class="emboss"></div></div>
+        <div class="dim"><span class="tk"></span><span class="ln"></span><span>175 mm</span><span class="ln"></span><span class="tk"></span></div>
+      </div>
+
+      <div class="cell back">
+        <div class="oface f-back back"><span class="lab">back</span>
+          <div class="t3"><b>Focus · Breathe · Company</b>Start a session. Take the break. Keep it on the desk.</div>
+          <div class="steps">
+            <span><i>1</i>Plug in</span><span><i>2</i>Hold the button</span><span><i>3</i>Start</span>
+          </div>
+          <div class="t3" style="margin-top:6px"><b>Local-first by default</b>Your progress stays with your server.</div>
+          <div class="codes">
+            <div class="qr"><svg viewBox="0 0 21 21" shape-rendering="crispEdges" aria-hidden="true"><rect width="21" height="21" fill="#FFFDF9"/><path d="M0 0h1v1h-1zM1 0h1v1h-1zM2 0h1v1h-1zM3 0h1v1h-1zM4 0h1v1h-1zM5 0h1v1h-1zM6 0h1v1h-1zM8 0h1v1h-1zM13 0h1v1h-1zM14 0h1v1h-1zM15 0h1v1h-1zM16 0h1v1h-1zM17 0h1v1h-1zM18 0h1v1h-1zM19 0h1v1h-1zM20 0h1v1h-1zM0 1h1v1h-1zM6 1h1v1h-1zM10 1h1v1h-1zM11 1h1v1h-1zM14 1h1v1h-1zM20 1h1v1h-1zM0 2h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM6 2h1v1h-1zM9 2h1v1h-1zM11 2h1v1h-1zM14 2h1v1h-1zM16 2h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM20 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM6 3h1v1h-1zM11 3h1v1h-1zM14 3h1v1h-1zM16 3h1v1h-1zM17 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM0 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM9 4h1v1h-1zM13 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM17 4h1v1h-1zM18 4h1v1h-1zM20 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM9 5h1v1h-1zM12 5h1v1h-1zM14 5h1v1h-1zM20 5h1v1h-1zM0 6h1v1h-1zM1 6h1v1h-1zM2 6h1v1h-1zM3 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM15 6h1v1h-1zM16 6h1v1h-1zM17 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM9 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM0 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM11 8h1v1h-1zM12 8h1v1h-1zM13 8h1v1h-1zM14 8h1v1h-1zM20 8h1v1h-1zM2 9h1v1h-1zM4 9h1v1h-1zM7 9h1v1h-1zM9 9h1v1h-1zM15 9h1v1h-1zM16 9h1v1h-1zM17 9h1v1h-1zM18 9h1v1h-1zM19 9h1v1h-1zM20 9h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM17 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM0 11h1v1h-1zM1 11h1v1h-1zM3 11h1v1h-1zM4 11h1v1h-1zM7 11h1v1h-1zM14 11h1v1h-1zM17 11h1v1h-1zM0 12h1v1h-1zM2 12h1v1h-1zM3 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM9 12h1v1h-1zM11 12h1v1h-1zM13 12h1v1h-1zM14 12h1v1h-1zM15 12h1v1h-1zM19 12h1v1h-1zM3 13h1v1h-1zM4 13h1v1h-1zM7 13h1v1h-1zM13 13h1v1h-1zM15 13h1v1h-1zM17 13h1v1h-1zM0 14h1v1h-1zM1 14h1v1h-1zM2 14h1v1h-1zM3 14h1v1h-1zM4 14h1v1h-1zM5 14h1v1h-1zM6 14h1v1h-1zM10 14h1v1h-1zM14 14h1v1h-1zM15 14h1v1h-1zM16 14h1v1h-1zM18 14h1v1h-1zM20 14h1v1h-1zM0 15h1v1h-1zM6 15h1v1h-1zM8 15h1v1h-1zM11 15h1v1h-1zM12 15h1v1h-1zM13 15h1v1h-1zM14 15h1v1h-1zM17 15h1v1h-1zM19 15h1v1h-1zM20 15h1v1h-1zM0 16h1v1h-1zM2 16h1v1h-1zM3 16h1v1h-1zM4 16h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM10 16h1v1h-1zM11 16h1v1h-1zM15 16h1v1h-1zM16 16h1v1h-1zM17 16h1v1h-1zM18 16h1v1h-1zM0 17h1v1h-1zM2 17h1v1h-1zM3 17h1v1h-1zM4 17h1v1h-1zM6 17h1v1h-1zM10 17h1v1h-1zM11 17h1v1h-1zM12 17h1v1h-1zM13 17h1v1h-1zM14 17h1v1h-1zM15 17h1v1h-1zM17 17h1v1h-1zM19 17h1v1h-1zM20 17h1v1h-1zM0 18h1v1h-1zM2 18h1v1h-1zM3 18h1v1h-1zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM17 18h1v1h-1zM19 18h1v1h-1zM20 18h1v1h-1zM0 19h1v1h-1zM6 19h1v1h-1zM9 19h1v1h-1zM13 19h1v1h-1zM16 19h1v1h-1zM19 19h1v1h-1zM0 20h1v1h-1zM1 20h1v1h-1zM2 20h1v1h-1zM3 20h1v1h-1zM4 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM10 20h1v1h-1zM11 20h1v1h-1zM12 20h1v1h-1zM13 20h1v1h-1zM16 20h1v1h-1zM18 20h1v1h-1z" fill="#3E3334"/></svg></div>
+            <div style="flex:1;min-width:0">
+              <div class="bar"></div>
+              <div class="codetext">AMI-01 · 5 V ⎓ 2 A</div>
+            </div>
+          </div>
+          <div class="addr">KasaTECH · Calle del Pez 14, 28004 Madrid<br>♻ Paper wrap · pulp tray · no film · FSC mixed</div>
+          <div class="reg">Model AMI-01 · Designed by KasaTECH</div>
+        </div>
+        <div class="dim"><span class="tk"></span><span class="ln"></span><span>175 mm · back</span><span class="ln"></span><span class="tk"></span></div>
+      </div>
+
+      <div class="cell left">
+        <div class="oface f-left side"><span class="lab">left</span>
+          <div class="vert">A small friend for big days</div>
+        </div>
+        <div class="dim" style="justify-content:center">95 mm</div>
+      </div>
+
+      <div class="cell front">
+        <div class="oface f-front front">
+          <span class="lab">front</span>
+          <div class="mark"><i class="a"></i><i class="b"></i></div>
+          <div class="wm">AMI</div>
+          <div class="ds">The Focus Buddy</div>
+          <div class="kasa">KasaTECH</div>
+        </div>
+        <div class="dim"><span class="tk"></span><span class="ln"></span><span>175 mm · 1.30 : 1</span><span class="ln"></span><span class="tk"></span></div>
+      </div>
+
+      <div class="cell right">
+        <div class="oface f-right side"><span class="lab">right</span>
+          <div class="contents">
+            AMI<br>
+            USB-C cable<br>
+            Quick start<br>
+            microSD inserted
+            <div style="margin-top:10px"><i>AMI-01<br>175 × 135 × 95</i></div>
+          </div>
+        </div>
+        <div class="dim" style="justify-content:center">95 mm</div>
+      </div>
+
+      <div class="cell bottom">
+        <div class="oface f-bottom bottomface"><span class="lab">bottom</span>
+          <div class="bar"></div>
+          <div class="codetext">SN 0000-AMI-0001</div>
+          <div class="regs">
+            Model AMI-01 · Designed by KasaTECH<br>
+            FSC mixed · paper wrap, pulp tray, no film<br>
+            ♻ Recycle as paper · 5 V ⎓ 2 A
+          </div>
+        </div>
+        <div class="dim"><span class="tk"></span><span class="ln"></span><span>175 mm · 1.84 : 1</span><span class="ln"></span><span class="tk"></span></div>
+      </div>
+    </div>
+
+    <p class="ortho-note">all six panels, true proportion · nothing on the front face beyond the mark · no plastic window anywhere</p>
+  </section>
+
+  <!-- ============ 02 DIELINE ============ -->
+  <section>
+    <div class="sec-head"><span class="n">02</span><h2>Dieline — lid wrap</h2><span class="rule"></span></div>
+    <p class="spec">Same drawing the printer receives. <b>3 mm bleed · 5 mm safe · 0.3 mm fold</b>, corner mitres cut at 45°, turn-ins hatched. Units are millimetres.</p>
+
+    <svg class="dieline" viewBox="0 0 420 262" role="img" aria-label="Lid wrap dieline, 320 x 245 mm">
+      <defs>
+        <pattern id="hatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="4" stroke="#965765" stroke-width=".45" opacity=".45"/>
+        </pattern>
+      </defs>
+
+      <!-- 3 mm bleed, drawn as a 6 mm stroke centred on the trim -->
+      <path d="M62 7 H237 V22 H277 V62 H292 V197 H277 V237 H237 V252 H62 V237 H22 V197 H7 V62 H22 V22 H62 Z"
+            fill="none" stroke="#F6E4E3" stroke-width="6" stroke-linejoin="miter"/>
+
+      <!-- trim -->
+      <path d="M62 7 H237 V22 H277 V62 H292 V197 H277 V237 H237 V252 H62 V237 H22 V197 H7 V62 H22 V22 H62 Z"
+            fill="#FFFDF9" stroke="#3E3334" stroke-width=".5" stroke-linejoin="miter"/>
+
+      <!-- walls, lightly tinted -->
+      <rect x="62" y="197" width="175" height="40" fill="#FFF7F4"/>
+      <rect x="62" y="22" width="175" height="40" fill="#FFF7F4"/>
+      <rect x="22" y="62" width="40" height="135" fill="#FFF7F4"/>
+      <rect x="237" y="62" width="40" height="135" fill="#FFF7F4"/>
+
+      <!-- turn-ins -->
+      <rect x="62" y="7" width="175" height="15" fill="url(#hatch)"/>
+      <rect x="62" y="237" width="175" height="15" fill="url(#hatch)"/>
+      <rect x="7" y="62" width="15" height="135" fill="url(#hatch)"/>
+      <rect x="277" y="62" width="15" height="135" fill="url(#hatch)"/>
+
+      <!-- folds -->
+      <g stroke="#965765" stroke-width=".35" stroke-dasharray="2.5 1.6" fill="none">
+        <path d="M62 62 H237 M62 197 H237 M62 62 V197 M237 62 V197"/>
+        <path d="M62 22 H237 M62 237 H237 M22 62 V197 M277 62 V197"/>
+      </g>
+
+      <!-- safe area, wrap top -->
+      <rect x="67" y="67" width="165" height="125" fill="none" stroke="#965765"
+            stroke-width=".3" stroke-dasharray="0.8 1.6" opacity=".6"/>
+
+      <!-- panel labels -->
+      <text class="pl" x="150" y="150" text-anchor="middle">WRAP TOP · 175 × 135</text>
+      <text class="pl" x="70" y="220" text-anchor="start">FRONT WALL · 40</text>
+      <text class="pl" x="150" y="45" text-anchor="middle">BACK WALL · 40</text>
+      <text class="pl" x="42" y="130" text-anchor="middle" transform="rotate(-90 42 130)">LEFT · 40</text>
+      <text class="pl" x="257" y="130" text-anchor="middle" transform="rotate(90 257 130)">RIGHT · 40</text>
+
+      <!-- numbered callout markers -->
+      <g>
+        <circle cx="150" cy="100" r="3.4" fill="#965765"/>
+        <circle cx="150" cy="220" r="3.4" fill="#965765"/>
+        <circle cx="232" cy="220" r="3.4" fill="#965765"/>
+        <circle cx="7" cy="140" r="3.4" fill="#965765"/>
+      </g>
+      <g fill="#FFFDF9" font-size="3.6" text-anchor="middle">
+        <text x="150" y="101.2">1</text>
+        <text x="150" y="221.2">2</text>
+        <text x="232" y="221.2">3</text>
+        <text x="7" y="141.2">4</text>
+      </g>
+
+      <!-- callout list -->
+      <g>
+        <text class="co" x="304" y="42">1  BLIND EMBOSS</text>
+        <text class="cd" x="304" y="47.5">0.6 mm, wrap top, no ink</text>
+        <text class="co" x="304" y="102">2  HOT FOIL</text>
+        <text class="cd" x="304" y="107.5">rose-deep wordmark, front wall</text>
+        <text class="co" x="304" y="162">3  ROSE SPOT</text>
+        <text class="cd" x="304" y="167.5">1 hit, front wall only</text>
+        <text class="co" x="304" y="222">4  3 mm BLEED</text>
+        <text class="cd" x="304" y="227.5">5 mm safe inside trim</text>
+      </g>
+    </svg>
+
+    <div class="legend">
+      <span><i></i>solid trim</span>
+      <span><i class="dash"></i>fold</span>
+      <span><i class="dot"></i>safe area</span>
+      <span><i class="bleed"></i>bleed</span>
+      <span><i class="glue"></i>turn-in, glued to greyboard</span>
+    </div>
+  </section>
+
+  <!-- ============ 03 UNBOXING ============ -->
+  <section>
+    <div class="sec-head"><span class="n">03</span><h2>Unboxing — five frames</h2><span class="rule"></span></div>
+    <p class="spec">Paper band instead of shrink wrap. Molded pulp cradle, no plastic bag. <b>The first thing you see is the visor.</b></p>
+
+    <div class="unbox">
+      <figure class="uframe">
+        <div class="bx"><span class="band">AMI</span></div>
+        <figcaption>01 sealed</figcaption>
+      </figure>
+      <figure class="uframe">
+        <div class="lid"></div>
+        <div class="base6">
+          <div class="ami" style="font-size:4.6px">
+            <div class="visor"><span class="eye"></span><span class="eye"></span></div>
+            <div class="ring"></div>
+          </div>
+        </div>
+        <figcaption>02 lid lifted</figcaption>
+      </figure>
+      <figure class="uframe">
+        <div class="card6">One thing<br>at a time.</div>
+        <figcaption>03 insert card</figcaption>
+      </figure>
+      <figure class="uframe">
+        <div class="pulp">
+          <div class="ami" style="font-size:4.2px">
+            <div class="visor"><span class="eye"></span><span class="eye"></span></div>
+            <div class="ring"></div>
+          </div>
+          <span class="slot"></span>
+        </div>
+        <figcaption>04 pulp cradle</figcaption>
+      </figure>
+      <figure class="uframe">
+        <div class="flat">
+          <div class="ami" style="font-size:3.4px">
+            <div class="visor"><span class="eye"></span><span class="eye"></span></div>
+            <div class="ring"></div>
+          </div>
+          <span class="cbl"></span>
+          <span class="crd"></span>
+        </div>
+        <figcaption>05 flat-lay</figcaption>
+      </figure>
+    </div>
+
+    <div class="band-proof">
+      <div class="strip"><b>AMI</b><span>A SMALL FRIEND FOR BIG DAYS</span><span>KASATECH</span></div>
+      <p>The paper band carries the only copy on the outside of the wrap: wordmark, tagline, company. It tears off in one piece.</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 OOH ============ -->
+  <section>
+    <div class="sec-head"><span class="n">04</span><h2>Billboard — three concepts</h2><span class="rule"></span></div>
+    <p class="spec">Copy never below <b>1/12 of board height</b>. One line, one object, one wordmark. Wordmark sits at the bottom, never the top.</p>
+
+    <div class="boards">
+      <figure>
+        <div class="board b1">
+          <div class="copy">A small friend<br>for big days.<span class="underscore"></span></div>
+          <div class="obj">
+            <div class="ami">
+              <div class="visor"><span class="eye blink"></span><span class="eye blink"></span></div>
+              <div class="ring"></div>
+            </div>
+          </div>
+          <span class="micro">AMI · KasaTECH</span>
+        </div>
+        <figcaption class="cap"><span>48-sheet · 6 × 3 m</span><span><b>eyes closed, mid-breath</b> · product fills 87 % of frame</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="board alt b2">
+          <div class="copy">One thing<br>at a time.<span class="underscore"></span></div>
+          <div class="obj">
+            <div class="ami">
+              <div class="visor"><span class="eye"></span><span class="eye"></span></div>
+              <div class="ring"></div>
+            </div>
+          </div>
+          <span class="micro">AMI · KasaTECH</span>
+        </div>
+        <figcaption class="cap"><span>48-sheet · 6 × 3 m</span><span><b>negative space</b> · whole object at true scale</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="board tint b3">
+          <div class="crop">
+            <div class="ami">
+              <div class="visor"><span class="eye"></span><span class="eye blink"></span></div>
+              <div class="ring"></div>
+            </div>
+          </div>
+          <div class="copy">Breaks count too.<span class="underscore"></span></div>
+          <span class="micro">AMI · KasaTECH</span>
+        </div>
+        <figcaption class="cap"><span>48-sheet · 6 × 3 m</span><span><b>visor crop</b> · one eye open, one blinking</span></figcaption>
+      </figure>
+    </div>
+
+    <p class="spec" style="margin:34px 0 12px">Same three concepts, adapted to <b>digital 16:9 (1920 × 1080)</b>. Shown at 1:5.</p>
+    <div class="thumbs">
+      <div class="thumb">
+        <span class="tc">16:9</span>
+        <div class="copy">A small friend for big days.</div>
+        <div class="obj"><div class="ami b1i"><div class="visor"><span class="eye blink"></span><span class="eye blink"></span></div><div class="ring"></div></div></div>
+        <span class="micro">AMI · KasaTECH</span>
+      </div>
+      <div class="thumb alt">
+        <span class="tc">16:9</span>
+        <div class="copy">One thing at a time.</div>
+        <div class="obj"><div class="ami b2i"><div class="visor"><span class="eye"></span><span class="eye"></span></div><div class="ring"></div></div></div>
+        <span class="micro">AMI · KasaTECH</span>
+      </div>
+      <div class="thumb tint">
+        <span class="tc">16:9</span>
+        <div class="crop"><div class="ami"><div class="visor"><span class="eye"></span><span class="eye blink"></span></div><div class="ring"></div></div></div>
+        <div class="copy">Breaks count too.</div>
+      </div>
+    </div>
+
+    <div class="squint">
+      <div class="board b1 blur" style="pointer-events:none">
+        <div class="copy">A small friend<br>for big days.<span class="underscore"></span></div>
+        <div class="obj">
+          <div class="ami">
+            <div class="visor"><span class="eye blink"></span><span class="eye blink"></span></div>
+            <div class="ring"></div>
+          </div>
+        </div>
+      </div>
+      <p><b>Squint test, 6 px blur</b>The line reads first, the object second. The wordmark is gone at this blur — deliberately. It is the third thing you need, not the first. Nothing else collapses into grey.</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 SOCIAL ============ -->
+  <section>
+    <div class="sec-head"><span class="n">05</span><h2>Social — the medsos set</h2><span class="rule"></span></div>
+    <p class="spec">Feed <b>1080 × 1080</b> · stories <b>1080 × 1920</b> · one idea per frame. No emoji, no hashtag stacks, alt text written for every image.</p>
+
+    <div class="feed">
+      <div class="img sq peach big">
+        <div class="tc">A small friend for big days.</div>
+        <div class="obj" style="margin-top:2.6em"><div class="ami"><div class="visor"><span class="eye"></span><span class="eye"></span></div><div class="ring"></div></div></div>
+        <span class="mk">AMI</span>
+      </div>
+      <div class="img sq paper big">
+        <div class="tc ctr" style="font-size:1.9em;line-height:1.08">One thing<br>at a time.</div>
+        <span class="mk">AMI</span>
+      </div>
+      <div class="img sq rose big">
+        <div class="tc">It rests.<br>It doesn't sit.</div>
+        <div class="obj" style="margin-top:3.4em"><div class="ami"><div class="visor"><span class="eye"></span><span class="eye"></span></div><div class="ring"></div></div><div class="gap"></div></div>
+        <span class="mk">3 mm gap</span>
+      </div>
+    </div>
+
+    <div class="stories">
+      <div class="img tall peach big" style="margin-top:20px">
+        <div class="safe"></div>
+        <div class="tc">25 minutes. Then a break.</div>
+        <div class="mono" style="margin-top:2.2em">24:58</div>
+        <span class="mk r">STORY 01</span>
+      </div>
+      <div class="img tall paper big" style="margin-top:20px">
+        <div class="tc">Your progress stays on your device.</div>
+        <div class="obj" style="margin-top:2.4em"><div class="ami"><div class="visor"><span class="eye"></span><span class="eye blink"></span></div><div class="ring"></div></div></div>
+        <span class="mk">Local-first by default</span>
+      </div>
+      <div class="img tall big" style="margin-top:20px;background:var(--cream)">
+        <div class="obj" style="margin-top:-1.6em"><div class="ami"><div class="visor"><span class="eye"></span><span class="eye blink"></span></div><div class="ring"></div></div></div>
+        <div class="tc bot">Breaks count too.</div>
+        <span class="mk r" style="bottom:auto;top:1.1em">REEL 0:12</span>
+      </div>
+    </div>
+    <p class="stories-note">dashed line = the 1080 × 1920 safe zone · copy and controls stay inside it</p>
+
+    <div class="socialrow">
+      <div class="grid9">
+        <div class="img sq peach"><div class="tc" style="font-size:1em">A small friend for big days.</div><span class="mk">AMI</span></div>
+        <div class="img sq paper"><div class="tc ctr" style="font-size:1.5em;line-height:1.1">One thing<br>at a time.</div></div>
+        <div class="img sq rose"><div class="tc" style="font-size:.92em">It rests. It doesn't sit.</div><div class="obj" style="margin-top:2.6em"><div class="ami"><div class="visor"><span class="eye"></span><span class="eye"></span></div><div class="ring"></div></div></div></div>
+        <div class="img sq cream"><div class="crop"><div class="ami"><div class="visor"><span class="eye"></span><span class="eye blink"></span></div></div></div><div class="tc bot" style="font-size:.92em">Breaks count too.</div></div>
+        <div class="img sq paper"><div class="tc" style="font-size:.92em">The music lives in its base.</div><span class="sd">microSD</span></div>
+        <div class="img sq peach"><div class="mono" style="font-size:2.6em">25:00</div></div>
+        <div class="img sq cream"><div class="band2">AMI · KASATECH</div><div class="tc bot" style="font-size:.86em">Paper wrap.<br>No film.</div></div>
+        <div class="img sq paper"><div class="tc" style="font-size:1em">Local-first by default.</div><span class="mk">no cloud</span></div>
+        <div class="img sq rose"><div style="text-align:center"><div class="wordmark">AMI</div><div style="font-family:var(--mono);font-size:.44em;letter-spacing:.2em;color:var(--muted);margin-top:.8em">THE FOCUS BUDDY</div></div></div>
+      </div>
+
+      <div class="caption">
+        <h4>Caption — post 01, launch</h4>
+        Meet AMI, the focus buddy.<br>
+        Twenty-five minutes, then a break. It nudges you to rest your eyes, unclench your
+        shoulders, sip some water. It even leaves a tiny treat for break time: a joke, a
+        riddle, a small story.<br>
+        The music comes from the card in its base. Nothing streams, nothing leaves.
+        <div class="hash">#onethingatatime #amifocus</div>
+        <div class="alt"><b>Alt text:</b> A soft white ovoid desk robot with a black visor and two lit eyes, standing on a warm peach surface with a soft shadow beneath it.</div>
+
+        <h4 style="margin-top:22px">Caption — post 02, the name</h4>
+        Why Kasa? Because kasa means house. We write it with a K, the way you say it.
+        No dashes, no dots, no invented symbols. A house is simple, warm, and holds the
+        things that matter. That is how we build.
+        <div class="hash">#kasatech #amifocus</div>
+        <div class="alt"><b>Alt text:</b> The word AMI set in rose-deep type on a paper ground, with "the focus buddy" underneath in small spaced capitals.</div>
+
+        <h4 style="margin-top:22px">Caption — post 03, who it is for</h4>
+        AMI is for everyone who sits down to do a thing. Students starting at a blank
+        page, nurses studying after a shift, anyone working from a kitchen table.
+        And on the heavy days, it has a quiet check-in: a small space to say what is
+        on your mind, with answers that are short and kind. All of it stays on your
+        own machine.
+        <div class="hash">#amifocus #onethingatatime</div>
+        <div class="alt"><b>Alt text:</b> The robot on a rose-soft ground with a soft shadow under it, eyes open, catching a little light.</div>
+
+        <h4 style="margin-top:22px">Grid logic</h4>
+        Nine posts: object, words, detail. Left column carries the product, middle column carries the sentence, right column carries the proof. Read down, not across.
+      </div>
+    </div>
+
+    <ul class="rules">
+      <li><b>One idea per frame</b>If removing it leaves the idea intact, it is not in the post.</li>
+      <li><b>No emoji, ever</b>Typography and the object carry it. Badges and arrows are removed.</li>
+      <li><b>Two hashtags</b>Real ones, lowercase, at the end. No stacks of twenty.</li>
+      <li><b>No health claims</b>Never "cures", never "treats". It is a desk companion, not a device.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>AMI — packaging · OOH · social</span>
+    <span><a href="design-board.html" style="color:var(--rose-deep);text-decoration:none;border-bottom:1px solid var(--line)">plate 01 — brand &amp; product &rarr;</a></span>
+    <span>one object · two accent colours · zero gradients</span>
+  </footer>
+</div>
+</body>
+</html>

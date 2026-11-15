@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AMI — Design Board (KasaTECH)</title>
+<style>
+  :root{
+    --paper:#FFF7F4; --cream:#FFFDF9; --rose:#D88E9A; --rose-deep:#965765;
+    --rose-soft:#F6E4E3; --peach:#F6D9CA; --ink:#3E3334; --muted:#837273;
+    --line:#EED8D8; --sage:#7A9280;
+    --shadow:0 14px 42px rgba(92,57,60,.08);
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+       -webkit-font-smoothing:antialiased;line-height:1.6}
+
+  /* ---------- board chrome ---------- */
+  .shell{max-width:1240px;margin:0 auto;padding:56px 32px 120px}
+  .board-head{display:flex;align-items:flex-end;justify-content:space-between;
+              gap:24px;border-bottom:1px solid var(--line);padding-bottom:20px}
+  .brandmark{font-size:44px;letter-spacing:.18em;font-weight:600;line-height:1}
+  .brandmark span{color:var(--rose)}
+  .board-head p{margin:6px 0 0;color:var(--muted);font-size:14px}
+  .stamp{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+         color:var(--muted);text-align:right;line-height:1.9}
+  .stamp b{color:var(--rose-deep);font-weight:600}
+
+  section{margin-top:72px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:24px}
+  .sec-head h2{font-size:13px;letter-spacing:.16em;text-transform:uppercase;
+               color:var(--muted);font-weight:600;margin:0}
+  .sec-head .rule{flex:1;height:1px;background:var(--line)}
+  .sec-head .n{font-family:var(--mono);font-size:11px;color:var(--rose)}
+
+  /* ---------- tokens ---------- */
+  .tokens{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .sw{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--cream)}
+  .sw i{display:block;height:54px}
+  .sw div{padding:8px 10px;font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.5}
+  .sw div b{display:block;color:var(--ink);font-size:11px}
+
+  /* ---------- robot ---------- */
+  .land-hero{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:center}
+  .hero-stage{background:var(--paper);border:1px solid var(--line);border-radius:22px;
+              box-shadow:var(--shadow);padding:64px 40px 72px;display:grid;
+              grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+  .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--rose-deep);margin:0 0 14px}
+  .headline{font-size:clamp(34px,4.4vw,58px);line-height:1.08;letter-spacing:-.015em;margin:0 0 18px;font-weight:600}
+  .headline em{font-style:normal;color:var(--rose-deep)}
+  .sub{color:var(--muted);font-size:17px;max-width:30ch;margin:0 0 28px}
+  .pill{display:inline-flex;align-items:center;gap:10px;background:var(--rose);color:#fff;
+        border:0;border-radius:99px;padding:0 26px;height:52px;font:600 15px/1 var(--sans);
+        letter-spacing:.01em;cursor:pointer;box-shadow:0 6px 18px rgba(150,87,101,.18)}
+  .pill:hover{background:var(--rose-deep)}
+  .pill .dot{width:7px;height:7px;border-radius:50%;background:#fff;opacity:.9}
+
+  .robot-wrap{display:flex;flex-direction:column;align-items:center;gap:0;position:relative}
+  /* One `font-size` per instance scales the whole object; proportions never drift. */
+  .ami{position:relative;font-size:10px;width:15em;height:19.6em;background:var(--cream);
+       border-radius:50% 50% 50% 50% / 44% 44% 56% 56%;
+       box-shadow:inset 0 0 0 .1em rgba(62,51,52,.055),
+                  inset -1em -1.4em 3em rgba(92,57,60,.07),
+                  inset .8em .8em 2.2em rgba(255,255,255,.9),
+                  0 1em 2.4em rgba(92,57,60,.10)}
+  .visor{position:absolute;left:8%;right:8%;top:24%;height:26%;background:#151112;
+         border-radius:48% 48% 42% 42% / 46% 46% 54% 54%;
+         display:flex;align-items:center;justify-content:center;gap:2.6em;
+         box-shadow:inset 0 -.8em 1.6em rgba(255,255,255,.05)}
+  .eye{width:1.3em;height:2.1em;border-radius:50%;background:var(--cream);
+       box-shadow:0 0 0 .5em rgba(216,142,154,.16)}
+  .eye.blink{height:.2em;border-radius:.2em;box-shadow:0 0 0 .5em rgba(216,142,154,.10)}
+  .ring{position:absolute;left:50%;bottom:.7em;transform:translateX(-50%);
+        width:4.6em;height:.4em;border-radius:50%;background:rgba(216,142,154,.75);
+        filter:blur(.07em)}
+  .gap{width:9.8em;height:1em;border-radius:50%;margin-top:.5em;
+       background:rgba(92,57,60,.13);filter:blur(.6em)}
+  .caption{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--muted);
+           text-transform:uppercase;margin-top:22px}
+
+  /* ---------- landing mock ---------- */
+  .frame{background:var(--cream);border:1px solid var(--line);border-radius:22px;
+         box-shadow:var(--shadow);overflow:hidden}
+  .frame-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;
+             border-bottom:1px solid var(--line);background:var(--paper)}
+  .frame-bar i{width:9px;height:9px;border-radius:50%;background:var(--line);display:block}
+  .frame-bar span{margin-left:10px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .frame-body{padding:40px 44px 48px}
+
+  .beat{font-size:clamp(28px,3.6vw,46px);letter-spacing:-.02em;line-height:1.15;
+        font-weight:600;margin:44px 0 8px;max-width:20ch}
+  .beat + p{color:var(--muted);margin:0 0 8px}
+
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
+  .card{border:1px solid var(--line);border-radius:13px;padding:20px;background:var(--paper)}
+  .card .ic{width:34px;height:34px;border-radius:50%;background:var(--rose-soft);
+            display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .card .ic svg{width:17px;height:17px;stroke:var(--rose-deep);fill:none;stroke-width:1.75;
+                stroke-linecap:round;stroke-linejoin:round}
+  .card h3{margin:0 0 6px;font-size:16px;font-weight:600}
+  .card p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.55}
+
+  .session{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+  .panel{border:1px solid var(--line);border-radius:13px;background:var(--paper);padding:24px}
+  .timer{font-family:var(--mono);font-size:56px;letter-spacing:-.02em;line-height:1;
+         font-variant-numeric:tabular-nums;margin:14px 0 18px}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:99px;overflow:hidden;background:var(--cream)}
+  .seg b{font-weight:500;font-size:12.5px;padding:7px 15px;color:var(--muted)}
+  .seg b.on{background:var(--rose-soft);color:var(--rose-deep);font-weight:600}
+  .captionline{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:16px}
+  .list{list-style:none;margin:0;padding:0}
+  .list li{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .list li:last-child{border-bottom:0}
+  .list .t{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .note{font-size:12px;color:var(--muted);margin-top:14px}
+  .note b{color:var(--rose-deep);font-weight:600}
+
+  .stats{display:flex;gap:34px;margin:6px 0 18px}
+  .stats div{font-family:var(--mono)}
+  .stats b{display:block;font-size:32px;font-weight:500;letter-spacing:-.02em}
+  .stats small{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .week{display:flex;gap:7px}
+  .week i{width:20px;height:20px;border-radius:50%;border:1px solid var(--line);display:block}
+  .week i.on{background:var(--sage);border-color:var(--sage)}
+
+  /* ---------- app ---------- */
+  .phones{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .phone{border:1px solid var(--line);border-radius:26px;background:var(--cream);
+         box-shadow:var(--shadow);padding:18px 16px 22px;min-height:430px;
+         display:flex;flex-direction:column}
+  .phone .top{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+              text-align:center;margin-bottom:18px}
+  .phone .big{font-family:var(--mono);font-size:64px;text-align:center;letter-spacing:-.03em;
+              line-height:1;font-variant-numeric:tabular-nums;margin:26px 0 10px}
+  .phone .mood{align-self:center;border:1px solid var(--line);border-radius:99px;
+               padding:6px 14px;font-size:12px;color:var(--muted);margin-bottom:auto}
+  .phone .cta{height:50px;border-radius:99px;background:var(--rose);color:#fff;border:0;
+              font:600 14px/1 var(--sans);display:flex;align-items:center;justify-content:center;gap:8px}
+  .phone .fine{text-align:center;font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:12px}
+  .tabs{display:flex;justify-content:center;gap:26px;margin-top:16px;font-size:11px;color:var(--muted)}
+  .tabs b{color:var(--rose-deep);font-weight:600}
+  .row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;
+       border-bottom:1px solid var(--line);font-size:14px}
+  .row .lbl{display:flex;align-items:center;gap:9px}
+  .row svg{width:15px;height:15px;flex:0 0 auto;stroke:var(--rose-deep);fill:none;
+           stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .row span:last-child{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .add{margin-top:14px;border:1px dashed var(--line);border-radius:11px;padding:12px;
+       text-align:center;font-size:13px;color:var(--muted)}
+  .mono3{display:flex;justify-content:space-around;text-align:center;margin:22px 0}
+  .mono3 b{display:block;font-family:var(--mono);font-size:30px;font-weight:500}
+  .mono3 small{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .disclose{border-top:1px solid var(--line);padding:14px 0;font-size:13.5px;display:flex;justify-content:space-between}
+  .disclose span{color:var(--muted);font-family:var(--mono);font-size:11px}
+
+  /* ---------- packaging ---------- */
+  .pack{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .face{border:1px solid var(--line);border-radius:13px;background:var(--cream);
+        aspect-ratio:4/3;padding:16px;display:flex;flex-direction:column;position:relative;overflow:hidden}
+  .face .label{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .face.front{align-items:center;justify-content:center;text-align:center;background:var(--cream)}
+  .face.front .wm{font-size:34px;letter-spacing:.2em;font-weight:600;color:var(--rose-deep);
+                  text-shadow:0 1px 0 rgba(150,87,101,.25)}
+  .face.front .ds{font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+  .face.front .mini{position:absolute;bottom:10px;font-size:8px;letter-spacing:.16em;color:var(--muted)}
+  .ovoid{width:50px;height:64px;border-radius:50% 50% 50% 50% / 44% 44% 56% 56%;
+         background:var(--cream);border:1px solid rgba(62,51,52,.45);position:relative;margin:10px 0}
+  .ovoid::before{content:"";position:absolute;left:17%;right:17%;top:24%;height:27%;
+                 background:var(--ink);border-radius:46% 46% 40% 40% / 42% 42% 58% 58%}
+  .ovoid .e{position:absolute;top:31%;width:5px;height:8px;border-radius:50%;
+            background:var(--cream);z-index:1}
+  .ovoid .e.a{left:31%} .ovoid .e.b{right:31%}
+  .face .tiny{font-size:9px;color:var(--muted);line-height:1.5}
+  .face .tiny b{color:var(--ink);font-weight:600;display:block;margin-bottom:2px;font-size:10px}
+  .bar{height:13px;background:repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px 3px);
+       border-radius:1px;width:64%}
+  .bar.wide{height:16px;margin-top:10px;width:58%}
+  .codetext{font-family:var(--mono);font-size:8px;letter-spacing:.06em;color:var(--muted);margin-top:3px}
+  .steps{display:flex;gap:9px;margin-top:8px}
+  .steps span{display:flex;align-items:center;gap:4px;font-size:8px;color:var(--muted)}
+  .steps i{font-family:var(--mono);font-style:normal;font-size:7.5px;color:var(--rose-deep);
+           width:12px;height:12px;border:1px solid var(--line);border-radius:50%;
+           display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .codes{display:flex;gap:10px;align-items:flex-end;margin-top:11px}
+  .qr{width:46px;height:46px;flex:0 0 auto;border:1px solid var(--line);padding:2px;background:var(--cream)}
+  .qr svg{width:100%;height:100%;display:block}
+  .codes .col{flex:1;min-width:0}
+  .addr{font-size:7.5px;line-height:1.65;color:var(--muted);margin-top:auto;padding-top:10px}
+  .vert{writing-mode:vertical-rl;text-orientation:mixed;font-size:10.5px;letter-spacing:.08em;
+        color:var(--rose-deep);margin:auto}
+  .contents{font-size:10.5px;line-height:1.9;color:var(--ink)}
+  .contents i{font-family:var(--mono);color:var(--muted);font-style:normal;font-size:9.5px}
+  .emboss{width:56px;height:72px;border-radius:50% 50% 50% 50% / 44% 44% 56% 56%;
+          border:1px solid rgba(62,51,52,.14);margin:auto;
+          box-shadow:inset 1px 1px 2px rgba(62,51,52,.08)}
+  .reg{font-size:9px;color:var(--muted);line-height:1.7;margin-top:auto}
+
+  .strip{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:16px}
+  .strip figure{margin:0;border:1px solid var(--line);border-radius:11px;background:var(--cream);
+                padding:10px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+  .strip figcaption{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;text-align:center}
+
+  /* ---------- OOH ---------- */
+  .ooh{display:grid;gap:20px}
+  .ooh figure{margin:0;min-width:0}
+  .board{aspect-ratio:2/1;border:1px solid var(--line);border-radius:13px;background:var(--cream);
+         position:relative;overflow:hidden;display:flex;align-items:center;gap:36px;
+         padding:0 48px;min-width:0}
+  .board.alt{background:var(--peach)}
+  .board.tint{background:var(--rose-soft)}
+  .board .copy{font-size:clamp(28px,4.2vw,52px);font-weight:600;letter-spacing:-.02em;
+               line-height:1.12;max-width:12ch;position:relative;z-index:2}
+  .board .micro{position:absolute;bottom:18px;left:48px;font-family:var(--mono);font-size:10px;
+                letter-spacing:.18em;text-transform:uppercase;color:var(--muted);z-index:2}
+  .board .underscore{display:block;width:64px;height:3px;background:var(--rose);margin-top:14px;border-radius:2px}
+  .board .obj{margin-left:auto;flex:0 0 auto}
+
+  /* 48-sheet · product as hero — AMI fills the frame, eyes closed on the breath */
+  .board.b1{align-items:flex-end;gap:0;padding-right:44px}
+  .board.b1 .ami{font-size:clamp(12px,2.2vw,26px);margin-bottom:-1.2em}
+  .board.b1 .copy{align-self:center}
+  /* 48-sheet · negative space — the whole object, small, far right */
+  .board.b2 .ami{font-size:clamp(5px,.92vw,9px)}
+  /* digital 16:9 · face crop — a real window onto the visor, one eye blinking */
+  .board.b3{gap:40px}
+  .board.b3 .crop{position:relative;align-self:center;width:52%;height:56%;overflow:hidden;flex:0 0 auto}
+  .board.b3 .crop .ami{position:absolute;left:50%;top:50%;margin:0;
+                       font-size:clamp(16px,3.15vw,31px);
+                       transform:translate(-50%,-37%)}
+  .ooh .cap{display:flex;justify-content:space-between;gap:16px;
+            font-family:var(--mono);font-size:10px;color:var(--muted);margin:7px 2px 0}
+
+  footer{margin-top:88px;border-top:1px solid var(--line);padding-top:22px;
+         display:flex;justify-content:space-between;color:var(--muted);font-size:12px;font-family:var(--mono)}
+
+  @media(max-width:900px){
+    .land-hero{grid-template-columns:1fr;gap:16px}
+    .hero-stage{grid-template-columns:1fr;text-align:left}
+    .tokens{grid-template-columns:repeat(3,1fr)}
+    .cards,.session,.pack,.phones{grid-template-columns:1fr}
+    .strip{grid-template-columns:repeat(2,1fr)}
+    .board{padding:0 24px} .board .micro{left:24px}
+  }
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="board-head">
+    <div>
+      <div class="brandmark">AM<span>I</span></div>
+      <p>The Focus Buddy — a KasaTECH product</p>
+    </div>
+    <div class="stamp">
+      design board · <b>v1</b><br>
+      form: ovoid · visor · eyes<br>
+      palette: paper / rose / sage
+    </div>
+  </header>
+
+  <!-- TOKENS -->
+  <section>
+    <div class="sec-head"><span class="n">01</span><h2>Tokens</h2><span class="rule"></span></div>
+    <div class="tokens">
+      <div class="sw"><i style="background:#FFF7F4;border-bottom:1px solid var(--line)"></i><div><b>paper</b>#FFF7F4</div></div>
+      <div class="sw"><i style="background:#FFFDF9;border-bottom:1px solid var(--line)"></i><div><b>cream</b>#FFFDF9</div></div>
+      <div class="sw"><i style="background:#D88E9A"></i><div><b>rose</b>#D88E9A</div></div>
+      <div class="sw"><i style="background:#965765"></i><div><b>rose-deep</b>#965765</div></div>
+      <div class="sw"><i style="background:#F6E4E3"></i><div><b>rose-soft</b>#F6E4E3</div></div>
+      <div class="sw"><i style="background:#F6D9CA"></i><div><b>peach</b>#F6D9CA</div></div>
+      <div class="sw"><i style="background:#3E3334"></i><div><b>ink</b>#3E3334</div></div>
+      <div class="sw"><i style="background:#837273"></i><div><b>muted</b>#837273</div></div>
+      <div class="sw"><i style="background:#EED8D8"></i><div><b>line</b>#EED8D8</div></div>
+      <div class="sw"><i style="background:#7A9280"></i><div><b>sage</b>#7A9280</div></div>
+    </div>
+  </section>
+
+  <!-- FORM + HERO -->
+  <section>
+    <div class="sec-head"><span class="n">02</span><h2>Form &amp; hero</h2><span class="rule"></span></div>
+    <div class="hero-stage">
+      <div>
+        <p class="eyebrow">The Focus Buddy</p>
+        <h1 class="headline">A small friend<br>for <em>big days</em></h1>
+        <p class="sub">AMI helps you start, take a proper breather, and feel a little less alone at your desk.</p>
+        <button class="pill"><span class="dot"></span>Start focus</button>
+      </div>
+      <div class="robot-wrap">
+        <div class="ami" style="font-size:13px">
+          <div class="visor"><span class="eye"></span><span class="eye"></span></div>
+          <div class="ring"></div>
+        </div>
+        <div class="gap"></div>
+        <p class="caption">150 × 110 × 100 mm · 3 mm shadow gap</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LANDING -->
+  <section>
+    <div class="sec-head"><span class="n">03</span><h2>Landing</h2><span class="rule"></span></div>
+    <div class="frame">
+      <div class="frame-bar"><i></i><i></i><i></i><span>focus-ami — hero</span></div>
+      <div class="frame-body">
+        <div class="land-hero">
+          <div>
+            <p class="eyebrow">The Focus Buddy</p>
+            <h2 style="font-size:40px;line-height:1.1;letter-spacing:-.02em;margin:0;max-width:16ch">A small friend for big days</h2>
+          </div>
+          <div class="robot-wrap">
+            <div class="ami" style="font-size:7.5px">
+              <div class="visor"><span class="eye"></span><span class="eye"></span></div>
+              <div class="ring"></div>
+            </div>
+            <div class="gap" style="width:78px"></div>
+          </div>
+        </div>
+        <h3 class="beat">One thing at a time.</h3>
+        <p>Start a session, breathe on the break, keep AMI on the desk.</p>
+
+        <div class="cards">
+          <div class="card">
+            <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+            <h3>Get started</h3>
+            <p>A 25 minute block. Press once, begin. No setup, no account.</p>
+          </div>
+          <div class="card">
+            <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 12c2.5-3.5 5.5-3.5 8 0s5.5 3.5 8 0"/></svg></div>
+            <h3>Take a breather</h3>
+            <p>Eyes, shoulders, water. Gentle defaults, never a scolding.</p>
+          </div>
+          <div class="card">
+            <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.3-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.7-7 9-7 9z"/></svg></div>
+            <h3>Keep company</h3>
+            <p>It sits with you. Quietly. It says the reminder out loud.</p>
+          </div>
+        </div>
+
+        <div class="session">
+          <div class="panel">
+            <p class="eyebrow" style="margin-bottom:0">Your focus session</p>
+            <div class="timer">25:00</div>
+            <div class="seg"><b class="on">Study</b><b>Work</b><b>Reset</b></div>
+            <p class="captionline">25 min focus · 5 min break</p>
+            <button class="pill" style="height:44px;padding:0 20px;font-size:13px;margin-top:18px"><span class="dot"></span>Start focus</button>
+          </div>
+          <div class="panel">
+            <p class="eyebrow" style="margin-bottom:0">A kind little nudge</p>
+            <ul class="list" style="margin-top:10px">
+              <li>Rest your eyes <span class="t">20m</span></li>
+              <li>Stretch a little <span class="t">50m</span></li>
+              <li>Have some water <span class="t">45m</span></li>
+            </ul>
+            <p class="note">Gentle reminders, never a scolding. <b>Not medical advice.</b></p>
+          </div>
+        </div>
+
+        <div class="session" style="margin-top:14px">
+          <div class="panel">
+            <p class="eyebrow" style="margin-bottom:0">Real progress, not perfection</p>
+            <div class="stats">
+              <div><b>12</b><small>sessions</small></div>
+              <div><b>300</b><small>focus min</small></div>
+              <div><b>4</b><small>day streak</small></div>
+            </div>
+            <div class="week"><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i></div>
+          </div>
+          <div class="panel">
+            <p class="eyebrow" style="margin-bottom:0">Soundtrack for this moment</p>
+            <ul class="list" style="margin-top:10px">
+              <li>Focus <span class="t">soft &amp; steady</span></li>
+              <li>Relax <span class="t">slow it down</span></li>
+              <li>Energise <span class="t">gentle lift</span></li>
+            </ul>
+            <p class="note">Music plays on AMI from the microSD card. <b>No streaming by default.</b></p>
+          </div>
+        </div>
+
+        <p class="note" style="margin-top:22px">Local-first by default. Your progress stays with your server. &nbsp;·&nbsp; KasaTECH</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <section>
+    <div class="sec-head"><span class="n">04</span><h2>App — three surfaces</h2><span class="rule"></span></div>
+    <div class="phones">
+      <!-- Focus -->
+      <div class="phone">
+        <div class="top">Your focus session</div>
+        <div class="big">25:00</div>
+        <div class="mood">Focus</div>
+        <button class="cta">Start focus</button>
+        <p class="fine">25 min focus · 5 min break</p>
+        <div class="tabs"><b>Focus</b><span>Nudges</span><span>You</span></div>
+      </div>
+      <!-- Nudges -->
+      <div class="phone">
+        <div class="top">A kind little nudge</div>
+        <div class="row"><span class="lbl"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Rest your eyes</span><span>20m</span></div>
+        <div class="row"><span class="lbl"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.4"/><path d="m9 20 3-6 3 6"/><path d="m6 8.5 6 2 6-2"/></svg>Stretch a little</span><span>50m</span></div>
+        <div class="row"><span class="lbl"><svg viewBox="0 0 24 24"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>Have some water</span><span>45m</span></div>
+        <div class="add">+ Add a reminder</div>
+        <p class="fine" style="margin-top:auto">Gentle defaults, not medical advice</p>
+        <div class="tabs"><span>Focus</span><b>Nudges</b><span>You</span></div>
+      </div>
+      <!-- You -->
+      <div class="phone">
+        <div class="top">You showed up</div>
+        <div class="mono3">
+          <div><b>12</b><small>sessions</small></div>
+          <div><b>300</b><small>minutes</small></div>
+          <div><b>4</b><small>streak</small></div>
+        </div>
+        <div class="week" style="justify-content:center;margin-bottom:20px">
+          <i class="on"></i><i class="on"></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i>
+        </div>
+        <div class="disclose">Long break every <span>4 sessions</span></div>
+        <div class="disclose">Nudge style <span>Gentle</span></div>
+        <div class="disclose">Eye rest <span>20 min</span></div>
+        <div class="tabs"><span>Focus</span><span>Nudges</span><b>You</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PACKAGING -->
+  <section>
+    <div class="sec-head"><span class="n">05</span><h2>Packaging — six views</h2><span class="rule"></span></div>
+    <div class="pack">
+      <div class="face front">
+        <span class="label" style="position:absolute;top:10px;left:12px">front</span>
+        <div class="ovoid"><span class="e a"></span><span class="e b"></span></div>
+        <div class="wm">AMI</div>
+        <div class="ds">The Focus Buddy</div>
+        <div class="mini">KasaTECH</div>
+      </div>
+
+      <div class="face">
+        <span class="label">back</span>
+        <div class="tiny" style="margin-top:7px">
+          <b>Focus · Breathe · Company</b>
+          Start a session. Take the break. Keep it on the desk.
+        </div>
+        <div class="steps">
+          <span><i>1</i>Plug in</span>
+          <span><i>2</i>Hold the button</span>
+          <span><i>3</i>Start</span>
+        </div>
+        <div class="tiny" style="margin-top:7px">
+          <b>Local-first by default</b>
+          Your progress stays with your server.
+        </div>
+        <div class="codes">
+          <div class="qr"><svg viewBox="0 0 21 21" shape-rendering="crispEdges" aria-hidden="true"><rect width="21" height="21" fill="#FFFDF9"/><path d="M0 0h1v1h-1zM1 0h1v1h-1zM2 0h1v1h-1zM3 0h1v1h-1zM4 0h1v1h-1zM5 0h1v1h-1zM6 0h1v1h-1zM8 0h1v1h-1zM13 0h1v1h-1zM14 0h1v1h-1zM15 0h1v1h-1zM16 0h1v1h-1zM17 0h1v1h-1zM18 0h1v1h-1zM19 0h1v1h-1zM20 0h1v1h-1zM0 1h1v1h-1zM6 1h1v1h-1zM10 1h1v1h-1zM11 1h1v1h-1zM14 1h1v1h-1zM20 1h1v1h-1zM0 2h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM6 2h1v1h-1zM9 2h1v1h-1zM11 2h1v1h-1zM14 2h1v1h-1zM16 2h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM20 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM6 3h1v1h-1zM11 3h1v1h-1zM14 3h1v1h-1zM16 3h1v1h-1zM17 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM0 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM9 4h1v1h-1zM13 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM17 4h1v1h-1zM18 4h1v1h-1zM20 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM9 5h1v1h-1zM12 5h1v1h-1zM14 5h1v1h-1zM20 5h1v1h-1zM0 6h1v1h-1zM1 6h1v1h-1zM2 6h1v1h-1zM3 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM15 6h1v1h-1zM16 6h1v1h-1zM17 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM9 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM0 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM11 8h1v1h-1zM12 8h1v1h-1zM13 8h1v1h-1zM14 8h1v1h-1zM20 8h1v1h-1zM2 9h1v1h-1zM4 9h1v1h-1zM7 9h1v1h-1zM9 9h1v1h-1zM15 9h1v1h-1zM16 9h1v1h-1zM17 9h1v1h-1zM18 9h1v1h-1zM19 9h1v1h-1zM20 9h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM17 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM0 11h1v1h-1zM1 11h1v1h-1zM3 11h1v1h-1zM4 11h1v1h-1zM7 11h1v1h-1zM14 11h1v1h-1zM17 11h1v1h-1zM0 12h1v1h-1zM2 12h1v1h-1zM3 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM9 12h1v1h-1zM11 12h1v1h-1zM13 12h1v1h-1zM14 12h1v1h-1zM15 12h1v1h-1zM19 12h1v1h-1zM3 13h1v1h-1zM4 13h1v1h-1zM7 13h1v1h-1zM13 13h1v1h-1zM15 13h1v1h-1zM17 13h1v1h-1zM0 14h1v1h-1zM1 14h1v1h-1zM2 14h1v1h-1zM3 14h1v1h-1zM4 14h1v1h-1zM5 14h1v1h-1zM6 14h1v1h-1zM10 14h1v1h-1zM14 14h1v1h-1zM15 14h1v1h-1zM16 14h1v1h-1zM18 14h1v1h-1zM20 14h1v1h-1zM0 15h1v1h-1zM6 15h1v1h-1zM8 15h1v1h-1zM11 15h1v1h-1zM12 15h1v1h-1zM13 15h1v1h-1zM14 15h1v1h-1zM17 15h1v1h-1zM19 15h1v1h-1zM20 15h1v1h-1zM0 16h1v1h-1zM2 16h1v1h-1zM3 16h1v1h-1zM4 16h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM10 16h1v1h-1zM11 16h1v1h-1zM15 16h1v1h-1zM16 16h1v1h-1zM17 16h1v1h-1zM18 16h1v1h-1zM0 17h1v1h-1zM2 17h1v1h-1zM3 17h1v1h-1zM4 17h1v1h-1zM6 17h1v1h-1zM10 17h1v1h-1zM11 17h1v1h-1zM12 17h1v1h-1zM13 17h1v1h-1zM14 17h1v1h-1zM15 17h1v1h-1zM17 17h1v1h-1zM19 17h1v1h-1zM20 17h1v1h-1zM0 18h1v1h-1zM2 18h1v1h-1zM3 18h1v1h-1zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM17 18h1v1h-1zM19 18h1v1h-1zM20 18h1v1h-1zM0 19h1v1h-1zM6 19h1v1h-1zM9 19h1v1h-1zM13 19h1v1h-1zM16 19h1v1h-1zM19 19h1v1h-1zM0 20h1v1h-1zM1 20h1v1h-1zM2 20h1v1h-1zM3 20h1v1h-1zM4 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM10 20h1v1h-1zM11 20h1v1h-1zM12 20h1v1h-1zM13 20h1v1h-1zM16 20h1v1h-1zM18 20h1v1h-1z" fill="#3E3334"/></svg></div>
+          <div class="col">
+            <div class="bar"></div>
+            <div class="codetext">AMI-01 · 5 V ⎓ 2 A</div>
+          </div>
+        </div>
+        <div class="addr">
+          KasaTECH · Calle del Pez 14, 28004 Madrid<br>
+          ♻ Paper wrap · molded pulp tray · no film · FSC mixed
+        </div>
+        <div class="reg">Model AMI-01 · Designed by KasaTECH</div>
+      </div>
+
+      <div class="face">
+        <span class="label">left</span>
+        <div class="vert">A small friend for big days</div>
+      </div>
+
+      <div class="face">
+        <span class="label">right</span>
+        <div class="contents" style="margin-top:10px">
+          AMI<br>
+          USB-C cable<br>
+          Quick start<br>
+          microSD inserted
+          <div style="margin-top:12px"><i>AMI-01 · 175 × 135 × 95 mm</i></div>
+        </div>
+      </div>
+
+      <div class="face">
+        <span class="label">top</span>
+        <div class="emboss"></div>
+        <div class="tiny" style="text-align:center;margin-top:6px">blind emboss only</div>
+      </div>
+
+      <div class="face">
+        <span class="label">bottom</span>
+        <div class="bar wide"></div>
+        <div class="codetext">SN 0000-AMI-0001</div>
+        <div class="reg">
+          SN 0000-AMI-0001 · Model AMI-01<br>
+          Designed by KasaTECH · FSC mixed<br>
+          ♻ paper · pulp tray · no film
+        </div>
+      </div>
+    </div>
+
+    <div class="strip">
+      <figure><div class="ovoid" style="width:26px;height:34px"><span class="e a" style="left:6px;width:3px;height:5px"></span><span class="e b" style="right:6px;width:3px;height:5px"></span></div><figcaption>sealed</figcaption></figure>
+      <figure><div class="ovoid" style="width:30px;height:40px"><span class="e a" style="left:7px;width:4px;height:6px"></span><span class="e b" style="right:7px;width:4px;height:6px"></span></div><figcaption>lid lifted</figcaption></figure>
+      <figure><div style="width:64px;height:40px;border:1px solid var(--line);border-radius:5px;background:var(--paper);font-size:7px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px">One thing<br>at a time.</div><figcaption>insert card</figcaption></figure>
+      <figure><div class="ovoid" style="width:26px;height:34px;box-shadow:0 8px 10px rgba(92,57,60,.12)"><span class="e a" style="left:6px;width:3px;height:5px"></span><span class="e b" style="right:6px;width:3px;height:5px"></span></div><figcaption>cradle</figcaption></figure>
+      <figure><div style="display:flex;gap:5px;align-items:flex-end">
+        <div class="ovoid" style="width:18px;height:24px"><span class="e a" style="left:4px;width:2px;height:3px"></span><span class="e b" style="right:4px;width:2px;height:3px"></span></div>
+        <div style="width:20px;height:4px;background:var(--line);border-radius:2px"></div>
+        <div style="width:14px;height:18px;border:1px solid var(--line);border-radius:2px"></div>
+      </div><figcaption>contents</figcaption></figure>
+    </div>
+    <p class="note">Rigid two-piece box · FSC uncoated 350 gsm · soy inks · rose spot · rose-deep hot foil · pulp cradle, no plastic film.</p>
+  </section>
+
+  <!-- OOH -->
+  <section>
+    <div class="sec-head"><span class="n">06</span><h2>Billboard / OOH</h2><span class="rule"></span></div>
+    <div class="ooh">
+      <figure>
+        <div class="board b1">
+          <div class="copy">A small friend<br>for big days.<span class="underscore"></span></div>
+          <div class="obj">
+            <div class="ami">
+              <div class="visor"><span class="eye blink"></span><span class="eye blink"></span></div>
+              <div class="ring"></div>
+            </div>
+          </div>
+          <span class="micro">AMI · KasaTECH</span>
+        </div>
+        <figcaption class="cap"><span>48-sheet · 6 × 3 m</span><span>eyes closed, mid-breath</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="board alt b2">
+          <div class="copy">One thing<br>at a time.<span class="underscore"></span></div>
+          <div class="obj">
+            <div class="ami">
+              <div class="visor"><span class="eye"></span><span class="eye"></span></div>
+              <div class="ring"></div>
+            </div>
+          </div>
+          <span class="micro">AMI · KasaTECH</span>
+        </div>
+        <figcaption class="cap"><span>48-sheet · negative space</span><span>the whole object, at true scale</span></figcaption>
+      </figure>
+
+      <figure>
+        <div class="board tint b3">
+          <div class="crop">
+            <div class="ami">
+              <div class="visor"><span class="eye"></span><span class="eye blink"></span></div>
+              <div class="ring"></div>
+            </div>
+          </div>
+          <div class="copy">Breaks count too.<span class="underscore"></span></div>
+          <span class="micro">AMI · KasaTECH</span>
+        </div>
+        <figcaption class="cap"><span>digital 16:9 · 1920 × 1080</span><span>visor crop, one eye blinking</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <footer>
+    <span>AMI — design board</span>
+    <span>no gradients · no glow · no gloss · no pure white</span>
+  </footer>
+</div>
+</body>
+</html>
