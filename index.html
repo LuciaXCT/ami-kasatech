@@ -105,15 +105,22 @@
 
               <!-- Top floating 3D HUD controls -->
               <div class="stage-3d-hud">
-                <div class="mode-toggle-pill">
-                  <button class="stage-mode-btn active" id="btnModeRobot" type="button">Robot 3D</button>
-                  <button class="stage-mode-btn" id="btnModeBox" type="button">Box 3D</button>
+                <div class="hud-top-row">
+                  <div class="mode-toggle-pill">
+                    <button class="stage-mode-btn active" id="btnModeRobot" type="button">Robot 3D</button>
+                    <button class="stage-mode-btn" id="btnModeBox" type="button">Box 3D</button>
+                  </div>
+                  <div class="camera-views-row">
+                    <button class="view-chip" data-v="front" type="button">Front</button>
+                    <button class="view-chip active" data-v="threeq" type="button">3/4</button>
+                    <button class="view-chip" data-v="top" type="button">Top</button>
+                    <button class="view-chip active" id="btnToggleSpin" type="button">Spin</button>
+                  </div>
                 </div>
-                <div class="camera-views-row">
-                  <button class="view-chip" data-v="front" type="button">Front</button>
-                  <button class="view-chip active" data-v="threeq" type="button">3/4</button>
-                  <button class="view-chip" data-v="top" type="button">Top</button>
-                  <button class="view-chip active" id="btnToggleSpin" type="button">Spin: on</button>
+                <div class="emotion-pills-row">
+                  <button class="emotion-chip active" data-emo="happy" type="button" title="Happy smiling eyes">^ ^ Happy</button>
+                  <button class="emotion-chip" data-emo="silly" type="button" title="Silly playful eyes">&gt; &lt; Silly</button>
+                  <button class="emotion-chip" data-emo="neutral" type="button" title="Neutral focused eyes">- - Neutral</button>
                 </div>
               </div>
 
@@ -278,38 +285,91 @@
           </div>
         </div>
 
-        <!-- Packaging & Unboxing Strip (5 Frames from Arena Prompt) -->
+        <!-- 48-Sheet Commercial Billboard Campaign with 3 Expressions -->
+        <div class="section-label">48-Sheet Billboard Campaign</div>
+        <div class="billboard-gallery-block">
+          <div class="billboard-gallery-header">
+            <h3 class="billboard-gallery-title">A Small Friend for Big Days.</h3>
+            <p class="billboard-gallery-subtitle">Three photographic 48-sheet outdoor billboard concepts showcasing AMI’s expressive glowing blue eyes (^ ^ / &gt; &lt; / - -), seamless bear ears, and minimal typography.</p>
+          </div>
+
+          <div class="billboard-cards-grid">
+            <div class="billboard-card glass-strong">
+              <div class="billboard-image-wrap">
+                <img src="exports/billboard-happy.png" alt="AMI Billboard - Happy Expression ^ ^" loading="lazy" class="billboard-img">
+                <span class="billboard-badge glass-pill">Emotion 01 · Happy (^ ^)</span>
+              </div>
+              <div class="billboard-caption-row">
+                <div>
+                  <span class="billboard-tag">48-Sheet · 6 × 3 m</span>
+                  <h4 class="billboard-quote">“Silence is where the best work happens.”</h4>
+                </div>
+                <span class="billboard-author">AMI · KasaTECH</span>
+              </div>
+            </div>
+
+            <div class="billboard-card glass-strong">
+              <div class="billboard-image-wrap">
+                <img src="exports/billboard-silly.png" alt="AMI Billboard - Silly Expression > <" loading="lazy" class="billboard-img">
+                <span class="billboard-badge glass-pill">Emotion 02 · Silly (&gt; &lt;)</span>
+              </div>
+              <div class="billboard-caption-row">
+                <div>
+                  <span class="billboard-tag">48-Sheet · 6 × 3 m</span>
+                  <h4 class="billboard-quote">“One thing at a time. The rest can wait.”</h4>
+                </div>
+                <span class="billboard-author">AMI · KasaTECH</span>
+              </div>
+            </div>
+
+            <div class="billboard-card glass-strong">
+              <div class="billboard-image-wrap">
+                <img src="exports/billboard-neutral.png" alt="AMI Billboard - Neutral Expression - -" loading="lazy" class="billboard-img">
+                <span class="billboard-badge glass-pill">Emotion 03 · Neutral (- -)</span>
+              </div>
+              <div class="billboard-caption-row">
+                <div>
+                  <span class="billboard-tag">48-Sheet · 6 × 3 m</span>
+                  <h4 class="billboard-quote">“A quiet mind builds loud things.”</h4>
+                </div>
+                <span class="billboard-author">AMI · KasaTECH</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Packaging & Unboxing Strip (PR Metal Box Edition) -->
         <div class="section-label">Packaging & Unboxing</div>
         <div class="unboxing-strip glass">
           <div class="unboxing-header">
-            <h4>FSC UNCOATED BOX · MOLDED PULP TRAY · ZERO PLASTIC</h4>
-            <p>120 × 110 × 70 mm rigid paper wrap with hot-stamped rose-deep foil.</p>
+            <h4>CNC ANODIZED ALUMINUM PR BOX · HIGH-DENSITY EVA FOAM · MAGNETIC LATCH</h4>
+            <p>175 × 135 × 95 mm Space Grey brushed metal luxury press kit box with laser-etched KasaTECH mark.</p>
           </div>
           <div class="unboxing-frames">
             <div class="unbox-frame glass-light">
               <div class="frame-tag">01</div>
-              <div class="frame-name">Sealed Pack</div>
-              <div class="frame-desc">Matte paper wrap with blind-embossed face mark and sage seal dot.</div>
+              <div class="frame-name">Sealed Metal Pack</div>
+              <div class="frame-desc">Brushed anodized aluminum box with laser-marked sliding clasp.</div>
             </div>
             <div class="unbox-frame glass-light">
               <div class="frame-tag">02</div>
               <div class="frame-name">Lid Lifted</div>
-              <div class="frame-desc">Telescoping lid lifts to reveal dark visor and twin capsule eyes.</div>
+              <div class="frame-desc">Precision-milled lid lifts on magnetic hinges to reveal the glowing visor.</div>
             </div>
             <div class="unbox-frame glass-light">
               <div class="frame-tag">03</div>
-              <div class="frame-name">Cream Card</div>
-              <div class="frame-desc">Heavyweight insert: <em>One thing at a time.</em> Quick start guide on reverse.</div>
+              <div class="frame-name">Matte Metal Card</div>
+              <div class="frame-desc">Anodized card insert: <em>One thing at a time.</em> Tactile laser-etched guide.</div>
             </div>
             <div class="unbox-frame glass-light">
               <div class="frame-tag">04</div>
-              <div class="frame-name">Pulp Cradle</div>
-              <div class="frame-desc">AMI rests in molded unbleached fiber tray with braided USB-C below.</div>
+              <div class="frame-name">EVA Foam Cradle</div>
+              <div class="frame-desc">AMI rests in precision-cut high-density velvet EVA foam with braided cable below.</div>
             </div>
             <div class="unbox-frame glass-light">
               <div class="frame-tag">05</div>
-              <div class="frame-name">Flat-Lay</div>
-              <div class="frame-desc">AMI companion, 32GB microSD inserted, braided cable, tactile card.</div>
+              <div class="frame-name">Flat-Lay Kit</div>
+              <div class="frame-desc">AMI companion with bear ears, 32GB microSD card, braided cable, metal guide.</div>
             </div>
           </div>
         </div>
@@ -700,6 +760,62 @@
         <div class="dialog-actions">
           <button type="button" class="action-pillar" id="btnSaveSettings">Save preferences</button>
         </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Ultra-Luxe Minimalist Glass Pre-Order Modal -->
+  <dialog id="orderModal" class="glass-dialog order-dialog">
+    <div class="dialog-card glass-strong order-card">
+      <div class="dialog-header">
+        <div>
+          <span class="dialog-pretitle">KASATECH PR EDITION</span>
+          <h2 class="dialog-title">Order AMI Focus Companion</h2>
+        </div>
+        <button class="dialog-close-btn" id="btnCloseOrder" aria-label="Close dialog">✕</button>
+      </div>
+
+      <div class="order-content">
+        <div class="order-hero-box glass-light">
+          <div class="order-box-spec">
+            <div class="order-tag-pill">PREMIUM ANODIZED METAL PR BOX</div>
+            <h3 class="order-box-name">Space Grey Aluminum Edition</h3>
+            <span class="order-price">$89 <small>USD</small></span>
+          </div>
+          <ul class="order-includes-list">
+            <li>✦ <strong>1× AMI Desk Companion</strong> · Matte White Ovoid, Blue EVE Eyes (^ ^, &gt; &lt;, - -), Bear Ears</li>
+            <li>✦ <strong>1× Anodized Aluminum PR Box</strong> · Space Grey with Magnetic Latch & Laser-Etched Lid</li>
+            <li>✦ <strong>1× Custom EVA Foam Bed</strong> · High-Density Precision Protection</li>
+            <li>✦ <strong>1× Braided USB-C Cable (1.5m)</strong> · Centered low to hide wires</li>
+            <li>✦ <strong>1× 32GB MicroSD Card</strong> · Preloaded with 6 offline soundscapes</li>
+            <li>✦ <strong>Free Worldwide Courier Delivery</strong> · Carbon-neutral shipping, zero subscriptions</li>
+          </ul>
+        </div>
+
+        <form class="order-form" id="orderForm" onsubmit="event.preventDefault(); submitOrder();">
+          <div class="order-input-row">
+            <div class="input-col">
+              <label class="order-label">Recipient Name</label>
+              <input type="text" class="glass-input" id="orderName" placeholder="Your name" required>
+            </div>
+            <div class="input-col">
+              <label class="order-label">Email Address</label>
+              <input type="email" class="glass-input" id="orderEmail" placeholder="you@domain.com" required>
+            </div>
+          </div>
+          <div class="input-col" style="margin-top:12px;">
+            <label class="order-label">Shipping Country / City</label>
+            <input type="text" class="glass-input" id="orderAddress" placeholder="e.g. Kyoto, Japan / Zurich, Switzerland" required>
+          </div>
+
+          <div class="order-actions-row">
+            <button type="submit" class="order-submit-btn glass-pill-luxury" id="btnSubmitOrder">
+              <span>Complete Pre-Order — $89</span>
+              <span class="btn-arrow">→</span>
+            </button>
+          </div>
+          <span class="order-guarantee">30-day quiet guarantee · 100% offline & local-first · No hidden fees</span>
+        </form>
       </div>
     </div>
   </dialog>

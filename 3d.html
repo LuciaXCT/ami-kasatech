@@ -9,6 +9,7 @@
     --paper:#FFF7F4; --cream:#FFFDF9; --rose:#D88E9A; --rose-deep:#965765;
     --rose-soft:#F6E4E3; --peach:#F6D9CA; --ink:#3E3334; --muted:#837273;
     --line:#EED8D8; --sage:#7A9280;
+    --cyber:#00D9FF; --metal:#E8E8EA; --metal-dark:#B9B9C0;
     --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
     --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   }
@@ -134,6 +135,9 @@
         <button class="pbtn" data-part="visor">
           <svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="5"/><circle cx="9.6" cy="12" r="1.2"/><circle cx="14.4" cy="12" r="1.2"/></svg>
           Visor &amp; eyes</button>
+        <button class="pbtn" data-part="ears">
+          <svg viewBox="0 0 24 24"><ellipse cx="12" cy="13" rx="6.4" ry="7.4"/><circle cx="6.6" cy="4.6" r="2.6"/><circle cx="17.4" cy="4.6" r="2.6"/></svg>
+          Bear ears</button>
         <button class="pbtn" data-part="ring">
           <svg viewBox="0 0 24 24"><path d="M12 20s-6.5-4-6.5-9C5.5 7.6 7.6 5.6 10 5.6c1 0 2 .8 2 .8s1-.8 2-.8c2.4 0 4.5 2 4.5 5.4 0 5-6.5 9-6.5 9z"/></svg>
           Heart ring</button>
@@ -176,14 +180,14 @@
         <span class="pill" data-view="top">Top</span>
         <span class="pill on" id="spinBtn">Spin</span>
       </div>
-      <canvas id="scene" aria-label="Interactive 3D model of AMI. Tap the visor, heart ring, power button, speaker, charge port or microSD slot to learn each part."></canvas>
+      <canvas id="scene" aria-label="Interactive 3D model of AMI. Tap the bear ears, visor, heart ring, power button, speaker, charge port or microSD slot to learn each part."></canvas>
       <span class="hint" id="hint">drag to turn · tap any part of the robot</span>
       <span class="toast" id="toast"></span>
       <div class="fallback" id="fallback">
         <p>The 3D scene needs WebGL and the three.js library. If your network blocks CDNs,
         the flat boards still show everything:
-        <a href="design-board.html">design board</a> ·
-        <a href="packaging.html">packaging board</a></p>
+        <a href="../AMI-design-board.html">design board</a> ·
+        <a href="../AMI-pack-ooh-social.html">packaging board</a></p>
       </div>
     </div>
 
@@ -193,10 +197,11 @@
   </div>
 
   <div class="links">
-    <a href="/">Try the real app</a>
-    <a href="packaging.html">Packaging drawings</a>
-    <a href="AMI-exports.html">22 PNG exports</a>
-    <a href="design-board.html">Design board</a>
+    <a href="./">Try the real app</a>
+    <a href="../AMI-pack-ooh-social.html">Packaging drawings</a>
+    <a href="../AMI-exports.html">22 PNG exports</a>
+    <a href="../AMI-design-board.html">Design board</a>
+    <a href="../AMI-self-test.html">Self-test</a>
   </div>
 
   <footer>
@@ -217,7 +222,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const CREAM=0xFFFDF9, INK=0x151112, ROSE=0xD88E9A, PAPER=0xFFF7F4,
-      PEACH=0xF6D9CA, ROSEDEEP=0x965765, BLUE=0x5BA4E6;
+      PEACH=0xF6D9CA, ROSEDEEP=0x965765, CYBER=0x00D9FF, METAL=0xE8E8EA;
 const stage=document.getElementById('stage'), canvas=document.getElementById('scene');
 const fallback=document.getElementById('fallback');
 const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -236,14 +241,14 @@ scene.fog=new THREE.Fog(PAPER,11,22);
 const cam=new THREE.PerspectiveCamera(34,1,.1,60);
 cam.position.set(2.7,2.1,3.6);
 
-scene.add(new THREE.HemisphereLight(0xFFFDF9,PEACH,.85));
-const key=new THREE.DirectionalLight(0xFFF1E6,1.15);
+scene.add(new THREE.HemisphereLight(0xFFFDF9,PEACH,2.4));
+const key=new THREE.DirectionalLight(0xFFF1E6,3.0);
 key.position.set(3.5,6,3); key.castShadow=true;
 key.shadow.mapSize.set(1024,1024);
 key.shadow.camera.left=-4; key.shadow.camera.right=4;
 key.shadow.camera.top=5; key.shadow.camera.bottom=-1;
 key.shadow.bias=-.0004; scene.add(key);
-const fill=new THREE.DirectionalLight(0xF6E4E3,.4);
+const fill=new THREE.DirectionalLight(0xF6E4E3,1.1);
 fill.position.set(-4,2.5,-2); scene.add(fill);
 
 const ground=new THREE.Mesh(new THREE.CircleGeometry(6,48),
@@ -270,7 +275,7 @@ function markTexture(){
   x.beginPath(); x.ellipse(256,320,172,238,0,0,Math.PI*2); x.stroke();
   x.fillStyle='rgba(21,17,18,.20)';
   x.beginPath(); x.ellipse(256,300,128,74,0,0,Math.PI*2); x.fill();
-  x.fillStyle='rgba(91,164,230,.95)';
+  x.fillStyle='rgba(255,253,249,.92)';
   x.beginPath(); x.ellipse(208,300,26,42,0,0,Math.PI*2); x.fill();
   x.beginPath(); x.ellipse(304,300,26,42,0,0,Math.PI*2); x.fill();
   const t=new THREE.CanvasTexture(c);
@@ -290,29 +295,39 @@ function buildRobot(){
   body.scale.set(1.05,1.38,.92); body.position.y=1.45; body.castShadow=true;
   reg('shell')([body]); g.add(body);
 
+  /* bear ears: two soft domes on the top corners of the head */
+  const earMat=new THREE.MeshPhysicalMaterial({color:CREAM,roughness:.34,
+    clearcoat:.28,clearcoatRoughness:.6});
+  const ears=[];
+  for(const s of [-1,1]){
+    const ear=new THREE.Mesh(new THREE.SphereGeometry(1,32,32),earMat);
+    ear.scale.set(.30,.34,.27);
+    ear.position.set(.72*s,2.44,-.02);
+    ear.castShadow=true; ears.push(ear); g.add(ear);
+  }
+  reg('ears')(ears);
+
   const visor=new THREE.Mesh(new THREE.SphereGeometry(1,48,32),
     new THREE.MeshPhysicalMaterial({color:INK,roughness:.12,
       clearcoat:1,clearcoatRoughness:.25}));
-  visor.scale.set(.66,.4,.5); visor.position.set(0,1.78,.72); visor.castShadow=true;
+  visor.scale.set(.66,.4,.38); visor.position.set(0,1.78,.55); visor.castShadow=true;
   reg('visor')([visor]); g.add(visor);
 
-  const eyeMat=new THREE.MeshStandardMaterial({color:BLUE,
-    emissive:BLUE,emissiveIntensity:1.8,roughness:.25});
+  const eyeMat=new THREE.MeshStandardMaterial({color:CYBER,
+    emissive:CYBER,emissiveIntensity:1.35,roughness:.35});
   const eyes=[];
   for(const s of [-1,1]){
     const eye=new THREE.Mesh(new THREE.SphereGeometry(1,24,24),eyeMat);
-    eye.scale.set(.085,.165,.055); eye.position.set(.24*s,1.78,1.2);
+    eye.scale.set(.085,.165,.045); eye.position.set(.24*s,1.78,.905);
     eye.userData.glow=true; eyes.push(eye); g.add(eye);
   }
   reg('eyes')(eyes);
 
-  const ringMat=new THREE.MeshStandardMaterial({color:ROSE,
-    emissive:ROSE,emissiveIntensity:.8,roughness:.4});
-  const ring=new THREE.Mesh(new THREE.TorusGeometry(.4,.05,16,48),ringMat);
-  ring.rotation.x=Math.PI/2; ring.position.set(0,.16,.1);
-  ring.userData.glow=true;
-  reg('ring')([ring]); g.add(ring);
-  g.userData.ringMat=ringMat;
+  /* 3mm baseline seam gap (NO heart indicator) */
+  const seamMat=new THREE.MeshStandardMaterial({color:0x1E1B1C,roughness:.85});
+  const seam=new THREE.Mesh(new THREE.TorusGeometry(.4,.035,16,48),seamMat);
+  seam.rotation.x=Math.PI/2; seam.position.set(0,.16,.1);
+  reg('seam')([seam]); g.add(seam);
 
   /* speaker: five small openings on the back */
   const spk=[];
@@ -374,41 +389,60 @@ robotG.traverse(o=>{ if(o.isMesh && o.userData.part) hitList.push(o); });
 /* ---------- the box, with printed labels ---------- */
 const boxG=new THREE.Group();
 {
-  const m=new THREE.MeshPhysicalMaterial({color:0xD4D4D8,roughness:.22,metalness:.85,clearcoat:.4,clearcoatRoughness:.15,side:THREE.DoubleSide});
+  /* 1 unit = 40 mm, so the box is exactly 120 x 110 x 70 mm */
+  const metal=new THREE.MeshPhysicalMaterial({color:METAL,roughness:.34,metalness:.22,
+    clearcoat:.5,clearcoatRoughness:.3});
+  const BW=120/40, BD=110/40, BH=70/40;   // 3.0 x 2.75 x 1.75
 
-  const base=new THREE.Mesh(new THREE.BoxGeometry(2.45,.78,1.35),m);
-  base.position.y=.39; base.castShadow=true; boxG.add(base);
+  /* the base is a real tray: floor + four walls, so AMI sits in the well */
+  const T=.06, H=BH-.20;                       // 2.4 mm wall, 50 mm base
+  const floor=new THREE.Mesh(new THREE.BoxGeometry(BW,T,BD),metal);
+  floor.position.y=T/2; floor.castShadow=true; boxG.add(floor);
+  for(const s of [-1,1]){
+    const wallZ=new THREE.Mesh(new THREE.BoxGeometry(BW,H-T,T),metal);
+    wallZ.position.set(0,T+(H-T)/2,s*(BD/2-T/2)); wallZ.castShadow=true; boxG.add(wallZ);
+    const wallX=new THREE.Mesh(new THREE.BoxGeometry(T,H-T,BD-2*T),metal);
+    wallX.position.set(s*(BW/2-T/2),T+(H-T)/2,0); wallX.castShadow=true; boxG.add(wallX);
+  }
+
+  const foil=new THREE.MeshBasicMaterial({
+    map:textTexture('AMI',{w:512,h:256,size:170,color:'#965765',ls:14}),transparent:true});
+  const wm=new THREE.Mesh(new THREE.PlaneGeometry(1.32,.60),foil);
+  wm.position.set(0,.43,BD/2+.006); boxG.add(wm);
+
+  const kasa=new THREE.Mesh(new THREE.PlaneGeometry(.94,.12),
+    new THREE.MeshBasicMaterial({map:textTexture('KASATECH',
+      {w:1024,h:120,size:44,color:'#837273',ls:10}),transparent:true}));
+  kasa.position.set(0,.10,BD/2+.006); boxG.add(kasa);
 
   const baseLabel=new THREE.Mesh(new THREE.PlaneGeometry(1.5,.13),
     new THREE.MeshBasicMaterial({map:textTexture('SN 0000-AMI-0001 · USB-C · 5 V, 2 A',
       {h:96,size:40,color:'#837273',ls:4}),transparent:true}));
-  baseLabel.position.set(0,.09,.677); boxG.add(baseLabel);
+  baseLabel.position.set(0,.06,-BD/2-.006); baseLabel.rotation.y=Math.PI; boxG.add(baseLabel);
 
-  const lid=new THREE.Mesh(new THREE.BoxGeometry(2.51,.5,1.41),m);
-  lid.position.set(0,1.03,0); lid.castShadow=true;
-  const emboss=new THREE.Mesh(new THREE.PlaneGeometry(.9,1.12),
+  const lid=new THREE.Mesh(new THREE.BoxGeometry(BW+.04,.72,BD+.04),metal);
+  lid.position.set(0,BH-.36,0); lid.castShadow=true;
+  const emboss=new THREE.Mesh(new THREE.PlaneGeometry(.86,1.08),
     new THREE.MeshBasicMaterial({map:markTexture(),transparent:true}));
-  emboss.rotation.x=-Math.PI/2; emboss.position.y=.252;
+  emboss.rotation.x=-Math.PI/2; emboss.position.y=.363;
   lid.add(emboss); boxG.add(lid);
 
-  const bandMat=new THREE.MeshStandardMaterial({color:0xA1A1AA,roughness:.30,
-    metalness:.75,side:THREE.DoubleSide,transparent:true});
-  const band=new THREE.Mesh(new THREE.BoxGeometry(2.47,.4,1.37),bandMat);
-  band.position.y=.42; band.castShadow=true;
+  /* paper band: the only printed wrap, no film */
+  const bandMat=new THREE.MeshStandardMaterial({color:0xF6E4E3,roughness:.62,
+    side:THREE.DoubleSide,transparent:true});
+  const band=new THREE.Mesh(new THREE.BoxGeometry(BW+.02,.34,BD+.02),bandMat);
+  band.position.y=.92; band.castShadow=true;
   const bandLabelMat=new THREE.MeshBasicMaterial({
-    map:textTexture('AMI · A SMALL FRIEND FOR BIG DAYS',{w:1024,h:120,size:46,ls:6,color:'#27272A'}),
+    map:textTexture('A SMALL FRIEND FOR BIG DAYS',{w:1024,h:120,size:40,color:'#965765',ls:6}),
     transparent:true});
-  const bandLabel=new THREE.Mesh(new THREE.PlaneGeometry(2.1,.24),bandLabelMat);
-  bandLabel.position.set(0,0,.688); band.add(bandLabel);
+  const bandLabel=new THREE.Mesh(new THREE.PlaneGeometry(2.0,.2),bandLabelMat);
+  bandLabel.position.set(0,0,BD/2+.016); band.add(bandLabel);
   boxG.add(band);
 
-  // High-Density Black EVA Foam Bed
-  const foamBed=new THREE.Mesh(new THREE.BoxGeometry(2.36,.35,1.26),
-    new THREE.MeshStandardMaterial({color:0x18181B,roughness:.92,metalness:.05}));
-  foamBed.position.y=.48; foamBed.castShadow=true; boxG.add(foamBed);
-
-  const mini=buildRobot(); mini.scale.setScalar(.34);
-  mini.position.y=-.45;
+  /* AMI travels lying on its back, face up: 96 mm long in a 110 mm well */
+  const mini=buildRobot(); mini.scale.setScalar(.87);
+  mini.position.set(0,.86,1.26);   // centre the 96 mm body in the 110 mm well
+  mini.rotation.x=-Math.PI/2;
   mini.traverse(o=>{ o.castShadow=false; });
   boxG.add(mini);
 
@@ -434,12 +468,13 @@ const VIEWS={
   low:{p:[1.2,.55,3.9],t:[0,1.15,0]},
   top:{p:[0,5.4,2.4],t:[0,1.2,0]},
   box:{p:[2.9,2.3,4.3],t:[0,.7,0]},
-  boxopen:{p:[0,1.7,4.4],t:[0,.55,0]}
+  boxopen:{p:[0,3.8,3.2],t:[0,1.05,0]}
 };
 const PARTVIEWS={
   visor:{p:[.5,1.9,2.9],t:[0,1.78,.8]},
   eyes:{p:[0,1.78,2.7],t:[0,1.78,1]},
-  ring:{p:[.9,.8,2.5],t:[0,.3,.2]},
+  ears:{p:[0,3.3,2.4],t:[0,2.6,0]},
+  seam:{p:[.9,.8,2.5],t:[0,.3,.2]},
   power:{p:[0,3.2,-2.8],t:[0,2.5,-.5]},
   speaker:{p:[-1,2.3,-2.9],t:[0,2,-.75]},
   charge:{p:[0,.8,-3.3],t:[0,.35,-.5]},
@@ -469,11 +504,14 @@ document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',(
 /* ---------- info panel ---------- */
 const PARTS={
   visor:{kind:'the face',t:'The visor & the eyes',
-    p:'One piece of dark glass set into the shell. Two blue capsule eyes glow inside it; they blink, they brighten when a session starts, they dim when you rest. No mouth — AMI speaks with light.',
-    s:['gloss #151112 · spans 26 % of the body','eyes: emissive #5BA4E6, they breathe','never a cartoon face, never a mouth']},
-  ring:{kind:'the pulse',t:'The heart ring',
-    p:'A rose ring at the base seam that breathes on a 2.2 second rhythm, slow like a resting person. In a dim room it is the only light AMI needs. It glows steady while you focus.',
-    s:['rose #D88E9A · 2.2 s rhythm','the 3 mm shadow gap lives right under it']},
+    p:'One piece of dark glass set into the shell. Two capsule eyes glow inside it; they blink, they brighten when a session starts, they dim when you rest. AMI has no mouth: it speaks with light.',
+    s:['gloss #151112 · spans 26 % of the body','eyes: emissive #00D9FF, they breathe','never a cartoon face, never a mouth']},
+  ears:{kind:'the silhouette',t:'The bear ears',
+    p:'Two soft domes on the top corners of the head, moulded into the same shell, not glued on. They sit above the visor line so the silhouette reads as a small animal from across a room, and they give your hand two honest places to pick AMI up.',
+    s:['2 domes · top corners, 69 % out from centre','same cream shell, no extra part line','readable at 3 m on a billboard']},
+  seam:{kind:'the baseline',t:'The 3mm base seam',
+    p:'A dark silicone shadow gap baseline seam with zero visible screws. Clean physical enclosure with no heart indicator, perfectly calm and minimal.',
+    s:['3 mm shadow gap','zero heart indicator · calm presence']},
   power:{kind:'the switch',t:'One button, on purpose',
     p:'A single button on the back of the head. One press wakes AMI; a long hold starts a session. No menus on the robot, no screen. AMI never starts anything without you asking.',
     s:['top-back, under the palm','wake: 1 press · session: hold']},
@@ -488,13 +526,13 @@ const PARTS={
     s:['microSD · local playback only','no streaming by default']},
   shell:{kind:'the body',t:'The seamless shell',
     p:'One ovoid, no visible screws, no seams except the base. It floats 3 mm above the desk so the shadow reads as a gap. Warm cream in daylight, a quiet glow at night.',
-    s:['150 × 110 × 100 mm · 15 : 19.6 ovoid','cream #FFFDF9 · soft matte']},
+    s:['96 × 73 × 64 mm · 15 : 19.6 ovoid','cream #FFFDF9 · soft matte']},
   packinfo:{kind:'the box',t:"What's inside",
-    p:'Brushed anodized aluminum cradle holding the body, quick-start card, USB-C cable, and the microSD already seated in AMI. Magnetic closure, premium metal finish.',
-    s:['box 175 × 135 × 95 mm','band copy: AMI · a small friend for big days · KasaTECH','film: zero, anywhere']},
+    p:'A rigid steel-toned box with a soft-touch laminate, not a printed carton. Inside: a moulded pulp tray holding the body face-up, the quick-start card, a USB-C cable, and the microSD already seated in AMI. No plastic bag, no film.',
+    s:['metal PR box 120 × 110 × 70 mm','AMI lies on its back, face up, in a moulded pulp tray','film: zero, anywhere']},
   packlabel:{kind:'the print',t:'The labelling',
-    p:'The brushed metal band carries the only copy on the outside. The lid wears a laser-etched mark. The base keeps a small serial label.',
-    s:['band: wordmark + tagline + KasaTECH','lid: laser-etched, precision marking','base: SN 0000-AMI-0001 · anodized aluminum']}
+    p:'The front carries the foil wordmark, an embossed visor face with the ears, and the KasaTECH logotype. A paper band wraps the seam and tears off in one piece. The top wears a blind emboss of the face, no ink. The base keeps a small serial label for the recyclers.',
+    s:['front: rose-deep foil AMI + embossed visor + KasaTECH','band: paper, tagline only, tears off in one piece','base: SN 0000-AMI-0001 · recycle shell as metal']}
 };
 
 const info=document.getElementById('info');
@@ -574,18 +612,16 @@ function say(msg){
 }
 let boxOpen=false;
 function setBox(open){
-  const {lid,band,mini,bandMat,bandLabelMat}=boxG.userData;
+  const {lid,band,bandMat,bandLabelMat}=boxG.userData;
   const l0=lid.position.clone();
-  const l1=open?new THREE.Vector3(0,1.72,-.62):new THREE.Vector3(0,1.03,0);
-  const r0=lid.rotation.x, r1=open?-.55:0;
-  const b0=band.position.y, b1=open?-.38:.42;
+  const l1=open?new THREE.Vector3(0,2.55,-1.5):l0.clone();
+  const r0=lid.rotation.x, r1=open?-.42:0;
+  const b0=band.position.y, b1=open?.38:.92;
   const o0=bandMat.opacity, o1=open?0:1;
-  const m0=mini.position.y, m1=open?.25:-.45;
   animate(950,k=>{
     lid.position.lerpVectors(l0,l1,k); lid.rotation.x=r0+(r1-r0)*k;
     band.position.y=b0+(b1-b0)*k;
     bandMat.opacity=o0+(o1-o0)*k; bandLabelMat.opacity=o0+(o1-o0)*k;
-    mini.position.y=m0+(m1-m0)*k;
   });
   boxOpen=open;
   document.getElementById('boxToggleTxt').textContent=open?'Close the box':'Open the box';

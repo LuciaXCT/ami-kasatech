@@ -9,6 +9,7 @@
     --paper:#FFF7F4; --cream:#FFFDF9; --rose:#D88E9A; --rose-deep:#965765;
     --rose-soft:#F6E4E3; --peach:#F6D9CA; --ink:#3E3334; --muted:#837273;
     --line:#EED8D8; --sage:#7A9280;
+    --cyber:#00D9FF; --metal:#E8E8EA; --metal-dark:#B9B9C0;
     --shadow:0 14px 42px rgba(92,57,60,.08);
     --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
     --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
@@ -60,19 +61,27 @@
 
   .robot-wrap{display:flex;flex-direction:column;align-items:center;gap:0;position:relative}
   /* One `font-size` per instance scales the whole object; proportions never drift. */
-  .ami{position:relative;font-size:10px;width:15em;height:19.6em;background:var(--cream);
+  .ami{position:relative;z-index:0;font-size:10px;width:15em;height:19.6em;background:var(--cream);
        border-radius:50% 50% 50% 50% / 44% 44% 56% 56%;
        box-shadow:inset 0 0 0 .1em rgba(62,51,52,.055),
                   inset -1em -1.4em 3em rgba(92,57,60,.07),
                   inset .8em .8em 2.2em rgba(255,255,255,.9),
                   0 1em 2.4em rgba(92,57,60,.10)}
+  .ami::before,.ami::after{content:"";position:absolute;z-index:-1;width:26%;height:21%;
+       top:-7%;background:var(--cream);
+       border-radius:52% 52% 44% 44% / 62% 62% 40% 40%;
+       box-shadow:inset 0 0 0 .1em rgba(62,51,52,.055),
+                  inset -.6em -.7em 1.5em rgba(92,57,60,.10),
+                  inset .4em .4em 1.2em rgba(255,255,255,.9)}
+  .ami::before{left:1.5%}
+  .ami::after{right:1.5%}
   .visor{position:absolute;left:8%;right:8%;top:24%;height:26%;background:#151112;
          border-radius:48% 48% 42% 42% / 46% 46% 54% 54%;
          display:flex;align-items:center;justify-content:center;gap:2.6em;
          box-shadow:inset 0 -.8em 1.6em rgba(255,255,255,.05)}
-  .eye{width:1.3em;height:2.1em;border-radius:50%;background:var(--cream);
-       box-shadow:0 0 0 .5em rgba(216,142,154,.16)}
-  .eye.blink{height:.2em;border-radius:.2em;box-shadow:0 0 0 .5em rgba(216,142,154,.10)}
+  .eye{width:1.3em;height:2.1em;border-radius:50%;background:var(--cyber);
+       box-shadow:0 0 0 .5em rgba(0,217,255,.16),0 0 .9em rgba(0,217,255,.55)}
+  .eye.blink{height:.2em;border-radius:.2em;box-shadow:0 0 0 .5em rgba(0,217,255,.10)}
   .ring{position:absolute;left:50%;bottom:.7em;transform:translateX(-50%);
         width:4.6em;height:.4em;border-radius:50%;background:rgba(216,142,154,.75);
         filter:blur(.07em)}
@@ -158,10 +167,12 @@
 
   /* ---------- packaging ---------- */
   .pack{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-  .face{border:1px solid var(--line);border-radius:13px;background:var(--cream);
+  .face{border:1px solid var(--metal-dark);border-radius:13px;background:var(--metal);
+        background-image:repeating-linear-gradient(90deg,rgba(62,51,52,.035) 0 1px,transparent 1px 3px);
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.75),inset 0 -1px 0 rgba(62,51,52,.10);
         aspect-ratio:4/3;padding:16px;display:flex;flex-direction:column;position:relative;overflow:hidden}
   .face .label{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  .face.front{align-items:center;justify-content:center;text-align:center;background:var(--cream)}
+  .face.front{align-items:center;justify-content:center;text-align:center}
   .face.front .wm{font-size:34px;letter-spacing:.2em;font-weight:600;color:var(--rose-deep);
                   text-shadow:0 1px 0 rgba(150,87,101,.25)}
   .face.front .ds{font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:8px}
@@ -173,6 +184,10 @@
   .ovoid .e{position:absolute;top:31%;width:5px;height:8px;border-radius:50%;
             background:var(--cream);z-index:1}
   .ovoid .e.a{left:31%} .ovoid .e.b{right:31%}
+  .ovoid .ear{position:absolute;top:-6%;width:32%;height:22%;border-radius:50%;
+              background:var(--cream);border:1px solid rgba(62,51,52,.45);
+              clip-path:inset(0 0 28% 0)}
+  .ovoid .ear.l{left:-2px} .ovoid .ear.r{right:-2px}
   .face .tiny{font-size:9px;color:var(--muted);line-height:1.5}
   .face .tiny b{color:var(--ink);font-weight:600;display:block;margin-bottom:2px;font-size:10px}
   .bar{height:13px;background:repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px 3px);
@@ -194,8 +209,12 @@
   .contents{font-size:10.5px;line-height:1.9;color:var(--ink)}
   .contents i{font-family:var(--mono);color:var(--muted);font-style:normal;font-size:9.5px}
   .emboss{width:56px;height:72px;border-radius:50% 50% 50% 50% / 44% 44% 56% 56%;
-          border:1px solid rgba(62,51,52,.14);margin:auto;
-          box-shadow:inset 1px 1px 2px rgba(62,51,52,.08)}
+          border:1px solid rgba(62,51,52,.20);margin:auto;position:relative;
+          box-shadow:inset 1.5px 1.5px 2px rgba(62,51,52,.12),inset -1px -1px 1px rgba(255,255,255,.95)}
+  .emboss::before,.emboss::after{content:"";position:absolute;top:-6px;width:16px;height:16px;
+          border-radius:50%;border:1px solid rgba(62,51,52,.18);background:var(--metal);
+          clip-path:inset(0 0 6px 0)}
+  .emboss::before{left:-2px} .emboss::after{right:-2px}
   .reg{font-size:9px;color:var(--muted);line-height:1.7;margin-top:auto}
 
   .strip{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:16px}
@@ -295,7 +314,7 @@
           <div class="ring"></div>
         </div>
         <div class="gap"></div>
-        <p class="caption">150 × 110 × 100 mm · 3 mm shadow gap</p>
+        <p class="caption">96 × 73 × 64 mm · 3 mm shadow gap</p>
       </div>
     </div>
   </section>
@@ -433,7 +452,7 @@
     <div class="pack">
       <div class="face front">
         <span class="label" style="position:absolute;top:10px;left:12px">front</span>
-        <div class="ovoid"><span class="e a"></span><span class="e b"></span></div>
+        <div class="ovoid"><span class="ear l"></span><span class="ear r"></span><span class="e a"></span><span class="e b"></span></div>
         <div class="wm">AMI</div>
         <div class="ds">The Focus Buddy</div>
         <div class="mini">KasaTECH</div>
@@ -443,7 +462,7 @@
         <span class="label">back</span>
         <div class="tiny" style="margin-top:7px">
           <b>Focus · Breathe · Company</b>
-          Start a session. Take the break. Keep it on the desk.
+          Start a session. Take the break.
         </div>
         <div class="steps">
           <span><i>1</i>Plug in</span>
@@ -452,7 +471,7 @@
         </div>
         <div class="tiny" style="margin-top:7px">
           <b>Local-first by default</b>
-          Your progress stays with your server.
+          Progress stays on your server.
         </div>
         <div class="codes">
           <div class="qr"><svg viewBox="0 0 21 21" shape-rendering="crispEdges" aria-hidden="true"><rect width="21" height="21" fill="#FFFDF9"/><path d="M0 0h1v1h-1zM1 0h1v1h-1zM2 0h1v1h-1zM3 0h1v1h-1zM4 0h1v1h-1zM5 0h1v1h-1zM6 0h1v1h-1zM8 0h1v1h-1zM13 0h1v1h-1zM14 0h1v1h-1zM15 0h1v1h-1zM16 0h1v1h-1zM17 0h1v1h-1zM18 0h1v1h-1zM19 0h1v1h-1zM20 0h1v1h-1zM0 1h1v1h-1zM6 1h1v1h-1zM10 1h1v1h-1zM11 1h1v1h-1zM14 1h1v1h-1zM20 1h1v1h-1zM0 2h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM6 2h1v1h-1zM9 2h1v1h-1zM11 2h1v1h-1zM14 2h1v1h-1zM16 2h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM20 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM6 3h1v1h-1zM11 3h1v1h-1zM14 3h1v1h-1zM16 3h1v1h-1zM17 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM0 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM9 4h1v1h-1zM13 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM17 4h1v1h-1zM18 4h1v1h-1zM20 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM9 5h1v1h-1zM12 5h1v1h-1zM14 5h1v1h-1zM20 5h1v1h-1zM0 6h1v1h-1zM1 6h1v1h-1zM2 6h1v1h-1zM3 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM15 6h1v1h-1zM16 6h1v1h-1zM17 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM9 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM0 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM11 8h1v1h-1zM12 8h1v1h-1zM13 8h1v1h-1zM14 8h1v1h-1zM20 8h1v1h-1zM2 9h1v1h-1zM4 9h1v1h-1zM7 9h1v1h-1zM9 9h1v1h-1zM15 9h1v1h-1zM16 9h1v1h-1zM17 9h1v1h-1zM18 9h1v1h-1zM19 9h1v1h-1zM20 9h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM17 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM0 11h1v1h-1zM1 11h1v1h-1zM3 11h1v1h-1zM4 11h1v1h-1zM7 11h1v1h-1zM14 11h1v1h-1zM17 11h1v1h-1zM0 12h1v1h-1zM2 12h1v1h-1zM3 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM9 12h1v1h-1zM11 12h1v1h-1zM13 12h1v1h-1zM14 12h1v1h-1zM15 12h1v1h-1zM19 12h1v1h-1zM3 13h1v1h-1zM4 13h1v1h-1zM7 13h1v1h-1zM13 13h1v1h-1zM15 13h1v1h-1zM17 13h1v1h-1zM0 14h1v1h-1zM1 14h1v1h-1zM2 14h1v1h-1zM3 14h1v1h-1zM4 14h1v1h-1zM5 14h1v1h-1zM6 14h1v1h-1zM10 14h1v1h-1zM14 14h1v1h-1zM15 14h1v1h-1zM16 14h1v1h-1zM18 14h1v1h-1zM20 14h1v1h-1zM0 15h1v1h-1zM6 15h1v1h-1zM8 15h1v1h-1zM11 15h1v1h-1zM12 15h1v1h-1zM13 15h1v1h-1zM14 15h1v1h-1zM17 15h1v1h-1zM19 15h1v1h-1zM20 15h1v1h-1zM0 16h1v1h-1zM2 16h1v1h-1zM3 16h1v1h-1zM4 16h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM10 16h1v1h-1zM11 16h1v1h-1zM15 16h1v1h-1zM16 16h1v1h-1zM17 16h1v1h-1zM18 16h1v1h-1zM0 17h1v1h-1zM2 17h1v1h-1zM3 17h1v1h-1zM4 17h1v1h-1zM6 17h1v1h-1zM10 17h1v1h-1zM11 17h1v1h-1zM12 17h1v1h-1zM13 17h1v1h-1zM14 17h1v1h-1zM15 17h1v1h-1zM17 17h1v1h-1zM19 17h1v1h-1zM20 17h1v1h-1zM0 18h1v1h-1zM2 18h1v1h-1zM3 18h1v1h-1zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM17 18h1v1h-1zM19 18h1v1h-1zM20 18h1v1h-1zM0 19h1v1h-1zM6 19h1v1h-1zM9 19h1v1h-1zM13 19h1v1h-1zM16 19h1v1h-1zM19 19h1v1h-1zM0 20h1v1h-1zM1 20h1v1h-1zM2 20h1v1h-1zM3 20h1v1h-1zM4 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM10 20h1v1h-1zM11 20h1v1h-1zM12 20h1v1h-1zM13 20h1v1h-1zM16 20h1v1h-1zM18 20h1v1h-1z" fill="#3E3334"/></svg></div>
@@ -462,8 +481,8 @@
           </div>
         </div>
         <div class="addr">
-          KasaTECH · Calle del Pez 14, 28004 Madrid<br>
-          ♻ Paper wrap · molded pulp tray · no film · FSC mixed
+          KasaTECH · Petaling Jaya, Malaysia<br>
+          ♻ Metal shell · molded pulp tray · paper band · no film
         </div>
         <div class="reg">Model AMI-01 · Designed by KasaTECH</div>
       </div>
@@ -480,7 +499,7 @@
           USB-C cable<br>
           Quick start<br>
           microSD inserted
-          <div style="margin-top:12px"><i>AMI-01 · 175 × 135 × 95 mm</i></div>
+          <div style="margin-top:12px"><i>AMI-01 · 120 × 110 × 70 mm<br>metal PR box</i></div>
         </div>
       </div>
 
@@ -496,24 +515,24 @@
         <div class="codetext">SN 0000-AMI-0001</div>
         <div class="reg">
           SN 0000-AMI-0001 · Model AMI-01<br>
-          Designed by KasaTECH · FSC mixed<br>
-          ♻ paper · pulp tray · no film
+          Designed by KasaTECH · metal PR box<br>
+          ♻ metal shell · pulp tray · no film
         </div>
       </div>
     </div>
 
     <div class="strip">
-      <figure><div class="ovoid" style="width:26px;height:34px"><span class="e a" style="left:6px;width:3px;height:5px"></span><span class="e b" style="right:6px;width:3px;height:5px"></span></div><figcaption>sealed</figcaption></figure>
-      <figure><div class="ovoid" style="width:30px;height:40px"><span class="e a" style="left:7px;width:4px;height:6px"></span><span class="e b" style="right:7px;width:4px;height:6px"></span></div><figcaption>lid lifted</figcaption></figure>
-      <figure><div style="width:64px;height:40px;border:1px solid var(--line);border-radius:5px;background:var(--paper);font-size:7px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px">One thing<br>at a time.</div><figcaption>insert card</figcaption></figure>
-      <figure><div class="ovoid" style="width:26px;height:34px;box-shadow:0 8px 10px rgba(92,57,60,.12)"><span class="e a" style="left:6px;width:3px;height:5px"></span><span class="e b" style="right:6px;width:3px;height:5px"></span></div><figcaption>cradle</figcaption></figure>
+      <figure><div style="width:58px;height:52px;background:var(--metal);border:1px solid var(--metal-dark);border-radius:3px;position:relative;box-shadow:0 6px 12px rgba(92,57,60,.10)"><span style="position:absolute;left:-1px;right:-1px;top:50%;transform:translateY(-50%);height:12px;background:var(--rose-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:7px;letter-spacing:.2em;color:var(--rose-deep)">AMI</span></div><figcaption>sealed</figcaption></figure>
+      <figure><div class="ovoid" style="width:30px;height:40px"><span class="ear l"></span><span class="ear r"></span><span class="e a" style="left:7px;width:4px;height:6px"></span><span class="e b" style="right:7px;width:4px;height:6px"></span></div><figcaption>lid lifted</figcaption></figure>
+      <figure><div style="width:64px;height:40px;border:1px solid var(--line);border-radius:5px;background:var(--cream);font-size:7px;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px">One thing<br>at a time.</div><figcaption>insert card</figcaption></figure>
+      <figure><div class="ovoid" style="width:26px;height:34px;box-shadow:0 8px 10px rgba(92,57,60,.12)"><span class="ear l"></span><span class="ear r"></span><span class="e a" style="left:6px;width:3px;height:5px"></span><span class="e b" style="right:6px;width:3px;height:5px"></span></div><figcaption>pulp tray</figcaption></figure>
       <figure><div style="display:flex;gap:5px;align-items:flex-end">
-        <div class="ovoid" style="width:18px;height:24px"><span class="e a" style="left:4px;width:2px;height:3px"></span><span class="e b" style="right:4px;width:2px;height:3px"></span></div>
+        <div class="ovoid" style="width:18px;height:24px"><span class="ear l"></span><span class="ear r"></span><span class="e a" style="left:4px;width:2px;height:3px"></span><span class="e b" style="right:4px;width:2px;height:3px"></span></div>
         <div style="width:20px;height:4px;background:var(--line);border-radius:2px"></div>
         <div style="width:14px;height:18px;border:1px solid var(--line);border-radius:2px"></div>
       </div><figcaption>contents</figcaption></figure>
     </div>
-    <p class="note">Rigid two-piece box · FSC uncoated 350 gsm · soy inks · rose spot · rose-deep hot foil · pulp cradle, no plastic film.</p>
+    <p class="note">Rigid metal PR box · <b>120 × 110 × 70 mm</b> · soft-touch metal laminate · rose-deep foil wordmark · blind emboss, no ink on top · molded pulp tray, paper band, no film. <span style="color:var(--muted)">True-proportion panels and the full dieline are on plate 02.</span></p>
   </section>
 
   <!-- OOH -->
@@ -566,6 +585,7 @@
 
   <footer>
     <span>AMI — design board</span>
+    <span><a href="../AMI-self-test.html" style="color:var(--rose-deep);text-decoration:none;border-bottom:1px solid var(--line)">plate 04 — self-test &rarr;</a></span>
     <span>no gradients · no glow · no gloss · no pure white</span>
   </footer>
 </div>

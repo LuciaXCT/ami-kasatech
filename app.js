@@ -114,13 +114,25 @@ brandHomeBtn?.addEventListener('click', (e) => { e.preventDefault(); switchView(
 heroLaunchAppBtn?.addEventListener('click', () => switchView('app'));
 
 function handleOrderModal() {
-  alert(
-    'AMI by KasaTECH — The Focus Buddy\n\n' +
-    'Includes: Matte White Robot, 32GB microSD Preloaded, Braided USB-C Cable, Molded Pulp Tray.\n' +
-    'Price: $89 (Free Worldwide Shipping)\n\n' +
-    'Thank you for supporting calm, local-first hardware.'
-  );
+  const modal = document.getElementById('orderModal');
+  if (modal && typeof modal.showModal === 'function') {
+    modal.showModal();
+    playCuteChime();
+  }
 }
+document.getElementById('btnCloseOrder')?.addEventListener('click', () => {
+  document.getElementById('orderModal')?.close();
+});
+window.submitOrder = function() {
+  const nameInput = document.getElementById('orderName');
+  const name = nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Friend';
+  document.getElementById('orderModal')?.close();
+  playCuteChime();
+  spawnHeartParticle();
+  setTimeout(spawnHeartParticle, 180);
+  setTimeout(spawnHeartParticle, 360);
+  toast(`Thank you, ${name}! Your AMI pre-order is confirmed. Estimated dispatch: 3 business days.`);
+};
 $('#btnOrderHeader')?.addEventListener('click', handleOrderModal);
 $('#heroOrderBtn')?.addEventListener('click', handleOrderModal);
 
