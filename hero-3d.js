@@ -5,7 +5,7 @@ export function initHero3D() {
   const canvas = document.getElementById('heroCanvas3D');
   if (!canvas) return;
 
-  const PAPER = 0xFFF7F4, CREAM = 0xFFFDF9, INK = 0x151112, ROSE = 0xD88E9A, PEACH = 0xF6D9CA, ROSEDEEP = 0x965765;
+  const PAPER = 0xFFF7F4, CREAM = 0xFFFDF9, INK = 0x151112, ROSE = 0xD88E9A, PEACH = 0xF6D9CA, ROSEDEEP = 0x965765, BLUE = 0x5BA4E6;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let renderer;
@@ -87,7 +87,7 @@ export function initHero3D() {
     ctx.ellipse(256, 300, 128, 74, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = 'rgba(255, 253, 249, 0.95)';
+    ctx.fillStyle = 'rgba(91, 164, 230, 0.95)';
     ctx.beginPath();
     ctx.ellipse(208, 300, 26, 42, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -143,12 +143,12 @@ export function initHero3D() {
     reg('visor')([visor]);
     g.add(visor);
 
-    // Glowing Cyan / Cream Capsule Eyes
+    // Glowing Blue EVE-Style Capsule Eyes (no mouth)
     const eyeMat = new THREE.MeshStandardMaterial({
-      color: CREAM,
-      emissive: CREAM,
-      emissiveIntensity: 1.7,
-      roughness: 0.3
+      color: BLUE,
+      emissive: BLUE,
+      emissiveIntensity: 1.8,
+      roughness: 0.25
     });
     const eyes = [];
     [-1, 1].forEach((s) => {
@@ -247,10 +247,10 @@ export function initHero3D() {
   const hitList = [];
   robotG.traverse(o => { if (o.isMesh && o.userData.part) hitList.push(o); });
 
-  // --- 2. BUILD THE 3D UNBOXING BOX ---
+  // --- 2. BUILD THE 3D PREMIUM METAL BOX ---
   const boxG = new THREE.Group();
   {
-    const boxMat = new THREE.MeshPhysicalMaterial({ color: CREAM, roughness: 0.55, side: THREE.DoubleSide });
+    const boxMat = new THREE.MeshPhysicalMaterial({ color: 0xD4D4D8, roughness: 0.22, metalness: 0.85, clearcoat: 0.4, clearcoatRoughness: 0.15, side: THREE.DoubleSide });
 
     // Base Box
     const base = new THREE.Mesh(new THREE.BoxGeometry(2.45, 0.78, 1.35), boxMat);
@@ -264,7 +264,7 @@ export function initHero3D() {
     const baseLabel = new THREE.Mesh(
       new THREE.PlaneGeometry(1.5, 0.13),
       new THREE.MeshBasicMaterial({
-        map: createTextTexture('SN 0000-AMI-0001 · USB-C · 5 V, 2 A', { h: 96, size: 40, color: '#837273', ls: 4 }),
+        map: createTextTexture('SN 0000-AMI-0001 · USB-C · 5 V, 2 A', { h: 96, size: 40, color: '#71717A', ls: 4 }),
         transparent: true
       })
     );
@@ -287,8 +287,8 @@ export function initHero3D() {
     lid.add(emboss);
     boxG.add(lid);
 
-    // Paper Band
-    const bandMat = new THREE.MeshStandardMaterial({ color: 0xF6E4E3, roughness: 0.6, side: THREE.DoubleSide, transparent: true });
+    // Brushed Metal Band
+    const bandMat = new THREE.MeshStandardMaterial({ color: 0xA1A1AA, roughness: 0.30, metalness: 0.75, side: THREE.DoubleSide, transparent: true });
     const band = new THREE.Mesh(new THREE.BoxGeometry(2.47, 0.40, 1.37), bandMat);
     band.position.y = 0.42;
     band.castShadow = true;
@@ -296,7 +296,7 @@ export function initHero3D() {
     const bandLabel = new THREE.Mesh(
       new THREE.PlaneGeometry(2.1, 0.24),
       new THREE.MeshBasicMaterial({
-        map: createTextTexture('AMI · A SMALL FRIEND FOR BIG DAYS', { w: 1024, h: 120, size: 46, ls: 6 }),
+        map: createTextTexture('AMI · A SMALL FRIEND FOR BIG DAYS', { w: 1024, h: 120, size: 46, ls: 6, color: '#27272A' }),
         transparent: true
       })
     );
@@ -304,7 +304,15 @@ export function initHero3D() {
     band.add(bandLabel);
     boxG.add(band);
 
-    // Mini companion inside pulp tray
+    // High-Density Black EVA Foam Bed
+    const foamMat = new THREE.MeshStandardMaterial({ color: 0x18181B, roughness: 0.92, metalness: 0.05 });
+    const foamBed = new THREE.Mesh(new THREE.BoxGeometry(2.36, 0.35, 1.26), foamMat);
+    foamBed.position.y = 0.48;
+    foamBed.castShadow = true;
+    foamBed.receiveShadow = true;
+    boxG.add(foamBed);
+
+    // Mini companion inside foam cradle
     const mini = buildRobot();
     mini.scale.setScalar(0.34);
     mini.position.y = -0.45;
@@ -435,15 +443,15 @@ export function initHero3D() {
   const amiCaptionText = document.getElementById('amiCaptionText');
 
   const PART_DETAILS = {
-    visor: "Visor & Eyes · Dark curved glass visor with two glowing capsule eyes. Spans 60% of front height.",
+    visor: "Visor & Eyes · Dark curved glass visor with two glowing blue eyes. No mouth — AMI speaks with light.",
     ring: "Breathing Heart Ring · Soft rose ring along the 3mm base seam. Breathes on a 2.2s pace.",
     power: "Capacitive Power Button · Single top crown control. Hold to start/end a session.",
     speaker: "Speaker Arc · 5 micro-perforations on the rear. Plays royalty-free audio locally from microSD.",
     charge: "USB-C Port · Centered low on the rear to keep desk cables neat and hidden.",
     music: "MicroSD Slot · Recessed into lower base. Holds 32GB preloaded soundscapes.",
     shell: "Matte Shell · Soft-touch unibody with 3mm shadow gap. No visible screws.",
-    packinfo: "Unboxing Box · Rigid paper wrap with molded unbleached pulp tray. Zero plastic.",
-    packlabel: "Hot-Stamped Foil · Rose-deep foil stamping and blind-embossed face mark on lid."
+    packinfo: "Premium Box · Brushed anodized aluminum with magnetic closure. Zero plastic.",
+    packlabel: "Laser-Etched Lid · Precision laser marking on brushed metal surface."
   };
 
   canvas.addEventListener('click', (e) => {

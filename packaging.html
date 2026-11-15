@@ -49,9 +49,9 @@
          border-radius:48% 48% 42% 42% / 46% 46% 54% 54%;
          display:flex;align-items:center;justify-content:center;gap:2.6em;
          box-shadow:inset 0 -.8em 1.6em rgba(255,255,255,.05)}
-  .eye{width:1.3em;height:2.1em;border-radius:50%;background:var(--cream);
-       box-shadow:0 0 0 .5em rgba(216,142,154,.16)}
-  .eye.blink{height:.2em;border-radius:.2em;box-shadow:0 0 0 .5em rgba(216,142,154,.10)}
+  .eye{width:1.3em;height:2.1em;border-radius:50%;background:#5BA4E6;
+       box-shadow:0 0 .8em rgba(91,164,230,.75), 0 0 0 .3em rgba(91,164,230,.22)}
+  .eye.blink{height:.2em;border-radius:.2em;background:#5BA4E6;box-shadow:0 0 .4em rgba(91,164,230,.6)}
   .ring{position:absolute;left:50%;bottom:.7em;transform:translateX(-50%);
         width:4.6em;height:.4em;border-radius:50%;background:rgba(216,142,154,.75);
         filter:blur(.07em)}
@@ -71,10 +71,11 @@
   .cell.front{grid-area:front} .cell.right{grid-area:right;justify-content:center}
   .cell.bottom{grid-area:bottom} .cell.back{grid-area:back}
 
-  .oface{background:var(--cream);border:1px solid var(--line);position:relative;overflow:hidden;
-         box-shadow:0 6px 18px rgba(92,57,60,.05);display:flex;flex-direction:column}
+  .oface{background:linear-gradient(135deg, #F4F4F5 0%, #E4E4E7 40%, #D4D4D8 70%, #E4E4E7 100%);
+         border:1px solid #A1A1AA;position:relative;overflow:hidden;
+         box-shadow:inset 0 1px 1px rgba(255,255,255,0.8), 0 8px 24px rgba(39,39,42,.12);display:flex;flex-direction:column}
   .oface .lab{position:absolute;top:8px;left:10px;font-family:var(--mono);font-size:8.5px;
-              letter-spacing:.14em;text-transform:uppercase;color:var(--muted);z-index:2}
+              letter-spacing:.14em;text-transform:uppercase;color:#52525B;z-index:2}
   /* true panel sizes at 1.7 px per mm */
   .f-front,.f-back{width:297.5px;height:229.5px}   /* 175 x 135 */
   .f-left,.f-right{width:161.5px;height:229.5px}   /* 95 x 135 */
@@ -92,7 +93,7 @@
   .mark::before{content:"";position:absolute;left:17%;right:17%;top:25%;height:26%;
                 background:var(--ink);border-radius:46% 46% 40% 40% / 42% 42% 58% 58%}
   .mark i{position:absolute;top:32%;width:4.5px;height:7px;border-radius:50%;
-          background:var(--cream);z-index:1}
+          background:#5BA4E6;box-shadow:0 0 3px rgba(91,164,230,.8);z-index:1}
   .mark i.a{left:31%} .mark i.b{right:31%}
   .wm{font-size:33px;letter-spacing:.2em;font-weight:600;color:var(--rose-deep);line-height:1;
       text-indent:.2em}
@@ -162,36 +163,37 @@
   .uframe figcaption{position:absolute;bottom:8px;left:0;right:0;text-align:center;
                      font-family:var(--mono);font-size:8px;letter-spacing:.07em;
                      color:var(--muted);text-transform:uppercase}
-  .bx{width:92px;height:92px;background:var(--paper);border:1px solid rgba(62,51,52,.16);
-      position:relative;border-radius:2px;
-      box-shadow:0 6px 12px rgba(92,57,60,.07)}
+  .bx{width:92px;height:92px;background:linear-gradient(145deg, #F4F4F5, #D4D4D8);border:1px solid #A1A1AA;
+      position:relative;border-radius:3px;
+      box-shadow:inset 0 1px 1px rgba(255,255,255,0.7), 0 6px 14px rgba(39,39,42,.15)}
   .band{position:absolute;left:-1px;right:-1px;top:50%;transform:translateY(-50%);height:15px;
-        background:var(--rose-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+        background:linear-gradient(90deg, #3F3F46, #52525B, #3F3F46);border-top:1px solid #27272A;border-bottom:1px solid #27272A;
         display:flex;align-items:center;justify-content:center;font-family:var(--mono);
-        font-size:6.5px;letter-spacing:.22em;color:var(--rose-deep)}
-  .lid{width:94px;height:12px;background:var(--cream);border:1px solid rgba(62,51,52,.18);
-       border-radius:2px;margin-bottom:9px;box-shadow:0 5px 9px rgba(92,57,60,.10)}
-  .base6{width:86px;height:46px;background:var(--paper);border:1px solid rgba(62,51,52,.20);
+        font-size:6.5px;letter-spacing:.22em;color:#FAFAFA}
+  .lid{width:94px;height:12px;background:linear-gradient(180deg, #F4F4F5, #D4D4D8);border:1px solid #A1A1AA;
+       border-radius:2px;margin-bottom:9px;box-shadow:inset 0 1px 1px rgba(255,255,255,0.8), 0 5px 9px rgba(39,39,42,.14)}
+  .base6{width:86px;height:46px;background:linear-gradient(180deg, #E4E4E7, #D4D4D8);border:1px solid #A1A1AA;
          border-radius:1px 1px 3px 3px;overflow:hidden;display:flex;justify-content:center;
-         position:relative;box-shadow:inset 0 10px 12px rgba(92,57,60,.13)}
+         position:relative;box-shadow:inset 0 10px 12px rgba(39,39,42,.22)}
   .base6 .ami{position:absolute;top:-2px}
-  .card6{width:76px;height:48px;background:var(--cream);border:1px solid var(--line);border-radius:2px;
+  .card6{width:76px;height:48px;background:linear-gradient(145deg, #27272A, #18181B);border:1px solid #3F3F46;border-radius:2px;
          display:flex;align-items:center;justify-content:center;text-align:center;
-         font-family:var(--mono);font-size:7px;line-height:1.5;color:var(--ink);
-         box-shadow:0 4px 10px rgba(92,57,60,.06)}
-  .pulp{width:84px;height:60px;background:var(--peach);border-radius:5px;position:relative;
+         font-family:var(--mono);font-size:7px;line-height:1.5;color:#E4E4E7;
+         box-shadow:0 4px 10px rgba(0,0,0,.25)}
+  .pulp{width:84px;height:60px;background:linear-gradient(180deg, #18181B, #27272A);border-radius:5px;position:relative;
         display:flex;justify-content:center;align-items:flex-end;
-        box-shadow:inset 0 7px 9px rgba(92,57,60,.15),inset 0 -5px 8px rgba(92,57,60,.10),
-                   inset 2px 0 6px rgba(92,57,60,.07),inset -2px 0 6px rgba(92,57,60,.07)}
-  .pulp .ami{position:absolute;bottom:-3px;filter:drop-shadow(0 3px 4px rgba(92,57,60,.14))}
+        box-shadow:inset 0 7px 9px rgba(0,0,0,.6),inset 0 -5px 8px rgba(0,0,0,.4)}
+  .pulp .ami{position:absolute;bottom:-3px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.35))}
   .pulp .slot{position:absolute;right:9px;bottom:7px;width:16px;height:5px;
-              background:rgba(92,57,60,.16);border-radius:2px}
+              background:rgba(255,255,255,.08);border-radius:2px}
   .flat{display:flex;align-items:flex-end;gap:7px}
-  .flat .cbl{width:22px;height:3px;background:var(--line);border-radius:2px;margin-bottom:4px}
-  .flat .crd{width:20px;height:26px;background:var(--cream);border:1px solid var(--line);border-radius:1px}
+  .flat .cbl{width:22px;height:3px;background:#71717A;border-radius:2px;margin-bottom:4px}
+  .flat .crd{width:20px;height:26px;background:linear-gradient(145deg,#27272A,#18181B);border:1px solid #3F3F46;border-radius:1px}
 
   .band-proof{margin-top:14px;display:flex;align-items:center;gap:16px}
-  .band-proof .strip{flex:1;height:44px;background:var(--rose-soft);border:1px solid var(--line);
+  .band-proof .strip{flex:1;height:44px;background:linear-gradient(90deg, #3F3F46, #52525B, #3F3F46);border:1px solid #27272A;
+                     display:flex;align-items:center;justify-content:space-between;padding:0 16px;
+                     font-family:var(--mono);font-size:8px;letter-spacing:.18em;color:#FAFAFA}
                      display:flex;align-items:center;justify-content:space-between;padding:0 16px;
                      font-family:var(--mono);font-size:8px;letter-spacing:.18em;color:var(--rose-deep)}
   .band-proof .strip b{font-family:var(--sans);font-size:13px;letter-spacing:.22em}
@@ -328,12 +330,12 @@
   <header class="head">
     <div>
       <div class="brandmark">AM<span>I</span></div>
-      <p>Packaging · Billboard · Social — a KasaTECH product</p>
+      <p>PR Metal Packaging · Billboard Quotes · Social — a KasaTECH product</p>
     </div>
     <div class="stamp">
       plate 02 · <b>three deliverables</b><br>
-      box 175 × 135 × 95 mm<br>
-      body 150 × 110 × 100 mm
+      PR box 175 × 135 × 95 mm · Anodized Metal<br>
+      body 150 × 110 × 100 mm · Blue EVE Eyes
     </div>
   </header>
 
@@ -362,7 +364,7 @@
               <div class="codetext">AMI-01 · 5 V ⎓ 2 A</div>
             </div>
           </div>
-          <div class="addr">KasaTECH · Calle del Pez 14, 28004 Madrid<br>♻ Paper wrap · pulp tray · no film · FSC mixed</div>
+          <div class="addr">KasaTECH · Kyoto & Zurich<br>Anodized 6063-T6 Aluminum · High-Density EVA Foam · Laser-Etched</div>
           <div class="reg">Model AMI-01 · Designed by KasaTECH</div>
         </div>
         <div class="dim"><span class="tk"></span><span class="ln"></span><span>175 mm · back</span><span class="ln"></span><span class="tk"></span></div>
@@ -405,15 +407,15 @@
           <div class="codetext">SN 0000-AMI-0001</div>
           <div class="regs">
             Model AMI-01 · Designed by KasaTECH<br>
-            FSC mixed · paper wrap, pulp tray, no film<br>
-            ♻ Recycle as paper · 5 V ⎓ 2 A
+            Space Grey Anodized Aluminum · High-Density EVA Foam<br>
+            CNC Milled Metal Enclosure · 5 V ⎓ 2 A
           </div>
         </div>
         <div class="dim"><span class="tk"></span><span class="ln"></span><span>175 mm · 1.84 : 1</span><span class="ln"></span><span class="tk"></span></div>
       </div>
     </div>
 
-    <p class="ortho-note">all six panels, true proportion · nothing on the front face beyond the mark · no plastic window anywhere</p>
+    <p class="ortho-note">all six metal panels, true proportion · laser-etched mark on brushed aluminum · magnetic closure</p>
   </section>
 
   <!-- ============ 02 DIELINE ============ -->
@@ -504,12 +506,12 @@
   <!-- ============ 03 UNBOXING ============ -->
   <section>
     <div class="sec-head"><span class="n">03</span><h2>Unboxing — five frames</h2><span class="rule"></span></div>
-    <p class="spec">Paper band instead of shrink wrap. Molded pulp cradle, no plastic bag. <b>The first thing you see is the visor.</b></p>
+    <p class="spec">Brushed metal clasp sleeve. Custom high-density EVA foam bed, zero plastic film. <b>The first thing you see is the glowing blue visor.</b></p>
 
     <div class="unbox">
       <figure class="uframe">
         <div class="bx"><span class="band">AMI</span></div>
-        <figcaption>01 sealed</figcaption>
+        <figcaption>01 sealed metal pr box</figcaption>
       </figure>
       <figure class="uframe">
         <div class="lid"></div>
@@ -523,7 +525,7 @@
       </figure>
       <figure class="uframe">
         <div class="card6">One thing<br>at a time.</div>
-        <figcaption>03 insert card</figcaption>
+        <figcaption>03 matte metal card</figcaption>
       </figure>
       <figure class="uframe">
         <div class="pulp">
@@ -533,7 +535,7 @@
           </div>
           <span class="slot"></span>
         </div>
-        <figcaption>04 pulp cradle</figcaption>
+        <figcaption>04 eva foam tray</figcaption>
       </figure>
       <figure class="uframe">
         <div class="flat">
@@ -544,25 +546,25 @@
           <span class="cbl"></span>
           <span class="crd"></span>
         </div>
-        <figcaption>05 flat-lay</figcaption>
+        <figcaption>05 flat-lay kit</figcaption>
       </figure>
     </div>
 
     <div class="band-proof">
       <div class="strip"><b>AMI</b><span>A SMALL FRIEND FOR BIG DAYS</span><span>KASATECH</span></div>
-      <p>The paper band carries the only copy on the outside of the wrap: wordmark, tagline, company. It tears off in one piece.</p>
+      <p>The brushed metal band carries precision laser-marked typography: wordmark, tagline, KasaTECH. Slides off with smooth weighted friction.</p>
     </div>
   </section>
 
   <!-- ============ 04 OOH ============ -->
   <section>
-    <div class="sec-head"><span class="n">04</span><h2>Billboard — three concepts</h2><span class="rule"></span></div>
-    <p class="spec">Copy never below <b>1/12 of board height</b>. One line, one object, one wordmark. Wordmark sits at the bottom, never the top.</p>
+    <div class="sec-head"><span class="n">04</span><h2>Billboard — AMI · KasaTECH Quotes</h2><span class="rule"></span></div>
+    <p class="spec">Copy never below <b>1/12 of board height</b>. Simple, timeless quotes. One thought, one floating companion with blue glowing eyes, one wordmark at the base.</p>
 
     <div class="boards">
       <figure>
         <div class="board b1">
-          <div class="copy">A small friend<br>for big days.<span class="underscore"></span></div>
+          <div class="copy">“Silence is where the best work happens.”<span class="underscore"></span></div>
           <div class="obj">
             <div class="ami">
               <div class="visor"><span class="eye blink"></span><span class="eye blink"></span></div>
@@ -571,12 +573,12 @@
           </div>
           <span class="micro">AMI · KasaTECH</span>
         </div>
-        <figcaption class="cap"><span>48-sheet · 6 × 3 m</span><span><b>eyes closed, mid-breath</b> · product fills 87 % of frame</span></figcaption>
+        <figcaption class="cap"><span>48-sheet · 6 × 3 m</span><span><b>Quote 01 · Silence & Focus</b> · AMI · KasaTECH</span></figcaption>
       </figure>
 
       <figure>
         <div class="board alt b2">
-          <div class="copy">One thing<br>at a time.<span class="underscore"></span></div>
+          <div class="copy">“One thing at a time. The rest can wait.”<span class="underscore"></span></div>
           <div class="obj">
             <div class="ami">
               <div class="visor"><span class="eye"></span><span class="eye"></span></div>
@@ -585,7 +587,7 @@
           </div>
           <span class="micro">AMI · KasaTECH</span>
         </div>
-        <figcaption class="cap"><span>48-sheet · 6 × 3 m</span><span><b>negative space</b> · whole object at true scale</span></figcaption>
+        <figcaption class="cap"><span>48-sheet · 6 × 3 m</span><span><b>Quote 02 · Single-Tasking</b> · AMI · KasaTECH</span></figcaption>
       </figure>
 
       <figure>
@@ -596,37 +598,38 @@
               <div class="ring"></div>
             </div>
           </div>
-          <div class="copy">Breaks count too.<span class="underscore"></span></div>
+          <div class="copy">“A quiet mind builds loud things.”<span class="underscore"></span></div>
           <span class="micro">AMI · KasaTECH</span>
         </div>
-        <figcaption class="cap"><span>48-sheet · 6 × 3 m</span><span><b>visor crop</b> · one eye open, one blinking</span></figcaption>
+        <figcaption class="cap"><span>48-sheet · 6 × 3 m</span><span><b>Quote 03 · Deep Craft</b> · AMI · KasaTECH</span></figcaption>
       </figure>
     </div>
 
-    <p class="spec" style="margin:34px 0 12px">Same three concepts, adapted to <b>digital 16:9 (1920 × 1080)</b>. Shown at 1:5.</p>
+    <p class="spec" style="margin:34px 0 12px">Same quotes, adapted to <b>digital 16:9 (1920 × 1080)</b>. Shown at 1:5.</p>
     <div class="thumbs">
       <div class="thumb">
         <span class="tc">16:9</span>
-        <div class="copy">A small friend for big days.</div>
+        <div class="copy">“Silence is where the best work happens.”</div>
         <div class="obj"><div class="ami b1i"><div class="visor"><span class="eye blink"></span><span class="eye blink"></span></div><div class="ring"></div></div></div>
         <span class="micro">AMI · KasaTECH</span>
       </div>
       <div class="thumb alt">
         <span class="tc">16:9</span>
-        <div class="copy">One thing at a time.</div>
+        <div class="copy">“One thing at a time. The rest can wait.”</div>
         <div class="obj"><div class="ami b2i"><div class="visor"><span class="eye"></span><span class="eye"></span></div><div class="ring"></div></div></div>
         <span class="micro">AMI · KasaTECH</span>
       </div>
       <div class="thumb tint">
         <span class="tc">16:9</span>
         <div class="crop"><div class="ami"><div class="visor"><span class="eye"></span><span class="eye blink"></span></div><div class="ring"></div></div></div>
-        <div class="copy">Breaks count too.</div>
+        <div class="copy">“A quiet mind builds loud things.”</div>
+        <span class="micro">AMI · KasaTECH</span>
       </div>
     </div>
 
     <div class="squint">
       <div class="board b1 blur" style="pointer-events:none">
-        <div class="copy">A small friend<br>for big days.<span class="underscore"></span></div>
+        <div class="copy">“Silence is where the best work happens.”<span class="underscore"></span></div>
         <div class="obj">
           <div class="ami">
             <div class="visor"><span class="eye blink"></span><span class="eye blink"></span></div>
@@ -634,7 +637,7 @@
           </div>
         </div>
       </div>
-      <p><b>Squint test, 6 px blur</b>The line reads first, the object second. The wordmark is gone at this blur — deliberately. It is the third thing you need, not the first. Nothing else collapses into grey.</p>
+      <p><b>Squint test, 6 px blur</b>The quote reads first, the glowing companion second. The wordmark AMI · KasaTECH anchors the composition. High legibility, zero clutter.</p>
     </div>
   </section>
 
