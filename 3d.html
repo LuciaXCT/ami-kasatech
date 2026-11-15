@@ -132,30 +132,24 @@
 
       <div id="robotRail">
         <span class="rlabel">Touch AMI · tap the robot or a button here</span>
-        <button class="pbtn" data-part="visor">
+        <button class="pbtn on" data-part="visor">
           <svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="5"/><circle cx="9.6" cy="12" r="1.2"/><circle cx="14.4" cy="12" r="1.2"/></svg>
-          Visor &amp; eyes</button>
+          Visor &amp; 4 eyes</button>
         <button class="pbtn" data-part="ears">
           <svg viewBox="0 0 24 24"><ellipse cx="12" cy="13" rx="6.4" ry="7.4"/><circle cx="6.6" cy="4.6" r="2.6"/><circle cx="17.4" cy="4.6" r="2.6"/></svg>
           Bear ears</button>
-        <button class="pbtn" data-part="ring">
-          <svg viewBox="0 0 24 24"><path d="M12 20s-6.5-4-6.5-9C5.5 7.6 7.6 5.6 10 5.6c1 0 2 .8 2 .8s1-.8 2-.8c2.4 0 4.5 2 4.5 5.4 0 5-6.5 9-6.5 9z"/></svg>
-          Heart ring</button>
         <button class="pbtn" data-part="power">
           <svg viewBox="0 0 24 24"><path d="M12 3v8"/><path d="M6.3 7a8 8 0 1 0 11.4 0"/></svg>
-          Power button</button>
+          Top power button</button>
         <button class="pbtn" data-part="speaker">
-          <svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="18" rx="3"/><circle cx="12" cy="7" r=".4"/><circle cx="12" cy="10" r=".4"/><circle cx="12" cy="13" r=".4"/></svg>
-          Speaker</button>
+          <svg viewBox="0 0 24 24"><rect x="7" y="11" width="10" height="7" rx="2"/><circle cx="10" cy="14" r=".4"/><circle cx="12" cy="14" r=".4"/><circle cx="14" cy="14" r=".4"/></svg>
+          Front acoustic grille</button>
         <button class="pbtn" data-part="charge">
           <svg viewBox="0 0 24 24"><rect x="4" y="9" width="16" height="7" rx="3.5"/><path d="M9 12.5h6"/></svg>
-          Charge port <small>USB-C</small></button>
-        <button class="pbtn" data-part="music">
-          <svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 11h4"/></svg>
-          microSD slot <small>the music</small></button>
+          Right-side USB-C port</button>
         <button class="pbtn" data-part="shell">
-          <svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="7" ry="9"/></svg>
-          The shell</button>
+          <svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="5"/></svg>
+          Chubby squircle shell</button>
       </div>
 
       <div id="boxRail" class="hidden">
@@ -178,7 +172,14 @@
         <span class="pill on" data-view="threeq">3/4</span>
         <span class="pill" data-view="low">Low</span>
         <span class="pill" data-view="top">Top</span>
+        <span class="pill" data-view="port">Port</span>
         <span class="pill on" id="spinBtn">Spin</span>
+      </div>
+      <div class="hud" style="top:44px;">
+        <span class="pill on" data-emo="happy">^ ^ Happy</span>
+        <span class="pill" data-emo="silly">&gt; &lt; Silly</span>
+        <span class="pill" data-emo="neutral">- - Neutral</span>
+        <span class="pill" data-emo="awake">o o Awake</span>
       </div>
       <canvas id="scene" aria-label="Interactive 3D model of AMI. Tap the bear ears, visor, heart ring, power button, speaker, charge port or microSD slot to learn each part."></canvas>
       <span class="hint" id="hint">drag to turn · tap any part of the robot</span>
@@ -289,94 +290,159 @@ function buildRobot(){
   const P=g.userData.parts;
   const reg=id=>ms=>{ ms.forEach(m=>{m.userData.part=id;}); P[id]=(P[id]||[]).concat(ms); };
 
-  const body=new THREE.Mesh(new THREE.SphereGeometry(1,48,64),
-    new THREE.MeshPhysicalMaterial({color:CREAM,roughness:.36,
-      clearcoat:.3,clearcoatRoughness:.55}));
-  body.scale.set(1.05,1.38,.92); body.position.y=1.45; body.castShadow=true;
+  // Chubby Squat Rounded Squircle Body (Soft Matte Warm White Porcelain)
+  const bodyMat=new THREE.MeshPhysicalMaterial({
+    color:0xFDFBF7,roughness:.38,metalness:.02,clearcoat:.25,clearcoatRoughness:.55,
+    sheen:.35,sheenColor:new THREE.Color(0xFFFFFF)
+  });
+  const body=new THREE.Mesh(new THREE.CapsuleGeometry(.82,.65,32,64),bodyMat);
+  body.scale.set(1.22,1.0,.98); body.position.set(0,1.22,0); body.castShadow=true;
   reg('shell')([body]); g.add(body);
 
-  /* bear ears: two soft domes on the top corners of the head */
-  const earMat=new THREE.MeshPhysicalMaterial({color:CREAM,roughness:.34,
-    clearcoat:.28,clearcoatRoughness:.6});
-  const ears=[];
+  /* bear ears: two soft rounded domes on the top corners of the head */
   for(const s of [-1,1]){
-    const ear=new THREE.Mesh(new THREE.SphereGeometry(1,32,32),earMat);
-    ear.scale.set(.30,.34,.27);
-    ear.position.set(.72*s,2.44,-.02);
-    ear.castShadow=true; ears.push(ear); g.add(ear);
+    const earGroup=new THREE.Group();
+    const earOuter=new THREE.Mesh(new THREE.SphereGeometry(.28,32,24),bodyMat);
+    earOuter.scale.set(.95,1.08,.78);
+    const earInner=new THREE.Mesh(new THREE.SphereGeometry(.20,24,18),
+      new THREE.MeshPhysicalMaterial({color:0xF3ECE6,roughness:.45,clearcoat:.1}));
+    earInner.scale.set(.90,1.0,.45); earInner.position.set(0,0,.12);
+    earGroup.add(earOuter,earInner);
+    earGroup.position.set(.74*s,2.18,0.0);
+    earGroup.rotation.z=-.32*s; earGroup.rotation.y=.08*s;
+    earGroup.castShadow=true;
+    reg('ears')([earOuter,earInner]); g.add(earGroup);
   }
-  reg('ears')(ears);
 
+  /* flush top-crown power button between bear ears */
+  const power=new THREE.Group();
+  const pBezel=new THREE.Mesh(new THREE.CylinderGeometry(.082,.086,.015,32),
+    new THREE.MeshStandardMaterial({color:0xD4D4D8,roughness:.25,metalness:.85}));
+  const pButtonCap=new THREE.Mesh(new THREE.CylinderGeometry(.072,.072,.022,32),
+    new THREE.MeshStandardMaterial({color:0x3F3F46,roughness:.45,metalness:.3}));
+  pButtonCap.position.y=.004;
+  const pPowerIcon=new THREE.Mesh(new THREE.TorusGeometry(.032,.004,12,32,Math.PI*1.5),
+    new THREE.MeshBasicMaterial({color:CYBER,transparent:true,opacity:.85}));
+  pPowerIcon.rotation.x=-Math.PI/2; pPowerIcon.rotation.z=Math.PI*.75; pPowerIcon.position.y=.016;
+  const pPowerStem=new THREE.Mesh(new THREE.PlaneGeometry(.008,.026),
+    new THREE.MeshBasicMaterial({color:CYBER,transparent:true,opacity:.85}));
+  pPowerStem.rotation.x=-Math.PI/2; pPowerStem.position.set(0,.016,-.02);
+  power.add(pBezel,pButtonCap,pPowerIcon,pPowerStem);
+  power.position.set(0,2.365,0.0);
+  reg('power')([pBezel,pButtonCap,pPowerIcon,pPowerStem]); g.add(power);
+
+  /* glossy black squircle visor */
   const visor=new THREE.Mesh(new THREE.SphereGeometry(1,48,32),
-    new THREE.MeshPhysicalMaterial({color:INK,roughness:.12,
-      clearcoat:1,clearcoatRoughness:.25}));
-  visor.scale.set(.66,.4,.38); visor.position.set(0,1.78,.55); visor.castShadow=true;
+    new THREE.MeshPhysicalMaterial({color:INK,roughness:.08,metalness:.15,clearcoat:1,clearcoatRoughness:.12}));
+  visor.scale.set(.72,.44,.45); visor.position.set(0,1.54,.65); visor.castShadow=true;
   reg('visor')([visor]); g.add(visor);
 
-  const eyeMat=new THREE.MeshStandardMaterial({color:CYBER,
-    emissive:CYBER,emissiveIntensity:1.35,roughness:.35});
-  const eyes=[];
-  for(const s of [-1,1]){
-    const eye=new THREE.Mesh(new THREE.SphereGeometry(1,24,24),eyeMat);
-    eye.scale.set(.085,.165,.045); eye.position.set(.24*s,1.78,.905);
-    eye.userData.glow=true; eyes.push(eye); g.add(eye);
+  /* dynamic 4-emotion canvas texture for glowing cyan eyes (^ ^ / > < / - - / o o) */
+  const eyeCanvas=document.createElement('canvas');
+  eyeCanvas.width=512; eyeCanvas.height=256;
+  const eyeCtx=eyeCanvas.getContext('2d');
+  const eyeTexture=new THREE.CanvasTexture(eyeCanvas);
+  eyeTexture.colorSpace=THREE.SRGBColorSpace;
+
+  function renderEyes(emotion='happy',blinkScale=1.0){
+    eyeCtx.clearRect(0,0,512,256);
+    eyeCtx.save();
+    eyeCtx.strokeStyle='#00D9FF'; eyeCtx.fillStyle='#00D9FF';
+    eyeCtx.shadowColor='#38BDF8'; eyeCtx.shadowBlur=20;
+    eyeCtx.lineCap='round'; eyeCtx.lineJoin='round';
+    const cx1=175, cx2=337, cy=128;
+
+    if(blinkScale<.12){
+      eyeCtx.lineWidth=6;
+      [-1,1].forEach(s=>{
+        const x=s===-1?cx1:cx2;
+        eyeCtx.beginPath(); eyeCtx.moveTo(x-36,cy); eyeCtx.lineTo(x+36,cy); eyeCtx.stroke();
+      });
+      eyeCtx.restore(); eyeTexture.needsUpdate=true; return;
+    }
+
+    if(emotion==='happy'){
+      eyeCtx.lineWidth=14;
+      [-1,1].forEach(s=>{
+        const x=s===-1?cx1:cx2;
+        eyeCtx.beginPath(); eyeCtx.arc(x,cy+22,38,Math.PI*1.15,Math.PI*1.85); eyeCtx.stroke();
+        eyeCtx.save(); eyeCtx.strokeStyle='#E0F2FE'; eyeCtx.lineWidth=5;
+        eyeCtx.beginPath(); eyeCtx.arc(x,cy+22,38,Math.PI*1.20,Math.PI*1.80); eyeCtx.stroke(); eyeCtx.restore();
+      });
+    } else if(emotion==='silly'){
+      eyeCtx.lineWidth=14;
+      eyeCtx.beginPath(); eyeCtx.moveTo(cx1-26,cy-26*blinkScale); eyeCtx.lineTo(cx1+22,cy); eyeCtx.lineTo(cx1-26,cy+26*blinkScale); eyeCtx.stroke();
+      eyeCtx.beginPath(); eyeCtx.moveTo(cx2+26,cy-26*blinkScale); eyeCtx.lineTo(cx2-22,cy); eyeCtx.lineTo(cx2+26,cy+26*blinkScale); eyeCtx.stroke();
+      eyeCtx.save(); eyeCtx.strokeStyle='#E0F2FE'; eyeCtx.lineWidth=5;
+      eyeCtx.beginPath(); eyeCtx.moveTo(cx1-26,cy-26*blinkScale); eyeCtx.lineTo(cx1+22,cy); eyeCtx.lineTo(cx1-26,cy+26*blinkScale); eyeCtx.stroke();
+      eyeCtx.beginPath(); eyeCtx.moveTo(cx2+26,cy-26*blinkScale); eyeCtx.lineTo(cx2-22,cy); eyeCtx.lineTo(cx2+26,cy+26*blinkScale); eyeCtx.stroke();
+      eyeCtx.restore();
+    } else if(emotion==='awake'){
+      [-1,1].forEach(s=>{
+        const x=s===-1?cx1:cx2, rx=24, ry=34*blinkScale;
+        eyeCtx.lineWidth=11; eyeCtx.beginPath(); eyeCtx.ellipse(x,cy,rx,Math.max(3,ry),0,0,Math.PI*2); eyeCtx.stroke();
+        eyeCtx.save(); eyeCtx.strokeStyle='#E0F2FE'; eyeCtx.lineWidth=4;
+        eyeCtx.beginPath(); eyeCtx.ellipse(x,cy,rx,Math.max(3,ry),0,0,Math.PI*2); eyeCtx.stroke(); eyeCtx.restore();
+      });
+    } else {
+      const w=70, h=24*blinkScale;
+      [-1,1].forEach(s=>{
+        const x=s===-1?cx1:cx2;
+        eyeCtx.beginPath(); eyeCtx.roundRect(x-w/2,cy-h/2,w,Math.max(4,h),12); eyeCtx.fill();
+        eyeCtx.save(); eyeCtx.fillStyle='#E0F2FE'; eyeCtx.beginPath();
+        eyeCtx.roundRect(x-w/2+8,cy-(h*.45)/2,w-16,Math.max(2,h*.45),6); eyeCtx.fill(); eyeCtx.restore();
+      });
+    }
+    eyeCtx.restore(); eyeTexture.needsUpdate=true;
   }
-  reg('eyes')(eyes);
+  renderEyes('happy',1.0);
 
-  /* 3mm baseline seam gap (NO heart indicator) */
-  const seamMat=new THREE.MeshStandardMaterial({color:0x1E1B1C,roughness:.85});
-  const seam=new THREE.Mesh(new THREE.TorusGeometry(.4,.035,16,48),seamMat);
-  seam.rotation.x=Math.PI/2; seam.position.set(0,.16,.1);
-  reg('seam')([seam]); g.add(seam);
+  const eyePlane=new THREE.Mesh(new THREE.PlaneGeometry(.84,.42),
+    new THREE.MeshBasicMaterial({map:eyeTexture,transparent:true,opacity:.98,depthWrite:false}));
+  eyePlane.position.set(0,1.54,1.085);
+  reg('visor')([eyePlane]); g.add(eyePlane);
+  g.userData.renderEyes=renderEyes;
 
-  /* speaker: five small openings on the back */
-  const spk=[];
-  for(let i=-2;i<=2;i++){
-    const hole=new THREE.Mesh(new THREE.CircleGeometry(.042,16),
-      new THREE.MeshStandardMaterial({color:0x3A3031,roughness:.8}));
-    hole.position.set(i*.085,.006-Math.abs(i)*.004,-.005);
-    hole.rotation.y=Math.PI;
-    hole.castShadow=false; spk.push(hole);
-  }
-  const speaker=new THREE.Group();
-  speaker.position.set(0,2.0,-.83); speaker.rotation.x=-.12;
-  spk.forEach(h=>speaker.add(h));
-  speaker.children.forEach(m=>m.rotation.y=Math.PI);
-  reg('speaker')(spk); g.add(speaker);
+  /* front acoustic speaker grille on belly */
+  const spkCanvas=document.createElement('canvas');
+  spkCanvas.width=512; spkCanvas.height=256;
+  const spkCtx=spkCanvas.getContext('2d');
+  const rows=[{y:64,count:9},{y:88,count:15},{y:112,count:21},{y:136,count:23},{y:160,count:21},{y:184,count:15},{y:208,count:9}];
+  const spkCx=256, dotSpacing=16, dotRadius=3.2;
+  rows.forEach(r=>{
+    const startX=spkCx-((r.count-1)*dotSpacing)/2;
+    for(let i=0;i<r.count;i++){
+      const x=startX+i*dotSpacing;
+      spkCtx.beginPath(); spkCtx.arc(x,r.y+.6,dotRadius+.5,0,Math.PI*2); spkCtx.fillStyle='rgba(255,255,255,0.45)'; spkCtx.fill();
+      spkCtx.beginPath(); spkCtx.arc(x,r.y,dotRadius,0,Math.PI*2); spkCtx.fillStyle='#272324'; spkCtx.fill();
+    }
+  });
+  const spkTexture=new THREE.CanvasTexture(spkCanvas); spkTexture.colorSpace=THREE.SRGBColorSpace;
+  const spkPlane=new THREE.Mesh(new THREE.PlaneGeometry(.85,.42),
+    new THREE.MeshBasicMaterial({map:spkTexture,transparent:true,opacity:.95,depthWrite:false}));
+  spkPlane.position.set(0,.88,.82); spkPlane.rotation.x=-.12;
+  reg('speaker')([spkPlane]); g.add(spkPlane);
 
-  /* USB-C charge port, low on the back */
+  /* right-side recessed USB-C charge port */
   const charge=new THREE.Group();
-  const port=new THREE.Mesh(new THREE.CylinderGeometry(.048,.048,.14,20),
-    new THREE.MeshStandardMaterial({color:0x3A3031,roughness:.35,metalness:.55}));
-  port.rotation.z=Math.PI/2;
-  const slot=new THREE.Mesh(new THREE.BoxGeometry(.09,.014,.012),
-    new THREE.MeshStandardMaterial({color:0x514344,roughness:.4}));
-  slot.position.z=-.012;
-  charge.add(port,slot);
-  charge.position.set(0,.35,-.565); charge.rotation.x=-.1;
-  port.userData.part='charge'; slot.userData.part='charge';
-  P.charge=[port,slot]; g.add(charge);
+  const portBevel=new THREE.Mesh(new THREE.CylinderGeometry(.065,.068,.04,24),
+    new THREE.MeshStandardMaterial({color:0x8E8B8C,roughness:.22,metalness:.9}));
+  portBevel.rotation.z=Math.PI/2;
+  const innerCavity=new THREE.Mesh(new THREE.BoxGeometry(.088,.028,.04),
+    new THREE.MeshStandardMaterial({color:0x0A0809,roughness:.9}));
+  innerCavity.position.z=-.01;
+  const pinTongue=new THREE.Mesh(new THREE.BoxGeometry(.052,.008,.026),
+    new THREE.MeshStandardMaterial({color:0xD4AF37,roughness:.28,metalness:.95}));
+  pinTongue.position.z=-.008;
+  charge.add(portBevel,innerCavity,pinTongue);
+  charge.position.set(1.00,.58,.02); charge.rotation.y=Math.PI/2;
+  reg('charge')([portBevel,innerCavity,pinTongue]); g.add(charge);
 
-  /* microSD slot, on the back-right shoulder of the base */
-  const sd=new THREE.Mesh(new THREE.BoxGeometry(.13,.035,.022),
-    new THREE.MeshStandardMaterial({color:0x3A3031,roughness:.4}));
-  sd.position.set(.30,.35,-.49); sd.rotation.y=.55;
-  const sdNote=new THREE.Mesh(new THREE.BoxGeometry(.05,.014,.006),
-    new THREE.MeshStandardMaterial({color:0x837273,roughness:.6}));
-  sdNote.position.set(.30,.335,-.475); sdNote.rotation.y=.55;
-  reg('music')([sd,sdNote]); g.add(sd,sdNote);
-
-  /* power button, top of the back */
-  const power=new THREE.Group();
-  const cap=new THREE.Mesh(new THREE.CylinderGeometry(.055,.055,.02,24),
-    new THREE.MeshStandardMaterial({color:0x3A3334,roughness:.5}));
-  cap.rotation.x=Math.PI/2;
-  const halo=new THREE.Mesh(new THREE.TorusGeometry(.055,.011,12,32),
-    new THREE.MeshStandardMaterial({color:ROSEDEEP,roughness:.5}));
-  power.add(cap,halo);
-  power.position.set(0,2.55,-.55); power.rotation.x=-.35;
-  cap.userData.part='power'; halo.userData.part='power';
-  P.power=[cap,halo]; g.add(power);
+  /* 3mm baseline non-slip silicone seam (NO heart indicator) */
+  const seamMat=new THREE.MeshStandardMaterial({color:0x1E1B1C,roughness:.85});
+  const seam=new THREE.Mesh(new THREE.TorusGeometry(.52,.032,16,48),seamMat);
+  seam.rotation.x=Math.PI/2; seam.position.set(0,.10,0);
+  reg('seam')([seam]); g.add(seam);
 
   return g;
 }
@@ -463,28 +529,27 @@ function flyTo(p,t,dur=650){
 }
 
 const VIEWS={
-  front:{p:[0,1.5,4.6],t:[0,1.5,0]},
-  threeq:{p:[2.7,2.1,3.6],t:[0,1.4,0]},
+  front:{p:[0,1.4,4.4],t:[0,1.3,0]},
+  threeq:{p:[2.7,2.0,3.4],t:[0,1.3,0]},
   low:{p:[1.2,.55,3.9],t:[0,1.15,0]},
-  top:{p:[0,5.4,2.4],t:[0,1.2,0]},
+  top:{p:[0,4.8,1.8],t:[0,1.3,0]},
+  port:{p:[3.8,1.2,0.4],t:[0,1.1,0]},
   box:{p:[2.9,2.3,4.3],t:[0,.7,0]},
   boxopen:{p:[0,3.8,3.2],t:[0,1.05,0]}
 };
 const PARTVIEWS={
-  visor:{p:[.5,1.9,2.9],t:[0,1.78,.8]},
-  eyes:{p:[0,1.78,2.7],t:[0,1.78,1]},
-  ears:{p:[0,3.3,2.4],t:[0,2.6,0]},
-  seam:{p:[.9,.8,2.5],t:[0,.3,.2]},
-  power:{p:[0,3.2,-2.8],t:[0,2.5,-.5]},
-  speaker:{p:[-1,2.3,-2.9],t:[0,2,-.75]},
-  charge:{p:[0,.8,-3.3],t:[0,.35,-.5]},
-  music:{p:[1.9,.8,-2.3],t:[.3,.35,-.45]},
-  shell:{p:[2.7,2.1,3.6],t:[0,1.4,0]}
+  visor:{p:[0,1.6,2.8],t:[0,1.54,.6]},
+  eyes:{p:[0,1.55,2.6],t:[0,1.54,1]},
+  ears:{p:[0,3.2,2.2],t:[0,2.18,0]},
+  power:{p:[0,3.6,1.2],t:[0,2.36,0]},
+  speaker:{p:[0,1.1,2.8],t:[0,.88,.8]},
+  charge:{p:[3.2,.8,.4],t:[1.0,.58,0]},
+  shell:{p:[2.7,2.0,3.4],t:[0,1.3,0]}
 };
 
 /* ---------- controls + hud ---------- */
 const controls=new OrbitControls(cam,canvas);
-controls.target.set(0,1.4,0);
+controls.target.set(0,1.3,0);
 controls.enableDamping=true; controls.dampingFactor=.08;
 controls.enablePan=false;
 controls.minDistance=2.4; controls.maxDistance=11;
@@ -501,38 +566,46 @@ document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',(
   flyTo(VIEWS[b.dataset.view].p,VIEWS[b.dataset.view].t);
 }));
 
+/* ---------- 4-emotion eye switching (^ ^ / > < / - - / o o) ---------- */
+let currentEmotion = 'happy';
+document.querySelectorAll('[data-emo]').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('[data-emo]').forEach(x=>x.classList.toggle('on',x===b));
+  currentEmotion = b.dataset.emo;
+  if(robotG.userData.renderEyes) robotG.userData.renderEyes(currentEmotion, 1.0);
+  const toast=document.getElementById('toast');
+  if(toast){
+    toast.textContent = `AMI EMOTION: ${b.textContent}`;
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'), 1400);
+  }
+}));
+
 /* ---------- info panel ---------- */
 const PARTS={
-  visor:{kind:'the face',t:'The visor & the eyes',
-    p:'One piece of dark glass set into the shell. Two capsule eyes glow inside it; they blink, they brighten when a session starts, they dim when you rest. AMI has no mouth: it speaks with light.',
-    s:['gloss #151112 · spans 26 % of the body','eyes: emissive #00D9FF, they breathe','never a cartoon face, never a mouth']},
+  visor:{kind:'the face',t:'The visor & 4 glowing eyes',
+    p:'A dark curved squircle glass visor spanning the upper front face. Inside glow two electric blue LED eyes with four distinct emotional states: Happy (^ ^), Silly (> <), Neutral (- -), and Awake (o o). AMI has zero mouth: it speaks entirely through light.',
+    s:['gloss black squircle visor','emissive #00D9FF glow with neon bloom','4 light emotions (^ ^ / > < / - - / o o)','zero mouth · speaks with light']},
   ears:{kind:'the silhouette',t:'The bear ears',
-    p:'Two soft domes on the top corners of the head, moulded into the same shell, not glued on. They sit above the visor line so the silhouette reads as a small animal from across a room, and they give your hand two honest places to pick AMI up.',
-    s:['2 domes · top corners, 69 % out from centre','same cream shell, no extra part line','readable at 3 m on a billboard']},
-  seam:{kind:'the baseline',t:'The 3mm base seam',
-    p:'A dark silicone shadow gap baseline seam with zero visible screws. Clean physical enclosure with no heart indicator, perfectly calm and minimal.',
-    s:['3 mm shadow gap','zero heart indicator · calm presence']},
-  power:{kind:'the switch',t:'One button, on purpose',
-    p:'A single button on the back of the head. One press wakes AMI; a long hold starts a session. No menus on the robot, no screen. AMI never starts anything without you asking.',
-    s:['top-back, under the palm','wake: 1 press · session: hold']},
-  speaker:{kind:'the voice',t:'The speaker',
-    p:'Five small openings, honest mono sound. The focus moods, the break treats and the spoken reminders all come from inside the body. Nothing streams: sound is played locally.',
-    s:['5 openings · rear mix','spoken reminders · gentle, never a scolding']},
-  charge:{kind:'the energy',t:'The charge port',
-    p:'A USB-C port low on the back, placed so the cable hides behind the body and the desk stays clean. A full charge carries a working day of focus sessions.',
-    s:['USB-C · 5 V, 2 A','cable hides behind the shell']},
-  music:{kind:'the memory',t:'The microSD slot',
-    p:'AMI plays from a card that lives inside its body. Royalty-free tracks ship on it; your own files can too. You own the music and nothing leaves the room.',
-    s:['microSD · local playback only','no streaming by default']},
-  shell:{kind:'the body',t:'The seamless shell',
-    p:'One ovoid, no visible screws, no seams except the base. It floats 3 mm above the desk so the shadow reads as a gap. Warm cream in daylight, a quiet glow at night.',
-    s:['96 × 73 × 64 mm · 15 : 19.6 ovoid','cream #FFFDF9 · soft matte']},
+    p:'Two soft rounded bear ears seamlessly molded into the top corners of the porcelain shell unibody. They give the silhouette an unmistakable, friendly character readable from across the room.',
+    s:['2 rounded ears on top head corners','seamless unibody porcelain mold','distinctive physical silhouette']},
+  power:{kind:'the crown button',t:'Flush crown power button',
+    p:'A single flush circular tactile button positioned directly on the top crown of the head between the bear ears. A quick press wakes AMI; a calm hold starts or completes a focus session.',
+    s:['top crown between bear ears','flush tactile disc with CNC chamfer','wake: tap · session: hold']},
+  speaker:{kind:'the acoustic grille',t:'Front acoustic matrix',
+    p:'A precision micro-perforated acoustic matrix located directly on the front belly beneath the visor. Tuned for natural, warm mono voice reminders and ambient soundscapes without high-frequency harshness.',
+    s:['front belly acoustic micro-perforations','multi-hole matrix array','warm voice cues & local soundscapes']},
+  charge:{kind:'the power',t:'Right-side USB-C port',
+    p:'A recessed CNC-machined USB-C port positioned cleanly on the lower right flank of the robot. Keeps cables neatly routed beside your keyboard while charging.',
+    s:['lower right flank placement','CNC metal bezel with gold contact tongue','clean desk cable management']},
+  shell:{kind:'the unibody',t:'Chubby squircle unibody',
+    p:'A chubby rounded-capsule squircle unibody finished in warm white porcelain with a soft-touch matte texture. Floats 3mm above your desk on a dark non-slip silicone base with zero visible screws.',
+    s:['chubby squircle silhouette (110 × 95 × 85 mm)','soft-touch warm porcelain matte','3mm desk shadow gap · non-slip silicone']},
   packinfo:{kind:'the box',t:"What's inside",
-    p:'A rigid steel-toned box with a soft-touch laminate, not a printed carton. Inside: a moulded pulp tray holding the body face-up, the quick-start card, a USB-C cable, and the microSD already seated in AMI. No plastic bag, no film.',
-    s:['metal PR box 120 × 110 × 70 mm','AMI lies on its back, face up, in a moulded pulp tray','film: zero, anywhere']},
+    p:'A rigid space grey brushed anodized aluminum PR box with precision EVA foam cradle. Inside: AMI companion robot, braided USB-C cable, quick-start card, and warranty documentation.',
+    s:['metal PR box 120 × 110 × 70 mm','high-density EVA foam cradle','zero plastic film anywhere']},
   packlabel:{kind:'the print',t:'The labelling',
-    p:'The front carries the foil wordmark, an embossed visor face with the ears, and the KasaTECH logotype. A paper band wraps the seam and tears off in one piece. The top wears a blind emboss of the face, no ink. The base keeps a small serial label for the recyclers.',
-    s:['front: rose-deep foil AMI + embossed visor + KasaTECH','band: paper, tagline only, tears off in one piece','base: SN 0000-AMI-0001 · recycle shell as metal']}
+    p:'The metal lid features precision laser etching with the AMI emblem and tagline. Base carries laser serial engraving and recyclability codes.',
+    s:['lid: laser-etched AMI mark & typography','band: uncoated paper tear-strip','base: laser serial SN 0000-AMI-0001']}
 };
 
 const info=document.getElementById('info');

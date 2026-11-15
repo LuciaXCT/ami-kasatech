@@ -5,7 +5,7 @@ export function initHero3D() {
   const canvas = document.getElementById('heroCanvas3D');
   if (!canvas) return;
 
-  const PAPER = 0xFFF7F4, CREAM = 0xFFFDF9, INK = 0x151112, ROSE = 0xD88E9A, PEACH = 0xF6D9CA, ROSEDEEP = 0x965765, BLUE = 0x5BA4E6;
+  const PAPER = 0xFFF7F4, CREAM = 0xFFFDF9, INK = 0x151112, ROSE = 0xD88E9A, PEACH = 0xF6D9CA, ROSEDEEP = 0x965765, CYBER = 0x00D9FF;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let renderer;
@@ -29,7 +29,7 @@ export function initHero3D() {
   const rect = canvas.getBoundingClientRect();
   const aspect = (rect.width && rect.height) ? (rect.width / rect.height) : 1;
   const cam = new THREE.PerspectiveCamera(34, aspect, 0.1, 60);
-  cam.position.set(2.7, 2.1, 3.6);
+  cam.position.set(4.33, 2.52, 5.77);
 
   // Studio Lighting
   scene.add(new THREE.HemisphereLight(0xFFFDF9, PEACH, 0.95));
@@ -87,7 +87,7 @@ export function initHero3D() {
     ctx.ellipse(256, 300, 128, 74, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = 'rgba(91, 164, 230, 0.95)';
+    ctx.fillStyle = 'rgba(0, 217, 255, 0.95)';
     ctx.beginPath();
     ctx.ellipse(208, 300, 26, 42, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -111,52 +111,101 @@ export function initHero3D() {
       P[id] = (P[id] || []).concat(ms);
     };
 
-    // Continuous Ovoid Body (Soft Matte Cream)
+    // Chubby Squat Rounded Squircle Body (Soft Matte Warm White Porcelain)
     const bodyMat = new THREE.MeshPhysicalMaterial({
-      color: CREAM,
-      roughness: 0.36,
-      clearcoat: 0.32,
-      clearcoatRoughness: 0.55
+      color: 0xFDFBF7,
+      roughness: 0.38,
+      metalness: 0.02,
+      clearcoat: 0.25,
+      clearcoatRoughness: 0.55,
+      sheen: 0.35,
+      sheenColor: new THREE.Color(0xFFFFFF)
     });
     const body = new THREE.Mesh(
-      new THREE.SphereGeometry(1, 48, 64),
+      new THREE.CapsuleGeometry(0.82, 0.65, 32, 64),
       bodyMat
     );
-    body.scale.set(1.05, 1.38, 0.92);
-    body.position.y = 1.45;
+    body.scale.set(1.22, 1.0, 0.98);
+    body.position.set(0, 1.22, 0);
     body.castShadow = true;
     reg('shell')([body]);
     g.add(body);
 
     // Cute Rounded Bear Ears on Top Corners of Head
     [-1, 1].forEach((s) => {
-      const ear = new THREE.Mesh(new THREE.SphereGeometry(0.24, 32, 24), bodyMat);
-      ear.scale.set(0.95, 1.05, 0.75);
-      ear.position.set(0.68 * s, 2.56, 0.02);
-      ear.rotation.z = -0.32 * s;
-      ear.rotation.y = 0.10 * s;
-      ear.castShadow = true;
-      reg('ears')([ear]);
-      g.add(ear);
+      const earGroup = new THREE.Group();
+      const earOuter = new THREE.Mesh(new THREE.SphereGeometry(0.28, 32, 24), bodyMat);
+      earOuter.scale.set(0.95, 1.08, 0.78);
+
+      const earInner = new THREE.Mesh(
+        new THREE.SphereGeometry(0.20, 24, 18),
+        new THREE.MeshPhysicalMaterial({
+          color: 0xF3ECE6,
+          roughness: 0.45,
+          clearcoat: 0.1
+        })
+      );
+      earInner.scale.set(0.90, 1.0, 0.45);
+      earInner.position.set(0, 0, 0.12);
+
+      earGroup.add(earOuter, earInner);
+      earGroup.position.set(0.74 * s, 2.18, 0.0);
+      earGroup.rotation.z = -0.32 * s;
+      earGroup.rotation.y = 0.08 * s;
+      earGroup.castShadow = true;
+      reg('ears')([earOuter, earInner]);
+      g.add(earGroup);
     });
 
-    // Glossy Black Curved Visor
+    // Flush Top-Crown Tactile Power Button between ears
+    const power = new THREE.Group();
+    const pBezel = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.082, 0.086, 0.015, 32),
+      new THREE.MeshStandardMaterial({ color: 0xD4D4D8, roughness: 0.25, metalness: 0.85 })
+    );
+    const pButtonCap = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.072, 0.072, 0.022, 32),
+      new THREE.MeshStandardMaterial({ color: 0x3F3F46, roughness: 0.45, metalness: 0.3 })
+    );
+    pButtonCap.position.y = 0.004;
+    const pPowerIcon = new THREE.Mesh(
+      new THREE.TorusGeometry(0.032, 0.004, 12, 32, Math.PI * 1.5),
+      new THREE.MeshBasicMaterial({ color: 0x00D9FF, transparent: true, opacity: 0.85 })
+    );
+    pPowerIcon.rotation.x = -Math.PI / 2;
+    pPowerIcon.rotation.z = Math.PI * 0.75;
+    pPowerIcon.position.y = 0.016;
+
+    const pPowerStem = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.008, 0.026),
+      new THREE.MeshBasicMaterial({ color: 0x00D9FF, transparent: true, opacity: 0.85 })
+    );
+    pPowerStem.rotation.x = -Math.PI / 2;
+    pPowerStem.position.set(0, 0.016, -0.02);
+
+    power.add(pBezel, pButtonCap, pPowerIcon, pPowerStem);
+    power.position.set(0, 2.365, 0.0);
+    reg('power')([pBezel, pButtonCap, pPowerIcon, pPowerStem]);
+    g.add(power);
+
+    // Glossy Black Curved Visor (Squircle glass face)
     const visor = new THREE.Mesh(
       new THREE.SphereGeometry(1, 48, 32),
       new THREE.MeshPhysicalMaterial({
-        color: INK,
-        roughness: 0.12,
+        color: 0x080607,
+        roughness: 0.08,
+        metalness: 0.15,
         clearcoat: 1.0,
-        clearcoatRoughness: 0.2
+        clearcoatRoughness: 0.12
       })
     );
-    visor.scale.set(0.66, 0.40, 0.50);
-    visor.position.set(0, 1.78, 0.72);
+    visor.scale.set(0.84, 0.44, 0.45);
+    visor.position.set(0, 1.54, 0.65);
     visor.castShadow = true;
     reg('visor')([visor]);
     g.add(visor);
 
-    // Dynamic 3-Emotion High-Res Canvas Texture for Eyes (^ ^ / > < / - -)
+    // Dynamic 4-Emotion High-Res Canvas Texture for Eyes (^ ^ / > < / - - / o o)
     const eyeCanvas = document.createElement('canvas');
     eyeCanvas.width = 512;
     eyeCanvas.height = 256;
@@ -164,105 +213,47 @@ export function initHero3D() {
     const eyeTexture = new THREE.CanvasTexture(eyeCanvas);
     eyeTexture.colorSpace = THREE.SRGBColorSpace;
 
-    function renderEyes(emotion = 'happy', blinkScale = 1.0) {
+    function renderEyes(emotion = 'awake', blinkScale = 1.0) {
       eyeCtx.clearRect(0, 0, 512, 256);
       eyeCtx.save();
-      eyeCtx.strokeStyle = '#5BA4E6';
-      eyeCtx.fillStyle = '#5BA4E6';
-      eyeCtx.shadowColor = '#38BDF8';
+      eyeCtx.fillStyle = '#00D9FF';
+      eyeCtx.shadowColor = 'rgba(0, 217, 255, 0.85)';
       eyeCtx.shadowBlur = 18;
-      eyeCtx.lineCap = 'round';
-      eyeCtx.lineJoin = 'round';
 
-      const cx1 = 175;
-      const cx2 = 337;
+      const cx1 = 138;
+      const cx2 = 374;
       const cy = 128;
+      const w = 100;
 
-      if (blinkScale < 0.12) {
-        eyeCtx.lineWidth = 6;
-        [-1, 1].forEach((s) => {
-          const x = s === -1 ? cx1 : cx2;
-          eyeCtx.beginPath();
-          eyeCtx.moveTo(x - 36, cy);
-          eyeCtx.lineTo(x + 36, cy);
-          eyeCtx.stroke();
-        });
-        eyeCtx.restore();
-        eyeTexture.needsUpdate = true;
-        return;
-      }
+      // one height rule per emotion; blink collapses it toward a line
+      const hMul = emotion === 'silly' ? 0.62
+        : emotion === 'neutral' ? 0.46
+        : emotion === 'happy' ? 1.08 : 1.0;
+      const h = Math.max(13, 160 * hMul * blinkScale);
 
-      if (emotion === 'happy') {
-        // Happy = ^ ^ (smiling curved upward neon arcs)
-        eyeCtx.lineWidth = 14;
-        [-1, 1].forEach((s) => {
-          const x = s === -1 ? cx1 : cx2;
-          eyeCtx.beginPath();
-          eyeCtx.arc(x, cy + 22, 38, Math.PI * 1.15, Math.PI * 1.85);
-          eyeCtx.stroke();
-          eyeCtx.save();
-          eyeCtx.strokeStyle = '#E0F2FE';
-          eyeCtx.lineWidth = 5;
-          eyeCtx.beginPath();
-          eyeCtx.arc(x, cy + 22, 38, Math.PI * 1.20, Math.PI * 1.80);
-          eyeCtx.stroke();
-          eyeCtx.restore();
-        });
-      } else if (emotion === 'silly') {
-        // Silly = > < (playful angled chevrons)
-        eyeCtx.lineWidth = 14;
+      [-1, 1].forEach((side) => {
+        const x = side === -1 ? cx1 : cx2;
         eyeCtx.beginPath();
-        eyeCtx.moveTo(cx1 - 26, cy - 26 * blinkScale);
-        eyeCtx.lineTo(cx1 + 22, cy);
-        eyeCtx.lineTo(cx1 - 26, cy + 26 * blinkScale);
-        eyeCtx.stroke();
-
-        eyeCtx.beginPath();
-        eyeCtx.moveTo(cx2 + 26, cy - 26 * blinkScale);
-        eyeCtx.lineTo(cx2 - 22, cy);
-        eyeCtx.lineTo(cx2 + 26, cy + 26 * blinkScale);
-        eyeCtx.stroke();
+        eyeCtx.roundRect(x - w / 2, cy - h / 2, w, h, w / 2);
+        eyeCtx.fill();
 
         eyeCtx.save();
-        eyeCtx.strokeStyle = '#E0F2FE';
-        eyeCtx.lineWidth = 5;
+        eyeCtx.shadowBlur = 0;
+        eyeCtx.fillStyle = 'rgba(226, 246, 255, 0.55)';
         eyeCtx.beginPath();
-        eyeCtx.moveTo(cx1 - 26, cy - 26 * blinkScale);
-        eyeCtx.lineTo(cx1 + 22, cy);
-        eyeCtx.lineTo(cx1 - 26, cy + 26 * blinkScale);
-        eyeCtx.stroke();
-        eyeCtx.beginPath();
-        eyeCtx.moveTo(cx2 + 26, cy - 26 * blinkScale);
-        eyeCtx.lineTo(cx2 - 22, cy);
-        eyeCtx.lineTo(cx2 + 26, cy + 26 * blinkScale);
-        eyeCtx.stroke();
+        eyeCtx.roundRect(x - w / 2 + 22, cy - h / 2 + 20, w - 44, Math.max(9, h * 0.16), w / 2);
+        eyeCtx.fill();
         eyeCtx.restore();
-      } else {
-        // Neutral = - - (sleek horizontal capsule slit eyes)
-        const w = 70;
-        const h = 24 * blinkScale;
-        [-1, 1].forEach((s) => {
-          const x = s === -1 ? cx1 : cx2;
-          eyeCtx.beginPath();
-          eyeCtx.roundRect(x - w / 2, cy - h / 2, w, Math.max(4, h), 12);
-          eyeCtx.fill();
-          eyeCtx.save();
-          eyeCtx.fillStyle = '#E0F2FE';
-          eyeCtx.beginPath();
-          eyeCtx.roundRect(x - w / 2 + 8, cy - (h * 0.45) / 2, w - 16, Math.max(2, h * 0.45), 6);
-          eyeCtx.fill();
-          eyeCtx.restore();
-        });
-      }
+      });
 
       eyeCtx.restore();
       eyeTexture.needsUpdate = true;
     }
 
-    renderEyes('happy', 1.0);
+    renderEyes('awake', 1.0);
 
     const eyePlane = new THREE.Mesh(
-      new THREE.PlaneGeometry(0.78, 0.39),
+      new THREE.PlaneGeometry(0.98, 0.52),
       new THREE.MeshBasicMaterial({
         map: eyeTexture,
         transparent: true,
@@ -270,41 +261,73 @@ export function initHero3D() {
         depthWrite: false
       })
     );
-    eyePlane.position.set(0, 1.78, 1.215);
+    eyePlane.position.set(0, 1.54, 1.135);
     reg('eyes')([eyePlane]);
     g.add(eyePlane);
     g.userData.renderEyes = renderEyes;
 
-    // 3mm Silicone Base Shadow Gap Seam (NO Heart Indicator)
-    const seamMat = new THREE.MeshStandardMaterial({
-      color: 0x1E1B1C,
-      roughness: 0.85
+    // Front Belly Acoustic Speaker Grille (micro-perforations matrix)
+    const spkCanvas = document.createElement('canvas');
+    spkCanvas.width = 512;
+    spkCanvas.height = 256;
+    const spkCtx = spkCanvas.getContext('2d');
+    
+    const rows = [
+      { y: 64, count: 9 },
+      { y: 88, count: 15 },
+      { y: 112, count: 21 },
+      { y: 136, count: 23 },
+      { y: 160, count: 21 },
+      { y: 184, count: 15 },
+      { y: 208, count: 9 }
+    ];
+    const spkCx = 256;
+    const dotSpacing = 16;
+    const dotRadius = 3.2;
+
+    rows.forEach(r => {
+      const startX = spkCx - ((r.count - 1) * dotSpacing) / 2;
+      for (let i = 0; i < r.count; i++) {
+        const x = startX + i * dotSpacing;
+        spkCtx.beginPath();
+        spkCtx.arc(x, r.y + 0.6, dotRadius + 0.5, 0, Math.PI * 2);
+        spkCtx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+        spkCtx.fill();
+
+        spkCtx.beginPath();
+        spkCtx.arc(x, r.y, dotRadius, 0, Math.PI * 2);
+        spkCtx.fillStyle = '#272324';
+        spkCtx.fill();
+      }
     });
-    const seam = new THREE.Mesh(new THREE.TorusGeometry(0.40, 0.035, 16, 48), seamMat);
-    seam.rotation.x = Math.PI / 2;
-    seam.position.set(0, 0.16, 0.1);
-    reg('seam')([seam]);
-    g.add(seam);
 
-    // Speaker Holes on Rear (7 micro-apertures)
-    const spk = [];
-    for (let i = -3; i <= 3; i++) {
-      const hole = new THREE.Mesh(
-        new THREE.CircleGeometry(0.036, 16),
-        new THREE.MeshStandardMaterial({ color: 0x27272A, roughness: 0.85 })
-      );
-      hole.position.set(i * 0.075, 0.006 - Math.abs(i) * 0.003, -0.005);
-      hole.rotation.y = Math.PI;
-      spk.push(hole);
-    }
-    const speaker = new THREE.Group();
-    speaker.position.set(0, 2.0, -0.83);
-    speaker.rotation.x = -0.12;
-    spk.forEach(h => speaker.add(h));
-    reg('speaker')(spk);
-    g.add(speaker);
+    const spkTexture = new THREE.CanvasTexture(spkCanvas);
+    spkTexture.colorSpace = THREE.SRGBColorSpace;
+    const spkMat = new THREE.MeshBasicMaterial({
+      map: spkTexture,
+      transparent: true,
+      opacity: 0.95,
+      depthWrite: false
+    });
+    const spkPlane = new THREE.Mesh(new THREE.PlaneGeometry(0.85, 0.42), spkMat);
+    spkPlane.position.set(0, 0.88, 0.82);
+    spkPlane.rotation.x = -0.12;
+    spkPlane.userData.part = 'speaker';
+    reg('speaker')([spkPlane]);
+    g.add(spkPlane);
 
-    // Realistic USB-C Charge Port with CNC Chamfer & Gold Pin Contact Tongue
+    // Front speaker clickable hit mesh
+    const spkHit = new THREE.Mesh(
+      new THREE.BoxGeometry(0.85, 0.45, 0.1),
+      new THREE.MeshBasicMaterial({ visible: false })
+    );
+    spkHit.position.copy(spkPlane.position);
+    spkHit.rotation.copy(spkPlane.rotation);
+    spkHit.userData.part = 'speaker';
+    reg('speaker')([spkHit]);
+    g.add(spkHit);
+
+    // Recessed Right-Side USB-C Charging Port
     const charge = new THREE.Group();
     const portBevel = new THREE.Mesh(
       new THREE.CylinderGeometry(0.065, 0.068, 0.04, 24),
@@ -323,48 +346,21 @@ export function initHero3D() {
     pinTongue.position.z = -0.008;
 
     charge.add(portBevel, innerCavity, pinTongue);
-    charge.position.set(0, 0.35, -0.565);
-    charge.rotation.x = -0.1;
+    charge.position.set(1.00, 0.58, 0.02);
+    charge.rotation.y = Math.PI / 2;
     reg('charge')([portBevel, innerCavity, pinTongue]);
     g.add(charge);
 
-    // Realistic MicroSD Slot with Eject Latch Chamfer
-    const sdGroup = new THREE.Group();
-    const sdOuter = new THREE.Mesh(
-      new THREE.BoxGeometry(0.14, 0.044, 0.025),
-      new THREE.MeshStandardMaterial({ color: 0x71717A, roughness: 0.25, metalness: 0.85 })
-    );
-    const sdSlot = new THREE.Mesh(
-      new THREE.BoxGeometry(0.118, 0.018, 0.03),
-      new THREE.MeshStandardMaterial({ color: 0x0A0809, roughness: 0.9 })
-    );
-    sdSlot.position.z = 0.002;
-    sdGroup.add(sdOuter, sdSlot);
-    sdGroup.position.set(0.30, 0.35, -0.49);
-    sdGroup.rotation.y = 0.55;
-    reg('music')([sdOuter, sdSlot]);
-    g.add(sdGroup);
-
-    // Realistic Capacitive Power Crown with Concentric Machined Rings
-    const power = new THREE.Group();
-    const cap = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.062, 0.062, 0.02, 32),
-      new THREE.MeshStandardMaterial({ color: 0x27272A, roughness: 0.32, metalness: 0.8 })
-    );
-    cap.rotation.x = Math.PI / 2;
-    const ring1 = new THREE.Mesh(
-      new THREE.TorusGeometry(0.042, 0.004, 12, 32),
-      new THREE.MeshStandardMaterial({ color: 0x52525B, roughness: 0.25, metalness: 0.9 })
-    );
-    const ring2 = new THREE.Mesh(
-      new THREE.TorusGeometry(0.022, 0.003, 12, 32),
-      new THREE.MeshStandardMaterial({ color: 0x52525B, roughness: 0.25, metalness: 0.9 })
-    );
-    power.add(cap, ring1, ring2);
-    power.position.set(0, 2.55, -0.55);
-    power.rotation.x = -0.35;
-    reg('power')([cap, ring1, ring2]);
-    g.add(power);
+    // 3mm Silicone Base Shadow Gap Seam (NO Heart Indicator)
+    const seamMat = new THREE.MeshStandardMaterial({
+      color: 0x1E1B1C,
+      roughness: 0.85
+    });
+    const seam = new THREE.Mesh(new THREE.TorusGeometry(0.52, 0.032, 16, 48), seamMat);
+    seam.rotation.x = Math.PI / 2;
+    seam.position.set(0, 0.10, 0);
+    reg('seam')([seam]);
+    g.add(seam);
 
     return g;
   }
@@ -416,7 +412,7 @@ export function initHero3D() {
     boxG.add(lid);
 
     // Brushed Metal Band
-    const bandMat = new THREE.MeshStandardMaterial({ color: 0xA1A1AA, roughness: 0.30, metalness: 0.75, side: THREE.DoubleSide, transparent: true });
+    const bandMat = new THREE.MeshStandardMaterial({ color: 0xF6E4E3, roughness: 0.92, metalness: 0.0, side: THREE.DoubleSide, transparent: true });
     const band = new THREE.Mesh(new THREE.BoxGeometry(2.47, 0.40, 1.37), bandMat);
     band.position.y = 0.42;
     band.castShadow = true;
@@ -433,7 +429,7 @@ export function initHero3D() {
     boxG.add(band);
 
     // High-Density Black EVA Foam Bed
-    const foamMat = new THREE.MeshStandardMaterial({ color: 0x18181B, roughness: 0.92, metalness: 0.05 });
+    const foamMat = new THREE.MeshStandardMaterial({ color: 0xE3CDBD, roughness: 0.96, metalness: 0.0 });
     const foamBed = new THREE.Mesh(new THREE.BoxGeometry(2.36, 0.35, 1.26), foamMat);
     foamBed.position.y = 0.48;
     foamBed.castShadow = true;
@@ -459,7 +455,7 @@ export function initHero3D() {
   controls.dampingFactor = 0.08;
   controls.enablePan = false;
   controls.minDistance = 2.2;
-  controls.maxDistance = 8;
+  controls.maxDistance = 11;
   controls.maxPolarAngle = 1.54;
   controls.autoRotate = !reduceMotion;
   controls.autoRotateSpeed = 0.8;
@@ -477,10 +473,11 @@ export function initHero3D() {
 
   // Camera Preset Views
   const VIEWS = {
-    front: { p: [0, 1.5, 4.6], t: [0, 1.5, 0] },
-    threeq: { p: [2.7, 2.1, 3.6], t: [0, 1.4, 0] },
-    top: { p: [0, 5.2, 2.2], t: [0, 1.2, 0] },
-    box: { p: [2.9, 2.2, 4.2], t: [0, 0.7, 0] }
+    front: { p: [0, 1.46, 7.04], t: [0, 1.3, 0] },
+    threeq: { p: [4.32, 2.42, 5.44], t: [0, 1.3, 0] },
+    top: { p: [0, 6.9, 2.88], t: [0, 1.3, 0] },
+    side: { p: [6.08, 1.26, 0.64], t: [0, 1.1, 0] },
+    box: { p: [4.06, 2.8, 5.88], t: [0, 0.7, 0] }
   };
 
   let camTween = null;
@@ -571,15 +568,14 @@ export function initHero3D() {
   const amiCaptionText = document.getElementById('amiCaptionText');
 
   const PART_DETAILS = {
-    visor: "Visor & Eyes · Dark curved glass visor with two glowing blue eyes (^ ^ / > < / - -). No mouth — AMI speaks with light.",
+    visor: "Visor & Eyes · Dark curved squircle glass with glowing blue LED eyes (^ ^ / > < / - - / o o). No mouth — AMI speaks with light.",
     ears: "Bear Ears · Smooth rounded top ears seamlessly molded into the matte white unibody.",
-    seam: "3mm Base Seam · Minimal shadow gap baseline seam with zero visible screws. Clean matte physical enclosure.",
-    power: "Capacitive Power Crown · Top sensor with laser-etched concentric acoustic/touch rings. Hold to start/end session.",
-    speaker: "Speaker Arc · 7 acoustic micro-perforations on the rear. Plays royalty-free audio locally from microSD.",
-    charge: "Precision USB-C · CNC-machined metal bezel with internal gold-plated contact tongue.",
-    music: "MicroSD Slot · Recessed CNC spring-latch card slot. Holds 32GB preloaded soundscapes.",
-    shell: "Matte Shell · Soft-touch unibody with 3mm shadow gap. No visible screws, zero plastic wrap.",
-    packinfo: "Premium PR Box · Brushed anodized aluminum with custom EVA foam cradle. Magnetic closure.",
+    seam: "3mm Base Seam · Minimal shadow gap baseline seam with zero visible screws and non-slip silicone base.",
+    power: "Top Power Button · Flush tactile circular button centered on the crown between the bear ears.",
+    speaker: "Front Acoustic Grille · Precision micro-perforated matrix on the front belly under the visor for rich mono sound and gentle voice cues.",
+    charge: "Right-Side USB-C Port · Recessed port positioned cleanly on the lower right flank for tidy desk cable management.",
+    shell: "Matte Porcelain Shell · Chubby squircle unibody in warm white porcelain with satin soft-touch finish.",
+    packinfo: "Premium PR Box · Brushed space grey anodized aluminum with custom EVA foam cradle. Magnetic closure.",
     packlabel: "Laser-Etched Lid · Precision laser marking on brushed metal surface."
   };
 
@@ -624,7 +620,7 @@ export function initHero3D() {
   window.addEventListener('resize', onResize);
   onResize();
 
-  // Emotion Management (^ ^ Happy, > < Silly, - - Neutral)
+  // Emotion Management (^ ^ Happy, > < Silly, - - Neutral, o o Awake)
   let currentEmotion = 'happy';
   function setRobotEmotion(emotion) {
     currentEmotion = emotion;
@@ -637,7 +633,8 @@ export function initHero3D() {
     if (amiCaptionText) {
       if (emotion === 'happy') amiCaptionText.textContent = "AMI is happy to focus with you (^ ^)";
       else if (emotion === 'silly') amiCaptionText.textContent = "AMI is feeling playful and bright (> <)";
-      else amiCaptionText.textContent = "AMI is in deep calm focus mode (- -)";
+      else if (emotion === 'neutral') amiCaptionText.textContent = "AMI is in deep calm focus mode (- -)";
+      else if (emotion === 'awake') amiCaptionText.textContent = "AMI is awake and ready to accompany your day (o o)";
     }
   }
 
@@ -705,5 +702,7 @@ export function initHero3D() {
     controls.update();
     renderer.render(scene, cam);
   }
+  window.__hero = { THREE, scene, cam, renderer, robotG, boxG, controls, hitList };
+
   animateFrame();
 }

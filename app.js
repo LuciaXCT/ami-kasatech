@@ -197,7 +197,9 @@ function spawnHeartParticle() {
   if (!amiHeartsContainer) return;
   const heart = document.createElement('div');
   heart.className = 'ami-floating-heart';
-  heart.textContent = Math.random() < 0.35 ? '✨' : '♥';
+  heart.innerHTML = Math.random() < 0.35
+    ? '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg>'
+    : '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-heart"/></svg>';
   const offset = (Math.random() - 0.5) * 70;
   heart.style.left = `calc(50% + ${offset}px)`;
   heart.style.bottom = '90px';
@@ -266,10 +268,10 @@ requestAnimationFrame(eyeLoop);
 
 // Petting Interaction on Robot Stage
 const PET_LINES = [
-  "*beep-boop!* AMI is cheering for you! ♥",
+  "AMI is cheering for you.",
   "Pat pat received! One thing at a time.",
-  "Deep breath... you are doing wonderful. ✨",
-  "AMI is right beside you on your desk. ✿",
+  "Deep breath. You are doing fine.",
+  "AMI is right beside you on your desk.",
   "Pace yourself. Rest is part of the work."
 ];
 
@@ -283,7 +285,7 @@ function petMascot() {
   triggerRobotBlink(true);
   robotGraphic?.classList.add('ami-pet-bounce');
 
-  if (amiCaptionText) amiCaptionText.textContent = "AMI is happy you’re here ♥";
+  if (amiCaptionText) amiCaptionText.textContent = "AMI is happy you are here";
 
   const line = PET_LINES[Math.floor(Math.random() * PET_LINES.length)];
   toast(line);
@@ -292,7 +294,7 @@ function petMascot() {
     robotGraphic?.classList.remove('ami-pet-bounce');
     isMascotInteracting = false;
     if (amiCaptionText) {
-      amiCaptionText.textContent = activeTimer?.isRunning ? "AMI is gently focusing with you ✿" : "AMI · Tap companion to pet & chime";
+      amiCaptionText.textContent = activeTimer?.isRunning ? "AMI is gently focusing with you" : "AMI · tap the companion to pet and chime";
     }
   }, 1000);
 }
@@ -398,7 +400,9 @@ function updateMusicUI() {
   const modeCap = appState.settings.musicMode.charAt(0).toUpperCase() + appState.settings.musicMode.slice(1);
   if (musicTitleText) musicTitleText.textContent = `AMI · ${modeCap} Ambient`;
   if (musicSubText) musicSubText.textContent = isMusicPlaying ? 'Synthesizing from microSD tracks' : 'Ready on the companion’s SD card';
-  if (musicPlayIcon) musicPlayIcon.textContent = isMusicPlaying ? 'Ⅱ' : '▶';
+  if (musicPlayIcon) musicPlayIcon.innerHTML = isMusicPlaying
+    ? '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pause"/></svg>'
+    : '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg>';
   if (albumOrb) albumOrb.classList.toggle('spinning', isMusicPlaying);
 }
 
@@ -406,7 +410,7 @@ function toggleMusicPlayback(forceState = null) {
   isMusicPlaying = forceState !== null ? forceState : !isMusicPlaying;
   if (isMusicPlaying) {
     initAmbientSound(appState.settings.musicMode);
-    toast(`Playing local ${appState.settings.musicMode} track from microSD ♪`);
+    toast(`Playing the local ${appState.settings.musicMode} track from the card`);
   } else {
     stopAmbientSound();
     toast('Local audio paused');
@@ -544,7 +548,7 @@ function completeSession() {
     saveState();
     updateProgressUI();
 
-    toast('Focus session complete! You showed up and logged real progress ♥');
+    toast('Session complete. You showed up. That counts.');
     triggerRobotBlink(true);
 
     // Show Break Prompt
@@ -554,7 +558,7 @@ function completeSession() {
 
     if (breakPromptWrap) breakPromptWrap.style.display = 'block';
     if (btnBreakStart) {
-      btnBreakStart.innerHTML = `<span>☕ Start your ${breakDuration}-min ${isLongBreak ? 'long ' : ''}break</span>`;
+      btnBreakStart.innerHTML = `<span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cup"/></svg> Start your ${breakDuration}-min ${isLongBreak ? 'long ' : ''}break</span>`;
     }
     if (focusStateNote) {
       focusStateNote.textContent = `Completed block. Jom rehat ${breakDuration} minit!`;
@@ -631,9 +635,9 @@ selectBreakCycle?.addEventListener('change', (e) => {
 const nudgeFiredMap = new Set();
 function checkIntervalNudges(elapsedSeconds) {
   const checks = [
-    { key: 'eye', mins: appState.settings.eyeRestMinutes, text: '👀 Eye release: Look 20 feet away for 20 seconds.' },
-    { key: 'stretch', mins: appState.settings.stretchMinutes, text: '🫶 Posture shift: Stand up and roll your shoulders back.' },
-    { key: 'water', mins: appState.settings.waterMinutes, text: '💧 Hydration check: Take a calm sip of water.' }
+    { key: 'eye', mins: appState.settings.eyeRestMinutes, text: 'Eye release: look 20 feet away for 20 seconds.' },
+    { key: 'stretch', mins: appState.settings.stretchMinutes, text: 'Posture shift: stand up and roll your shoulders back.' },
+    { key: 'water', mins: appState.settings.waterMinutes, text: 'Hydration check: take a calm sip of water.' }
   ];
 
   checks.forEach(({ key, mins, text }) => {
@@ -687,7 +691,7 @@ function renderRemindersUI() {
         <strong>${escapeHtml(rem.text)}</strong>
         <small>${dateStr} at ${timeStr}</small>
       </div>
-      <button class="btn-del-reminder glass-pill" data-idx="${idx}" title="Delete reminder">×</button>
+      <button class="btn-del-reminder glass-pill" data-idx="${idx}" title="Delete reminder" aria-label="Delete reminder"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-x"/></svg></button>
     `;
     remindersList.appendChild(row);
   });
@@ -719,7 +723,7 @@ reminderForm?.addEventListener('submit', (e) => {
   if (inputReminderText) inputReminderText.value = '';
   setDefaultReminderDate();
   renderRemindersUI();
-  toast('Reminder scheduled ♥');
+  toast('Reminder scheduled.');
 });
 
 // Reminder Interval Watcher
@@ -757,7 +761,7 @@ function setupSpeechInput(triggerBtn, targetInput) {
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
-    toast('🎙 Listening... speak now');
+    toast('Listening. Speak now.');
     if (voiceStatusNote) voiceStatusNote.textContent = 'Listening… speak when ready.';
 
     recognition.onresult = (evt) => {

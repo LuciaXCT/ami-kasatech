@@ -6,9 +6,6 @@
   <title>AMI by KasaTECH — The Focus Buddy</title>
   <meta name="description" content="A small friend for big days. A palm-sized desk companion paired with a calm, local-first focus timer. One thing at a time.">
   <meta name="theme-color" content="#FFF7F4">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script type="importmap">
   {
@@ -20,6 +17,29 @@
   </script>
 </head>
 <body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" fill="currentColor"/></symbol>
+  <symbol id="i-bloom" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="12" cy="6.4" r="3.1"/><circle cx="17.3" cy="10.2" r="3.1"/><circle cx="15" cy="16.4" r="3.1"/><circle cx="9" cy="16.4" r="3.1"/><circle cx="6.7" cy="10.2" r="3.1"/></g></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.4M12 18.6V21M3 12h2.4M18.6 12H21M5.6 5.6l1.7 1.7M16.7 16.7l1.7 1.7M18.4 5.6l-1.7 1.7M7.3 16.7l-1.7 1.7"/></g></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M2.5 12S6 6.5 12 6.5 21.5 12 21.5 12 18 17.5 12 17.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.6"/></g></symbol>
+  <symbol id="i-stretch" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.6" r="2.1"/><path d="M12 7v6M12 13l-4.5 3.5M12 13l4.5 3.5M4 9.5l4-1.6M20 9.5l-4-1.6"/></g></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s6.4 6.6 6.4 10.4a6.4 6.4 0 1 1-12.8 0C5.6 9.6 12 3 12 3Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+  <symbol id="i-cup" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 8.5h11V14a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5V8.5Z"/><path d="M15.5 9.5h2a3 3 0 0 1 0 6h-2"/><path d="M6 3.5v2M9.5 3v2M13 3.5v2"/></g></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18.5a4.2 4.2 0 0 1 .3-8.4A5.6 5.6 0 0 1 18 11.6a3.5 3.5 0 0 1-.6 6.9H7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/></g></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V6l10-2v12"/><circle cx="6.6" cy="18" r="2.4"/><circle cx="16.6" cy="16" r="2.4"/></g></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5l12 7.5-12 7.5v-15Z" fill="currentColor"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><g fill="currentColor"><rect x="6.5" y="5" width="4" height="14"/><rect x="13.5" y="5" width="4" height="14"/></g></symbol>
+  <symbol id="i-timer" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 13V8.5M9 2.5h6"/></g></symbol>
+  <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M2.5 12h4l2-5.5 4 11 2-5.5h7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.8l2.7 5.9 6.4.8-4.7 4.3 1.2 6.3-5.6-3.1-5.6 3.1 1.2-6.3L3 9.5l6.4-.8L12 2.8Z" fill="currentColor"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2.8" width="6" height="10.4" rx="3"/><path d="M5.2 11a6.8 6.8 0 0 0 13.6 0M12 17.8V21M8.5 21h7"/></g></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 20V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.2s-7.2-4.4-7.2-9.7A4.4 4.4 0 0 1 12 7.4a4.4 4.4 0 0 1 7.2 3.1c0 5.3-7.2 9.7-7.2 9.7Z" fill="currentColor"/></symbol>
+</svg>
 
   <!-- Ambient Optical Light Pools for Realistic Glass Refraction -->
   <div class="ambient-glow-layer" aria-hidden="true">
@@ -55,7 +75,7 @@
           <button class="switch-btn" id="btnShowApp">Live App</button>
         </div>
         <button class="icon-btn-glass" id="btnOpenSettings" title="Open Preferences" aria-label="Preferences">
-          <span>☼</span>
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-gear"/></svg>
         </button>
         <button class="btn-order-cta" id="btnOrderHeader">Order AMI — $89</button>
       </nav>
@@ -80,7 +100,7 @@
             <p>AMI helps you get started, take a proper breather, and feel a little less alone at your desk. Palm-sized hardware paired with a calm, local-first app.</p>
             
             <div class="today-greeting-chip glass-light">
-              <span class="chip-icon">✿</span>
+              <span class="chip-icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-bloom"/></svg></span>
               <div>
                 <strong id="greetingLabel">Good day!</strong>
                 <span class="chip-sub">Your pace is allowed to be human.</span>
@@ -91,15 +111,15 @@
               <div class="hero-cta-row">
                 <button class="hero-cta-btn" id="heroOrderBtn">Order AMI — $89</button>
                 <button class="hero-cta-secondary glass-pill" id="heroLaunchAppBtn">Launch Live App →</button>
-                <a href="3d.html" class="hero-cta-secondary glass-pill" style="text-decoration:none;">✦ Touch 3D Model & Box →</a>
+                <a href="3d.html" class="hero-cta-secondary glass-pill" style="text-decoration:none;"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg> Touch 3D Model & Box →</a>
               </div>
-              <span class="hero-meta">Uncoated paper wrap · Free worldwide delivery · Zero subscriptions</span>
+              <span class="hero-meta">Paper band, no film · Free worldwide delivery · Zero subscriptions</span>
             </div>
           </div>
 
           <!-- Interactive 3D Companion Robot & Packaging Box Stage -->
           <div class="robot-stage">
-            <div class="robot-card-stage-3d glass-strong" id="amiStage" title="Drag to orbit in 3D · Tap companion to inspect & pet ♥">
+            <div class="robot-card-stage-3d glass-strong" id="amiStage" title="Drag to orbit in 3D · tap the companion to inspect it">
               <div class="robot-stage-sheen"></div>
               <div class="ami-hearts-container" id="amiHeartsContainer"></div>
 
@@ -114,6 +134,7 @@
                     <button class="view-chip" data-v="front" type="button">Front</button>
                     <button class="view-chip active" data-v="threeq" type="button">3/4</button>
                     <button class="view-chip" data-v="top" type="button">Top</button>
+                    <button class="view-chip" data-v="side" type="button">Port</button>
                     <button class="view-chip active" id="btnToggleSpin" type="button">Spin</button>
                   </div>
                 </div>
@@ -121,6 +142,7 @@
                   <button class="emotion-chip active" data-emo="happy" type="button" title="Happy smiling eyes">^ ^ Happy</button>
                   <button class="emotion-chip" data-emo="silly" type="button" title="Silly playful eyes">&gt; &lt; Silly</button>
                   <button class="emotion-chip" data-emo="neutral" type="button" title="Neutral focused eyes">- - Neutral</button>
+                  <button class="emotion-chip" data-emo="awake" type="button" title="Awake glowing ring eyes">o o Awake</button>
                 </div>
               </div>
 
@@ -134,12 +156,12 @@
                     <linearGradient id="bodySheen" x1="20%" y1="0%" x2="80%" y2="100%">
                       <stop offset="0%" stop-color="#FFFFFF" />
                       <stop offset="60%" stop-color="#FFFDF9" />
-                      <stop offset="100%" stop-color="#F7EFEA" />
+                      <stop offset="100%" stop-color="#F2EDE8" />
                     </linearGradient>
                     <linearGradient id="visorSpec" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#241B1C" />
-                      <stop offset="45%" stop-color="#140E0F" />
-                      <stop offset="100%" stop-color="#080506" />
+                      <stop offset="0%" stop-color="#1E1718" />
+                      <stop offset="45%" stop-color="#100B0C" />
+                      <stop offset="100%" stop-color="#060405" />
                     </linearGradient>
                     <linearGradient id="glareSweep" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stop-color="rgba(255,255,255,0.34)" />
@@ -156,49 +178,60 @@
                   </defs>
 
                   <!-- 3mm Physical Shadow Gap on Pedestal -->
-                  <ellipse cx="110" cy="285" rx="74" ry="8" fill="rgba(46, 37, 38, 0.12)" filter="url(#softShadow)" />
-                  <ellipse cx="110" cy="283" rx="48" ry="4.5" fill="rgba(46, 37, 38, 0.22)" />
+                  <ellipse cx="110" cy="276" rx="72" ry="7.5" fill="rgba(46, 37, 38, 0.14)" filter="url(#softShadow)" />
+                  <ellipse cx="110" cy="274" rx="46" ry="4" fill="rgba(46, 37, 38, 0.24)" />
 
-                  <!-- Base Heart Light Ring (2mm seam breathing ring) -->
-                  <ellipse cx="110" cy="276" rx="50" ry="6.5" fill="#D88E9A" class="robot-heart-ring" id="robotHeartRing" />
+                  <!-- Bear Ears on Top Corners -->
+                  <circle cx="56" cy="56" r="24" fill="url(#bodySheen)" stroke="rgba(238, 216, 216, 0.85)" stroke-width="1.2" />
+                  <circle cx="56" cy="56" r="14" fill="#F4ECE5" />
+                  <circle cx="164" cy="56" r="24" fill="url(#bodySheen)" stroke="rgba(238, 216, 216, 0.85)" stroke-width="1.2" />
+                  <circle cx="164" cy="56" r="14" fill="#F4ECE5" />
 
-                  <!-- Continuous Matte White Ovoid Body (110 mm scale) -->
+                  <!-- Top-Crown Flush Power Button -->
+                  <rect x="99" y="38" width="22" height="5" rx="2.5" fill="#3F3F46" stroke="#D4D4D8" stroke-width="0.8" />
+
+                  <!-- Chubby Squat Squircle Body -->
                   <g id="robotBodyGroup">
-                    <path d="M 110,18
-                             C 174,18 198,78 198,155
-                             C 198,226 166,274 110,274
-                             C 54,274 22,226 22,155
-                             C 22,78 46,18 110,18 Z"
+                    <rect x="28" y="42" width="164" height="226" rx="66"
                           fill="url(#bodySheen)"
                           stroke="rgba(238, 216, 216, 0.85)"
                           stroke-width="1.2" />
 
-                    <!-- Flush Glossy Black Visor (60% front height) -->
-                    <path class="robot-svg-visor"
-                          d="M 110,50
-                             C 152,50 172,78 172,126
-                             C 172,176 150,198 110,198
-                             C 70,198 48,176 48,126
-                             C 48,78 68,50 110,50 Z"
+                    <!-- Glossy Black Squircle Visor -->
+                    <rect class="robot-svg-visor"
+                          x="44" y="66" width="132" height="88" rx="36"
                           fill="url(#visorSpec)" />
 
-                    <!-- Curved Glass Visor Reflection Arc -->
-                    <path d="M 62,68
-                             C 88,56 132,56 158,68
-                             C 142,60 98,60 62,68 Z"
+                    <!-- Visor Reflection Sweep -->
+                    <path d="M 58,82 C 84,72 136,72 162,82 C 146,74 102,74 58,82 Z"
                           fill="url(#glareSweep)" />
 
-                    <!-- Left Luminous Capsule Eye -->
-                    <g class="robot-eye" id="eyeLeft" transform="translate(86, 122)">
-                      <ellipse cx="0" cy="0" rx="14" ry="17" fill="rgba(91, 164, 230, 0.35)" />
-                      <ellipse cx="0" cy="0" rx="9" ry="13" fill="#5BA4E6" filter="url(#eyeGlow)" />
+                    <!-- Glowing Cyan Eyes (NO mouth) -->
+                    <g class="robot-eye" id="eyeLeft" transform="translate(86, 110)">
+                      <circle cx="0" cy="0" r="14" fill="rgba(0, 217, 255, 0.35)" />
+                      <circle cx="0" cy="0" r="8" fill="#00D9FF" filter="url(#eyeGlow)" />
+                    </g>
+                    <g class="robot-eye" id="eyeRight" transform="translate(134, 110)">
+                      <circle cx="0" cy="0" r="14" fill="rgba(0, 217, 255, 0.35)" />
+                      <circle cx="0" cy="0" r="8" fill="#00D9FF" filter="url(#eyeGlow)" />
                     </g>
 
-                    <!-- Right Luminous Capsule Eye -->
-                    <g class="robot-eye" id="eyeRight" transform="translate(134, 122)">
-                      <ellipse cx="0" cy="0" rx="14" ry="17" fill="rgba(91, 164, 230, 0.35)" />
-                      <ellipse cx="0" cy="0" rx="9" ry="13" fill="#5BA4E6" filter="url(#eyeGlow)" />
+                    <!-- Front Belly Acoustic Speaker Matrix -->
+                    <g id="frontSpeakerMatrix" fill="#2E2829" opacity="0.85">
+                      <!-- Row 1 -->
+                      <circle cx="86" cy="180" r="1.6" /><circle cx="94" cy="180" r="1.6" /><circle cx="102" cy="180" r="1.6" /><circle cx="110" cy="180" r="1.6" /><circle cx="118" cy="180" r="1.6" /><circle cx="126" cy="180" r="1.6" /><circle cx="134" cy="180" r="1.6" />
+                      <!-- Row 2 -->
+                      <circle cx="78" cy="188" r="1.6" /><circle cx="86" cy="188" r="1.6" /><circle cx="94" cy="188" r="1.6" /><circle cx="102" cy="188" r="1.6" /><circle cx="110" cy="188" r="1.6" /><circle cx="118" cy="188" r="1.6" /><circle cx="126" cy="188" r="1.6" /><circle cx="134" cy="188" r="1.6" /><circle cx="142" cy="188" r="1.6" />
+                      <!-- Row 3 (center) -->
+                      <circle cx="70" cy="196" r="1.6" /><circle cx="78" cy="196" r="1.6" /><circle cx="86" cy="196" r="1.6" /><circle cx="94" cy="196" r="1.6" /><circle cx="102" cy="196" r="1.6" /><circle cx="110" cy="196" r="1.6" /><circle cx="118" cy="196" r="1.6" /><circle cx="126" cy="196" r="1.6" /><circle cx="134" cy="196" r="1.6" /><circle cx="142" cy="196" r="1.6" /><circle cx="150" cy="196" r="1.6" />
+                      <!-- Row 4 -->
+                      <circle cx="78" cy="204" r="1.6" /><circle cx="86" cy="204" r="1.6" /><circle cx="94" cy="204" r="1.6" /><circle cx="102" cy="204" r="1.6" /><circle cx="110" cy="204" r="1.6" /><circle cx="118" cy="204" r="1.6" /><circle cx="126" cy="204" r="1.6" /><circle cx="134" cy="204" r="1.6" /><circle cx="142" cy="204" r="1.6" />
+                      <!-- Row 5 -->
+                      <circle cx="86" cy="212" r="1.6" /><circle cx="94" cy="212" r="1.6" /><circle cx="102" cy="212" r="1.6" /><circle cx="110" cy="212" r="1.6" /><circle cx="118" cy="212" r="1.6" /><circle cx="126" cy="212" r="1.6" /><circle cx="134" cy="212" r="1.6" />
                     </g>
+
+                    <!-- Right-Side USB-C Port Indicator -->
+                    <rect x="188" y="210" width="4" height="14" rx="2" fill="#52525B" stroke="#A1A1AA" stroke-width="0.6" />
                   </g>
                 </svg>
               </div>
@@ -212,21 +245,21 @@
             
             <div class="robot-caption glass-pill" id="robotCaption">
               <span class="online-pip"></span>
-              <span id="amiCaptionText">AMI · Tap companion to pet & chime</span>
+              <span id="amiCaptionText">AMI · Tap companion to inspect & chime</span>
             </div>
 
             <!-- Interactive Quick Controls on Robot Pedestal -->
             <div class="robot-actions-glass">
               <button class="glass-pill-btn" id="btnRobotBlink" title="Trigger gentle eye blink">
-                <span class="btn-icon">✦</span>
+                <span class="btn-icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg></span>
                 <span>Blink</span>
               </button>
               <button class="glass-pill-btn" id="btnRobotChime" title="Play harmonic bell chime">
-                <span class="btn-icon">♪</span>
+                <span class="btn-icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-note"/></svg></span>
                 <span>Chime</span>
               </button>
               <button class="glass-pill-btn" id="btnToggleSpecs" title="Toggle hardware specifications">
-                <span class="btn-icon">⚙</span>
+                <span class="btn-icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-gear"/></svg></span>
                 <span>Hardware Specs</span>
               </button>
             </div>
@@ -237,22 +270,22 @@
                 <div class="spec-card glass-light">
                   <span class="spec-title">SCALE & FORM</span>
                   <span class="spec-value">110 × 95 × 85 mm · 210g</span>
-                  <span class="spec-detail">Continuous soft-touch matte unibody with 3mm silicone base shadow gap.</span>
+                  <span class="spec-detail">Chubby squircle unibody in warm porcelain white with bear ears and 3mm desk shadow gap.</span>
                 </div>
                 <div class="spec-card glass-light">
-                  <span class="spec-title">VISOR & SENSORS</span>
-                  <span class="spec-value">Glossy Black · Capacitive Crown</span>
-                  <span class="spec-detail">Luminous twin capsule eyes, breathing rose heart ring, capacitive top touch.</span>
+                  <span class="spec-title">VISOR & EYES</span>
+                  <span class="spec-value">4 Light Expressions</span>
+                  <span class="spec-detail">Glowing cyan eyes (^ ^ Happy, &gt; &lt; Silly, - - Neutral, o o Awake). Zero mouth, zero heart light.</span>
                 </div>
                 <div class="spec-card glass-light">
-                  <span class="spec-title">AUDIO HARDWARE</span>
-                  <span class="spec-value">MicroSD Slot · Speaker Arc</span>
-                  <span class="spec-detail">Plays royalty-free ambient soundscapes from card. Zero streaming, no telemetry.</span>
+                  <span class="spec-title">ACOUSTIC GRILLE</span>
+                  <span class="spec-value">Front Belly Matrix</span>
+                  <span class="spec-detail">Precision micro-perforated acoustic matrix on the belly beneath the visor for warm mono voice and ambient soundscapes.</span>
                 </div>
                 <div class="spec-card glass-light">
-                  <span class="spec-title">CONNECTIVITY</span>
-                  <span class="spec-value">Centered USB-C · Local-First</span>
-                  <span class="spec-detail">Operates 100% offline. Progress stays strictly on your physical machine.</span>
+                  <span class="spec-title">CONTROLS & POWER</span>
+                  <span class="spec-value">Top Button · Side USB-C</span>
+                  <span class="spec-detail">Flush circular tactile button on the top crown between the ears; fast-charging USB-C port recessed on the right flank.</span>
                 </div>
               </div>
             </div>
@@ -285,54 +318,72 @@
           </div>
         </div>
 
-        <!-- 48-Sheet Commercial Billboard Campaign with 3 Expressions -->
+        <!-- 48-Sheet Commercial Billboard Campaign with 4 Expressions & Reference Lineup -->
         <div class="section-label">48-Sheet Billboard Campaign</div>
         <div class="billboard-gallery-block">
           <div class="billboard-gallery-header">
-            <h3 class="billboard-gallery-title">A Small Friend for Big Days.</h3>
-            <p class="billboard-gallery-subtitle">Three photographic 48-sheet outdoor billboard concepts showcasing AMI’s expressive glowing blue eyes (^ ^ / &gt; &lt; / - -), seamless bear ears, and minimal typography.</p>
+            <h3 class="billboard-gallery-title">AMI the focus buddy.</h3>
+            <p class="billboard-gallery-subtitle">Four distinct eye emotions, zero mouth, zero AI slop. Precision industrial design with bear ears, top crown power button, front belly acoustic grille, and right-side USB-C port.</p>
+          </div>
+
+          <!-- Flagship 4-Robot Reference Lineup Billboard -->
+          <div class="billboard-hero-card glass-strong" style="margin-bottom:24px;border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:0 16px 48px rgba(92,57,60,.08);">
+            <div style="position:relative;width:100%;overflow:hidden;background:#FAF8F5;">
+              <img src="exports/ami-reference-lineup.jpg" alt="AMI the focus buddy. Four robots side by side with Happy, Silly, Neutral, and Awake eyes, bear ears, power button, front speaker grille, and USB-C port." style="width:100%;height:auto;display:block;object-fit:cover;">
+              <span class="billboard-badge glass-pill" style="position:absolute;top:16px;right:16px;background:rgba(255,253,249,0.92);padding:6px 14px;border-radius:999px;font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--rose-deep);border:1px solid var(--line);">Production Lineup · 4 Light Expressions</span>
+            </div>
+            <div class="billboard-caption-row" style="padding:18px 24px;display:flex;justify-content:space-between;align-items:center;background:var(--cream);">
+              <div>
+                <span class="billboard-tag" style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);">48-Sheet Flagship · 6 × 3 m</span>
+                <h4 class="billboard-quote" style="margin:4px 0 0;font-size:19px;font-weight:600;color:var(--ink);">“AMI the focus buddy.”</h4>
+              </div>
+              <div style="text-align:right;">
+                <span style="font-family:var(--font-mono);font-size:11.5px;color:var(--rose-deep);font-weight:600;">AMI × KasaTECH</span>
+                <div style="font-size:12px;color:var(--muted);">Happy (^ ^) · Silly (&gt; &lt;) · Neutral (- -) · Awake (o o)</div>
+              </div>
+            </div>
           </div>
 
           <div class="billboard-cards-grid">
             <div class="billboard-card glass-strong">
               <div class="billboard-image-wrap">
-                <img src="exports/billboard-happy.png" alt="AMI Billboard - Happy Expression ^ ^" loading="lazy" class="billboard-img">
-                <span class="billboard-badge glass-pill">Emotion 01 · Happy (^ ^)</span>
+                <img src="exports/billboard-happy.png" alt="AMI billboard: Happy smiling eyes ^ ^ with text AMI the focus buddy." loading="lazy" class="billboard-img">
+                <span class="billboard-badge glass-pill">^ ^ Happy Emotion</span>
               </div>
               <div class="billboard-caption-row">
                 <div>
                   <span class="billboard-tag">48-Sheet · 6 × 3 m</span>
-                  <h4 class="billboard-quote">“Silence is where the best work happens.”</h4>
+                  <h4 class="billboard-quote">“AMI the focus buddy.”</h4>
                 </div>
-                <span class="billboard-author">AMI · KasaTECH</span>
+                <span class="billboard-author">AMI · Happy (^ ^)</span>
               </div>
             </div>
 
             <div class="billboard-card glass-strong">
               <div class="billboard-image-wrap">
-                <img src="exports/billboard-silly.png" alt="AMI Billboard - Silly Expression > <" loading="lazy" class="billboard-img">
-                <span class="billboard-badge glass-pill">Emotion 02 · Silly (&gt; &lt;)</span>
+                <img src="exports/billboard-silly.png" alt="AMI billboard: Silly playful eyes > < with text AMI the focus buddy." loading="lazy" class="billboard-img">
+                <span class="billboard-badge glass-pill">&gt; &lt; Silly Emotion</span>
               </div>
               <div class="billboard-caption-row">
                 <div>
                   <span class="billboard-tag">48-Sheet · 6 × 3 m</span>
-                  <h4 class="billboard-quote">“One thing at a time. The rest can wait.”</h4>
+                  <h4 class="billboard-quote">“AMI the focus buddy.”</h4>
                 </div>
-                <span class="billboard-author">AMI · KasaTECH</span>
+                <span class="billboard-author">AMI · Silly (&gt; &lt;)</span>
               </div>
             </div>
 
             <div class="billboard-card glass-strong">
               <div class="billboard-image-wrap">
-                <img src="exports/billboard-neutral.png" alt="AMI Billboard - Neutral Expression - -" loading="lazy" class="billboard-img">
-                <span class="billboard-badge glass-pill">Emotion 03 · Neutral (- -)</span>
+                <img src="exports/billboard-neutral.png" alt="AMI billboard: Neutral focus eyes - - with text AMI the focus buddy." loading="lazy" class="billboard-img">
+                <span class="billboard-badge glass-pill">- - Neutral Focus</span>
               </div>
               <div class="billboard-caption-row">
                 <div>
                   <span class="billboard-tag">48-Sheet · 6 × 3 m</span>
-                  <h4 class="billboard-quote">“A quiet mind builds loud things.”</h4>
+                  <h4 class="billboard-quote">“AMI the focus buddy.”</h4>
                 </div>
-                <span class="billboard-author">AMI · KasaTECH</span>
+                <span class="billboard-author">AMI · Neutral (- -)</span>
               </div>
             </div>
           </div>
@@ -342,34 +393,34 @@
         <div class="section-label">Packaging & Unboxing</div>
         <div class="unboxing-strip glass">
           <div class="unboxing-header">
-            <h4>CNC ANODIZED ALUMINUM PR BOX · HIGH-DENSITY EVA FOAM · MAGNETIC LATCH</h4>
-            <p>175 × 135 × 95 mm Space Grey brushed metal luxury press kit box with laser-etched KasaTECH mark.</p>
+            <h4>METAL LAMINATE PR BOX · MOLDED PULP TRAY · PAPER BAND</h4>
+            <p>120 × 110 × 70 mm soft-touch metal laminate, rose-deep foil and blind emboss. No film, no plastic bag, no foam.</p>
           </div>
           <div class="unboxing-frames">
             <div class="unbox-frame glass-light">
               <div class="frame-tag">01</div>
-              <div class="frame-name">Sealed Metal Pack</div>
-              <div class="frame-desc">Brushed anodized aluminum box with laser-marked sliding clasp.</div>
+              <div class="frame-name">Sealed pack</div>
+              <div class="frame-desc">Metal laminate box held closed by a printed paper band. No shrink wrap.</div>
             </div>
             <div class="unbox-frame glass-light">
               <div class="frame-tag">02</div>
-              <div class="frame-name">Lid Lifted</div>
-              <div class="frame-desc">Precision-milled lid lifts on magnetic hinges to reveal the glowing visor.</div>
+              <div class="frame-name">Lid lifted</div>
+              <div class="frame-desc">The lid comes off. The first thing you see is the face.</div>
             </div>
             <div class="unbox-frame glass-light">
               <div class="frame-tag">03</div>
-              <div class="frame-name">Matte Metal Card</div>
-              <div class="frame-desc">Anodized card insert: <em>One thing at a time.</em> Tactile laser-etched guide.</div>
+              <div class="frame-name">Insert card</div>
+              <div class="frame-desc">Cream card, one line: <em>One thing at a time.</em></div>
             </div>
             <div class="unbox-frame glass-light">
               <div class="frame-tag">04</div>
-              <div class="frame-name">EVA Foam Cradle</div>
-              <div class="frame-desc">AMI rests in precision-cut high-density velvet EVA foam with braided cable below.</div>
+              <div class="frame-name">Pulp cradle</div>
+              <div class="frame-desc">Molded pulp tray holds AMI on its back, the cable in the well beneath.</div>
             </div>
             <div class="unbox-frame glass-light">
               <div class="frame-tag">05</div>
-              <div class="frame-name">Flat-Lay Kit</div>
-              <div class="frame-desc">AMI companion with bear ears, 32GB microSD card, braided cable, metal guide.</div>
+              <div class="frame-name">Flat-lay kit</div>
+              <div class="frame-desc">AMI, microSD card, USB-C cable, insert card. Nothing else.</div>
             </div>
           </div>
         </div>
@@ -397,7 +448,7 @@
           </div>
           <div class="dashboard-meta-actions">
             <button class="adaptive-apply-btn glass-pill" id="btnApplyAdaptive">
-              <span>✦ Use AMI’s suggested rhythm</span>
+              <span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkle"/></svg> Use AMI’s suggested rhythm</span>
             </button>
           </div>
         </div>
@@ -412,7 +463,7 @@
                 <span class="card-eyebrow">YOUR FOCUS SESSION</span>
                 <h3>Let’s get into it</h3>
               </div>
-              <span class="card-glyph">◷</span>
+              <span class="card-glyph"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-timer"/></svg></span>
             </div>
 
             <!-- Mode Tabs (Study / Work / Reset) -->
@@ -437,12 +488,12 @@
             <!-- Break Prompt Button (Appears when focus ends) -->
             <div class="break-prompt-wrap" id="breakPromptWrap" style="display:none;">
               <button class="btn-break-trigger" id="btnBreakStart">
-                <span>☕ Start your 5-min break</span>
+                <span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cup"/></svg> Start your 5-min break</span>
               </button>
             </div>
 
             <div class="dash-card-foot">
-              <span>✿ <span id="cycleLabel">25 min focus · 5 min break</span></span>
+              <span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-bloom"/></svg> <span id="cycleLabel">25 min focus · 5 min break</span></span>
               <span id="focusStateNote">No pressure. Just begin.</span>
             </div>
           </article>
@@ -454,7 +505,7 @@
                 <span class="card-eyebrow">A KIND LITTLE NUDGE</span>
                 <h3>Breaks count too</h3>
               </div>
-              <span class="card-glyph">✿</span>
+              <span class="card-glyph"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-bloom"/></svg></span>
             </div>
             <p class="dash-card-copy">AMI will remind you gently. Pick a rhythm that feels doable today.</p>
 
@@ -479,7 +530,7 @@
 
             <div class="nudge-items-list">
               <div class="nudge-row glass-light">
-                <span class="nudge-icon">👀</span>
+                <span class="nudge-icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-eye"/></svg></span>
                 <div class="nudge-detail">
                   <strong>Rest your eyes</strong>
                   <small>Look 20 feet away for 20s</small>
@@ -487,7 +538,7 @@
                 <span class="nudge-badge" id="badgeEyeInterval">20m</span>
               </div>
               <div class="nudge-row glass-light">
-                <span class="nudge-icon">🫶</span>
+                <span class="nudge-icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-stretch"/></svg></span>
                 <div class="nudge-detail">
                   <strong>Stretch a little</strong>
                   <small>Unclench your shoulders</small>
@@ -495,7 +546,7 @@
                 <span class="nudge-badge" id="badgeStretchInterval">50m</span>
               </div>
               <div class="nudge-row glass-light">
-                <span class="nudge-icon">💧</span>
+                <span class="nudge-icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-drop"/></svg></span>
                 <div class="nudge-detail">
                   <strong>Have some water</strong>
                   <small>One sip is a good start</small>
@@ -516,7 +567,7 @@
             </div>
 
             <div class="dash-card-foot">
-              <span>♡ Gentle reminders, never a scolding.</span>
+              <span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-heart"/></svg> Gentle reminders, never a scolding.</span>
             </div>
           </article>
 
@@ -527,23 +578,23 @@
                 <span class="card-eyebrow">SOUNDTRACK FOR THIS MOMENT</span>
                 <h3>Pick your mood</h3>
               </div>
-              <span class="card-glyph">♫</span>
+              <span class="card-glyph"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-note"/></svg></span>
             </div>
             <p class="dash-card-copy">AMI plays royalty-free tracks locally from its microSD card.</p>
 
             <div class="music-mood-grid">
               <button class="music-mood-btn glass-light active" data-music="focus">
-                <span class="mood-icon">☁</span>
+                <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cloud"/></svg>
                 <strong>Focus</strong>
                 <small>soft & steady</small>
               </button>
               <button class="music-mood-btn glass-light" data-music="relax">
-                <span class="mood-icon">☾</span>
+                <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-moon"/></svg>
                 <strong>Relax</strong>
                 <small>slow it down</small>
               </button>
               <button class="music-mood-btn glass-light" data-music="energise">
-                <span class="mood-icon">☀</span>
+                <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sun"/></svg>
                 <strong>Energise</strong>
                 <small>gentle lift</small>
               </button>
@@ -551,13 +602,13 @@
 
             <!-- Player Bar with Live Web Audio Synthesis -->
             <div class="music-player-bar glass-light">
-              <div class="album-orb" id="albumOrb">♫</div>
+              <div class="album-orb" id="albumOrb"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-note"/></svg></div>
               <div class="music-info-text">
                 <strong id="musicTitleText">AMI · Focus Ambient</strong>
                 <small id="musicSubText">Ready on the companion’s SD card</small>
               </div>
               <button class="play-trigger-btn" id="btnToggleMusic" aria-label="Toggle local audio">
-                <span id="musicPlayIcon">▶</span>
+                <span id="musicPlayIcon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg></span>
               </button>
             </div>
 
@@ -573,7 +624,7 @@
                 <span class="card-eyebrow">KEEP IT ON YOUR RADAR</span>
                 <h3>Small reminders</h3>
               </div>
-              <span class="card-glyph">⌁</span>
+              <span class="card-glyph"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pulse"/></svg></span>
             </div>
 
             <form id="reminderForm" class="reminder-form-grid">
@@ -582,7 +633,7 @@
               <div class="reminder-form-actions">
                 <button type="submit" class="btn-primary-small">Add reminder</button>
                 <button type="button" class="voice-btn glass-pill" id="btnVoiceReminder">
-                  <span>🎙 Say it</span>
+                  <span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-mic"/></svg> Say it</span>
                 </button>
               </div>
             </form>
@@ -613,7 +664,7 @@
             <!-- Chat Message History -->
             <div class="chat-log-window" id="chatLogWindow" aria-live="polite">
               <div class="bubble ami-bubble glass-light">
-                Hey, I’m here. What’s on your mind—or should we pick one tiny thing to start? <span class="bubble-heart">♥</span>
+                Hey, I’m here. What’s on your mind—or should we pick one tiny thing to start? <span class="bubble-heart"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-heart"/></svg></span>
               </div>
             </div>
 
@@ -627,8 +678,8 @@
             <!-- Chat Input Form -->
             <form id="chatForm" class="chat-input-bar">
               <input type="text" id="chatInputText" class="glass-input" maxlength="2000" placeholder="Tell AMI what’s up…" autocomplete="off" required>
-              <button type="button" id="btnChatMic" class="mic-trigger-btn glass-pill" title="Speak to AMI (Voice Input)">🎙</button>
-              <button type="submit" class="send-trigger-btn" aria-label="Send message">↑</button>
+              <button type="button" id="btnChatMic" class="mic-trigger-btn glass-pill" title="Speak to AMI (Voice Input)"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-mic"/></svg></button>
+              <button type="submit" class="send-trigger-btn" aria-label="Send message"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-up"/></svg></button>
             </form>
 
             <div class="dash-card-foot chat-foot-split">
@@ -644,7 +695,7 @@
                 <span class="card-eyebrow">REAL PROGRESS, NOT PERFECTION</span>
                 <h3>You showed up</h3>
               </div>
-              <span class="card-glyph">✧</span>
+              <span class="card-glyph"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></span>
             </div>
 
             <!-- Stat Counters -->
@@ -679,12 +730,12 @@
 
             <!-- Adaptive Recommendation Text -->
             <div class="adaptive-recommendation-box glass-light">
-              <div class="recom-icon">✿</div>
+              <div class="recom-icon"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-bloom"/></svg></div>
               <p id="adaptiveRecomText">Every finished session teaches AMI what works for you. Complete a few blocks to get custom rhythm suggestions.</p>
             </div>
 
             <div class="dash-card-foot">
-              <span class="star-rhythm-row">✿　✦　♡　✦　✿</span>
+              <span class="star-rhythm-row">one thing at a time</span>
             </div>
           </article>
 
@@ -701,7 +752,7 @@
           <span class="card-eyebrow">YOUR AMI, YOUR WAY</span>
           <h3>Preferences</h3>
         </div>
-        <button class="close-dialog-btn glass-pill" id="btnCloseSettings" aria-label="Close dialog">×</button>
+        <button class="close-dialog-btn glass-pill" id="btnCloseSettings" aria-label="Close dialog"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-x"/></svg></button>
       </div>
 
       <div class="dialog-form-body">
@@ -769,26 +820,26 @@
     <div class="dialog-card glass-strong order-card">
       <div class="dialog-header">
         <div>
-          <span class="dialog-pretitle">KASATECH PR EDITION</span>
+          <span class="dialog-pretitle">KASATECH · PR EDITION</span>
           <h2 class="dialog-title">Order AMI Focus Companion</h2>
         </div>
-        <button class="dialog-close-btn" id="btnCloseOrder" aria-label="Close dialog">✕</button>
+        <button class="dialog-close-btn" id="btnCloseOrder" aria-label="Close dialog"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-x"/></svg></button>
       </div>
 
       <div class="order-content">
         <div class="order-hero-box glass-light">
           <div class="order-box-spec">
-            <div class="order-tag-pill">PREMIUM ANODIZED METAL PR BOX</div>
-            <h3 class="order-box-name">Space Grey Aluminum Edition</h3>
+            <div class="order-tag-pill">METAL LAMINATE PR BOX</div>
+            <h3 class="order-box-name">Rose Foil Edition</h3>
             <span class="order-price">$89 <small>USD</small></span>
           </div>
           <ul class="order-includes-list">
-            <li>✦ <strong>1× AMI Desk Companion</strong> · Matte White Ovoid, Blue EVE Eyes (^ ^, &gt; &lt;, - -), Bear Ears</li>
-            <li>✦ <strong>1× Anodized Aluminum PR Box</strong> · Space Grey with Magnetic Latch & Laser-Etched Lid</li>
-            <li>✦ <strong>1× Custom EVA Foam Bed</strong> · High-Density Precision Protection</li>
-            <li>✦ <strong>1× Braided USB-C Cable (1.5m)</strong> · Centered low to hide wires</li>
-            <li>✦ <strong>1× 32GB MicroSD Card</strong> · Preloaded with 6 offline soundscapes</li>
-            <li>✦ <strong>Free Worldwide Courier Delivery</strong> · Carbon-neutral shipping, zero subscriptions</li>
+            <li><strong>1× AMI desk companion</strong> · cream ovoid, two cyan eyes, bear ears</li>
+            <li><strong>1× metal laminate PR box</strong> · 120 × 110 × 70 mm, rose-deep foil, blind emboss</li>
+            <li><strong>1× molded pulp tray</strong> · holds AMI on its back</li>
+            <li><strong>1× USB-C cable</strong> · charges from a rear port</li>
+            <li><strong>1× microSD card</strong> · your music lives on the card, nothing streams</li>
+            <li><strong>Free Worldwide Courier Delivery</strong> · Carbon-neutral shipping, zero subscriptions</li>
           </ul>
         </div>
 
@@ -805,7 +856,7 @@
           </div>
           <div class="input-col" style="margin-top:12px;">
             <label class="order-label">Shipping Country / City</label>
-            <input type="text" class="glass-input" id="orderAddress" placeholder="e.g. Kyoto, Japan / Zurich, Switzerland" required>
+            <input type="text" class="glass-input" id="orderAddress" placeholder="e.g. Petaling Jaya, Malaysia" required>
           </div>
 
           <div class="order-actions-row">
@@ -827,7 +878,7 @@
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-left">
-        <strong>AMI · The Focus Buddy</strong> · KasaTECH (Kyoto & Zurich)
+        <strong>AMI · The Focus Buddy</strong> · KasaTECH, Petaling Jaya, Malaysia
       </div>
       <div class="footer-right">
         Local-first by default. Your progress stays exclusively on your machine.
